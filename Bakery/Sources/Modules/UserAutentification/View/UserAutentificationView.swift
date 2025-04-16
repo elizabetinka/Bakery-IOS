@@ -7,11 +7,14 @@ import UIKit
 extension UserAutentificationView {
     struct Appearance {
         let exampleOffset: CGFloat = 10
+        let backgroundColor: UIColor = .systemBackground
+        let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
     }
 }
 
 class UserAutentificationView: UIView {
     let appearance = Appearance()
+    var buttonDelegate: LoginButtonDelegate
     
     // Поле для ввода номера телефона
         private let phoneTextField: UITextField = {
@@ -38,12 +41,13 @@ class UserAutentificationView: UIView {
         return view
     }()
 
-    override init(frame: CGRect = CGRect.zero, delegate: ButtonDelegate) {
+    init(frame: CGRect = CGRect.zero, delegate: LoginButtonDelegate) {
+        buttonDelegate=delegate
         super.init(frame: frame)
         addSubviews()
         makeConstraints()
         
-        loginButton.addTarget(self, action: #selector(delegate), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         
     }
 
@@ -58,6 +62,11 @@ class UserAutentificationView: UIView {
     func makeConstraints() {
     }
     
+    func showError(message: String) {
+    }
+    
+    func showLoading() {
+    }
     
     @objc private func loginButtonTapped() {
             guard let phoneNumber = phoneTextField.text, !phoneNumber.isEmpty else {
@@ -67,5 +76,6 @@ class UserAutentificationView: UIView {
             
             // Здесь можно реализовать логику аутентификации
             print("Введён номер телефона: \(phoneNumber)")
+        buttonDelegate.didTapLoginButton(number: phoneNumber)
         }
 }

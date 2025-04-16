@@ -8,6 +8,7 @@ extension UserView {
     struct Appearance {
         let exampleOffset: CGFloat = 10
         let backgroundColor = UIColor.blue
+        let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
     }
 }
 

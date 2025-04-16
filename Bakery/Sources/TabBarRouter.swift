@@ -21,8 +21,8 @@ extension TabBarRouter {
 
 class TabBarRouter: TabBarRouterProtocol {
     
-    func openViewController(myView: MyViewController) {
-        switch myView {
+    func openViewController(toView: MyViewController) {
+        switch toView {
         case .home:
             selectTab(at: 0)
         case .user:
@@ -31,6 +31,10 @@ class TabBarRouter: TabBarRouterProtocol {
             selectTab(at: 1)
         case.authentification:
             openAutentification()
+        case .registration:
+            selectTab(at: 0)
+        case let .itemDetails(itemId):
+            openItemDetails(itemId: itemId)
         }
         
     }
@@ -51,8 +55,8 @@ class TabBarRouter: TabBarRouterProtocol {
             routerApperance.applyRouterSettigs()
         }
         
-        let menuVC = UserBuilder().build()
-        if let routerApperance = menuVC as? UserRouterAppearance {
+        let menuVC = MenuBuilder().build()
+        if let routerApperance = menuVC as? MenuRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
         
@@ -82,5 +86,17 @@ class TabBarRouter: TabBarRouterProtocol {
                 curViewController.present(authController, animated: true, completion: nil)
             }
         }
+    
+    func openItemDetails(itemId: UniqueIdentifier){
+        let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).build()
+        
+        if let routerApperance = detailsVC as? MenuDetailsRouterAppearance {
+            routerApperance.applyRouterSettigs()
+        }
+
+        if let curViewController = tabBarController.viewControllers?[tabBarController.selectedIndex] {
+            curViewController.present(detailsVC, animated: true)
+        }
+    }
 
 }

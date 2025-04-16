@@ -5,7 +5,7 @@
 
 enum Common {
     // MARK: Use cases
-    enum ShowModule {
+    enum ShowUserInfo {
         struct Request {
         }
 
@@ -16,18 +16,45 @@ enum Common {
         struct ViewModel {
             var state: ViewControllerState
         }
+        
+        enum CommonRequestResult {
+            case failure(CommonError)
+            case success(UserModel)
+            case notAuthorized
+        }
+        
+        enum ViewControllerState {
+            case loading
+            case authorizedResult(CommonUserViewModel)
+            case notAuthorized
+            case error(message: String)
+        }
     }
+    
+    enum ShowItem {
+        struct Request {
+        }
 
-    enum CommonRequestResult {
-        case failure(CommonError)
-        case success(CommonModel)
-    }
+        struct Response {
+            var result: CommonRequestResult
+        }
 
-    enum ViewControllerState {
-        case loading
-        case authorizedResult(CommonViewModel)
-        case notAuthorizedResult(CommonViewModel)
-        case error(message: String)
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+        
+        enum CommonRequestResult {
+            case failure(CommonError)
+            case success(ItemModel)
+            case emptyResult
+        }
+        
+        enum ViewControllerState {
+            case loading
+            case result(CommonItemViewModel)
+            case emptyResult
+            case error(message: String)
+        }
     }
 
     enum CommonError: Error {

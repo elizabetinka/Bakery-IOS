@@ -9,14 +9,16 @@ import Foundation
 import UIKit
 
 
-struct CommonViewModel {
-    //var uid: UniqueIdentifier
+struct CommonUserViewModel {
+    let name: String
+    let points: Int
+}
 
-    struct UserInfo {
-        let name: String
-        let points: Int
-    }
-    
-    let userInfo: UserInfo?
+struct CommonItemViewModel {
     let menuImage: UIImage
+}
+
+struct CommonViewModel {
+    var user : CommonUserViewModel?
+    var item: CommonItemViewModel?
 }

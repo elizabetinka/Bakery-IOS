@@ -8,6 +8,7 @@ extension CommonView {
     struct Appearance {
         let exampleOffset: CGFloat = 10
         let backgroundColor = UIColor.systemGray
+        let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
     }
     
 }
@@ -76,7 +77,11 @@ class CommonView: UIView {
     }
     
 
-    func showLoading() {
+    func showUserLoading() {
+        show(view: tableView)
+    }
+    
+    func showItemLoading() {
         show(view: tableView)
     }
 

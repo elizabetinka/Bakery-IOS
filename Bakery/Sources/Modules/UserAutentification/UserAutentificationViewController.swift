@@ -5,13 +5,21 @@
 
 import UIKit
 
+protocol LoginButtonDelegate: AnyObject {
+    func didTapLoginButton(number: String)
+}
+
 protocol UserAutentificationDisplayLogic: AnyObject {
-    func displayModule(viewModel: UserAutentification.ShowModule.ViewModel)
+    func displaySomething(viewModel: UserAutentification.Login.ViewModel)
 }
 
 class UserAutentificationViewController: UIViewController {
     let interactor: UserAutentificationBusinessLogic
     var state: UserAutentification.ViewControllerState
+    weak var router: TabBarRouterProtocol?
+    
+    lazy var customView = self.view as? UserAutentificationView
+    
 
     init(interactor: UserAutentificationBusinessLogic, initialState: UserAutentification.ViewControllerState = .loading) {
         self.interactor = interactor
@@ -25,25 +33,26 @@ class UserAutentificationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserAutentificationView(frame: UIScreen.main.bounds)
+        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self)
         self.view = view
         // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        showModule()
+        print("UserAutentificationViewController.viewDidLoad")
+        display(newState: state)
     }
 
     // MARK: Do something
-    func showModule() {
-        let request = UserAutentification.ShowModule.Request()
-        interactor.showModule(request: request)
+    func login(number : String) {
+        let request = UserAutentification.Login.Request(form: UserAutentification.UserAutentificationRequest(phoneNumner: number))
+        interactor.login(request: request)
     }
 }
 
 extension UserAutentificationViewController: UserAutentificationDisplayLogic {
-    func displaySomething(viewModel: UserAutentification.Something.ViewModel) {
+    func displaySomething(viewModel: UserAutentification.Login.ViewModel) {
         display(newState: viewModel.state)
     }
 
@@ -52,19 +61,24 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
         switch state {
         case .loading:
             print("loading...")
+            customView?.showLoading()
         case let .error(message):
             print("error \(message)")
-        case let .result(items):
-            print("result: \(items)")
-        case .emptyResult:
-            print("empty result")
+            customView?.showError(message: message)
+        case .success:
+            dismiss(animated: true, completion: nil)
+            router?.openViewController(toView: MyViewController.user)
+        case .notRegistred:
+            dismiss(animated: true, completion: nil)
+            router?.openViewController(toView: MyViewController.registration)
         }
     }
 }
 
 
-extension UserAutentificationViewController :ButtonDelegate {
-    @objc func didTapLoginButton() {
-        dismiss(animated: true, completion: nil)
+extension UserAutentificationViewController : LoginButtonDelegate {
+    func didTapLoginButton(number : String) {
+        login(number: number)
+        //dismiss(animated: true, completion: nil)
     }
 }

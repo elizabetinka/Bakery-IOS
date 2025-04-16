@@ -12,16 +12,8 @@ class CommonTableDelegate: NSObject, UITableViewDelegate {
 
     weak var delegate: CommonViewControllerDelegate?
 
-    var representableViewModel: CommonViewModel?
-
-    init(viewModel: CommonViewModel? = nil) {
-        representableViewModel = viewModel
-    }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         defer { tableView.deselectRow(at: indexPath, animated: true) }
-
-        guard let viewModel = representableViewModel else { return }
         
         if (indexPath.section == 0){
             delegate?.openUser()

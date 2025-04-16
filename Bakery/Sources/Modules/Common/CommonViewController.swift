@@ -6,7 +6,8 @@
 import UIKit
 
 protocol CommonDisplayLogic: AnyObject {
-    func displayModule(viewModel: Common.ShowModule.ViewModel)
+    func displayUserInfo(viewModel: Common.ShowUserInfo.ViewModel)
+    func displayItem(viewModel: Common.ShowItem.ViewModel)
 }
 
 protocol CommonRouterAppearance: AnyObject {
@@ -20,7 +21,9 @@ protocol CommonViewControllerDelegate: AnyObject {
 
 class CommonViewController: UIViewController {
     let interactor: CommonBusinessLogic
-    var state: Common.ViewControllerState
+
+    var userState: Common.ShowUserInfo.ViewControllerState
+    var itemState: Common.ShowItem.ViewControllerState
     weak var router: TabBarRouterProtocol?
     
     private let commonTableDataSource: CommonTableDataSource = CommonTableDataSource()
@@ -29,9 +32,11 @@ class CommonViewController: UIViewController {
     lazy var customView = self.view as? CommonView
         
 
-    init(interactor: CommonBusinessLogic, initialState: Common.ViewControllerState = .loading) {
+    init(interactor: CommonBusinessLogic,  userInitialState: Common.ShowUserInfo.ViewControllerState = .loading, itemInitialState: Common.ShowItem.ViewControllerState = .loading) {
         self.interactor = interactor
-        self.state = initialState
+
+        self.userState = userInitialState
+        self.itemState = itemInitialState
         super.init(nibName: nil, bundle: nil)
         
         commonTableDelegate.delegate = self
@@ -50,49 +55,70 @@ class CommonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        showModule()
+        print("CommonViewController: viewDidLoad")
+        display(newState: userState)
+        display(newState: itemState)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("View frame: \(view.frame)")
         view.bounds = view.safeAreaLayoutGuide.layoutFrame
-        print("View frame2: \(view.frame)")
     }
 
     // MARK: Do something
-    func showModule() {
-        let request = Common.ShowModule.Request()
-        interactor.getInformation(request: request)
+    func showUserInfo() {
+        let request = Common.ShowUserInfo.Request()
+        interactor.showUserInfo(request: request)
+    }
+    
+    func showItem() {
+        let request = Common.ShowItem.Request()
+        interactor.showItem(request: request)
     }
     
 
 }
 
 extension CommonViewController: CommonDisplayLogic {
-    func displayModule(viewModel: Common.ShowModule.ViewModel) {
+    func displayUserInfo(viewModel: Common.ShowUserInfo.ViewModel) {
         display(newState: viewModel.state)
     }
-
-    func display(newState: Common.ViewControllerState) {
-        state = newState
-        switch state {
+    
+    func displayItem(viewModel: Common.ShowItem.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    
+    func display(newState: Common.ShowUserInfo.ViewControllerState) {
+        userState = newState
+        switch userState {
         case .loading:
-            print("loading...")
-            customView?.showLoading()
-            showModule()
+            customView?.showUserLoading()
+            showUserInfo()
         case let .error(message):
             print("error \(message)")
             customView?.showError(message: message)
         case let .authorizedResult(viewModel):
-            print("authorizedResult")
-            commonTableDelegate.representableViewModel = viewModel
-            commonTableDataSource.representableViewModel = viewModel
+            commonTableDataSource.setUserModel(viewModel)
+        case .notAuthorized:
+            commonTableDataSource.setUserModel(nil)
             customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
-        case let .notAuthorizedResult(viewModel):
-            print("not authorizedResult")
-            commonTableDelegate.representableViewModel = viewModel
-            commonTableDataSource.representableViewModel = viewModel
+        }
+    }
+    
+    func display(newState: Common.ShowItem.ViewControllerState) {
+        itemState = newState
+        switch itemState {
+        case .loading:
+            customView?.showItemLoading()
+            showItem()
+        case let .error(message):
+            print("error \(message)")
+            customView?.showError(message: message)
+        case let .result(viewModel):
+            commonTableDataSource.setItemModel(viewModel)
+            customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
+        case .emptyResult:
+            commonTableDataSource.setItemModel(nil)
             customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
         }
     }
@@ -119,17 +145,20 @@ extension CommonViewController : CommonRouterAppearance {
 
 extension CommonViewController: CommonViewControllerDelegate {
     func openMenu() {
-        router?.openViewController(myView: MyViewController.menu)
+        router?.openViewController(toView: MyViewController.menu)
     }
     
     func openUser() {
-        router?.openViewController(myView: MyViewController.user)
+        router?.openViewController(toView: MyViewController.user)
     }
 }
 
 extension CommonViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
-        display(newState: .loading)
+        userState = .loading
+        itemState = .loading
+        display(newState: userState)
+        display(newState: itemState)
     }
 }
 

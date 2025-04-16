@@ -5,7 +5,7 @@
 
 enum User {
     // MARK: Use cases
-    enum ShowModule {
+    enum ShowUserInfo {
         struct Request {
         }
 
@@ -21,12 +21,13 @@ enum User {
     enum UserRequestResult {
         case failure(UserError)
         case success(UserModel)
+        case notAuthorized
     }
 
     enum ViewControllerState {
         case loading
         case result(UserInfoViewModel)
-        case auth
+        case notAuthorized
         case error(message: String)
     }
 

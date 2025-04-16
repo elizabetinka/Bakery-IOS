@@ -4,64 +4,64 @@
 //
 
 protocol CommonBusinessLogic {
-    func getInformation(request: Common.ShowModule.Request)
+    func showUserInfo(request: Common.ShowUserInfo.Request)
+    func showItem(request: Common.ShowItem.Request)
 }
 
 /// Класс для описания бизнес-логики модуля Common
 class CommonInteractor: CommonBusinessLogic {
     let presenter: CommonPresentationLogic
     let provider: CommonProviderProtocol
-    let authWorker: AuthChekerWorker
-    let userWorker: UserWorker
 
-    init(presenter: CommonPresentationLogic, provider: CommonProviderProtocol = CommonProvider(), authWorker : AuthChekerWorker, userWorker: UserWorker) {
+    init(presenter: CommonPresentationLogic, provider: CommonProviderProtocol = CommonProvider()) {
         self.presenter = presenter
         self.provider = provider
-        self.authWorker = authWorker
-        self.userWorker = userWorker
     }
     
     // MARK: Do something
-    func getInformation(request: Common.ShowModule.Request) {
+    func showUserInfo(request: Common.ShowUserInfo.Request) {
         
-        //let result: Common.CommonRequestResult
-//        var isAuth : Bool
-        
-        
-//        authWorker.isAuth { (isAuthRes, error) in
-//            let result: Common.CommonRequestResult
-//            if let error = error {
-//                result = .failure(.someError(message: error.localizedDescription))
-//                self.presenter.presentModule(response: Common.ShowModule.Response(result: result))
-//            }
-//            if let isAuthUnwrapped = isAuthRes {
-//                isAuth = isAuthUnwrapped
-//            }
-//        }
-        
-        var userInfo : CommonModel.UserInfo? = nil
-        
-        userWorker.getInfo { (info, error) in
-            let result: Common.CommonRequestResult
+        provider.getCurrentUserInfo { (info, error) in
+            let result: Common.ShowUserInfo.CommonRequestResult
             if let error = error {
-                result = .failure(.someError(message: error.localizedDescription))
-                self.presenter.presentModule(response: Common.ShowModule.Response(result: result))
+                switch error {
+                case .notAuthorized:
+                    result = .notAuthorized
+                case let .getUserFailed(underlyingError):
+                    result = .failure(.someError(message: error.localizedDescription))
+                default:
+                    result = .failure(.someError(message: "No Data"))
+                }
             }
-            if let info = info {
-                userInfo = CommonModel.UserInfo(name: info.name, points: info.points)
+            else if let info = info {
+                result = .success(info)
             }
+            else {
+                result = .failure(.someError(message: "No Data"))
+            }
+            self.presenter.presentUserInfo(response: Common.ShowUserInfo.Response(result: result))
         }
+    }
+    
+    func showItem(request: Common.ShowItem.Request) {
         
-        provider.getImage { (image, error) in
-            let result: Common.CommonRequestResult
-            if let image = image {
-                result = .success(CommonModel(userInfo: userInfo, menuImage: image))
+        provider.getRandomItem { (item, error) in
+            let result: Common.ShowItem.CommonRequestResult
+            if let image = item {
+                result =  .success(image)
             } else if let error = error {
-                result = .failure(.someError(message: error.localizedDescription))
+                switch error {
+                case let .getItemFailed(underlyingError):
+                    result = .failure(.someError(message: error.localizedDescription))
+                case .emptyData:
+                    result = .emptyResult
+                default:
+                    result = .failure(.someError(message: "No Data"))
+                }
             } else {
                 result = .failure(.someError(message: "No Data"))
             }
-            self.presenter.presentModule(response: Common.ShowModule.Response(result: result))
+            self.presenter.presentItem(response: Common.ShowItem.Response(result: result))
         }
     }
 }

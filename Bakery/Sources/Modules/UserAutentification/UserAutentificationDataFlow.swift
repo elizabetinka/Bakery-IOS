@@ -5,37 +5,10 @@
 
 enum UserAutentification {
     // MARK: Use cases
-    enum ShowModule {
-        struct Request {
-        }
-
-        struct Response {
-            var result: UserAutentificationShowModuleResult
-        }
-
-        struct ViewModel {
-            var state: ViewControllerState
-        }
-    }
     
-    enum UserAutentificationShowModuleResult {
-        case failure(UserAutentificationError)
-        case success
-    }
-
-    enum ViewControllerState {
-        case loading
-        case result
-        case error(message: String)
-    }
-
-    enum UserAutentificationError: Error {
-        case someError(message: String)
-    }
-    
-    enum InterAuthInformation {
+    enum Login {
         struct Request {
-            var phoneNumner : String
+            var form : UserAutentificationRequest
         }
 
         struct Response {
@@ -46,10 +19,26 @@ enum UserAutentification {
             var state: ViewControllerState
         }
     }
-
+    
+    struct UserAutentificationRequest{
+        let phoneNumner : String
+    }
+    
+    enum UserAutentificationError: Error {
+        case someError(message: String)
+    }
     
     enum UserAutentificationRequestResult {
         case failure(UserAutentificationError)
-        case success([UserAutentificationModel])
+        case success
+        case notRegistred
     }
+    
+    enum ViewControllerState {
+        case loading
+        case success
+        case notRegistred
+        case error(message: String)
+    }
+
 }

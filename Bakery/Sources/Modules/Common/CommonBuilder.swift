@@ -7,10 +7,12 @@ import UIKit
 
 class CommonBuilder: ModuleBuilder {
 
-    var initialState: Common.ViewControllerState?
+    var userInitialState: Common.ShowUserInfo.ViewControllerState?
+    var itemInitialState: Common.ShowItem.ViewControllerState?
 
-    func set(initialState: Common.ViewControllerState) -> CommonBuilder {
-        self.initialState = initialState
+    func set(userInitialState: Common.ShowUserInfo.ViewControllerState, itemInitialState: Common.ShowItem.ViewControllerState) -> CommonBuilder {
+        self.itemInitialState = itemInitialState
+        self.userInitialState = userInitialState
         return self
     } 
 

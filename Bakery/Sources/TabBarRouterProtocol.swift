@@ -13,10 +13,12 @@ enum MyViewController{
     case user
     case menu
     case authentification
+    case registration
+    case itemDetails(itemId: UniqueIdentifier)
 }
 
 protocol TabBarRouterProtocol  : AnyObject {
     var tabBarController: UITabBarController { get }
     func start()
-    func openViewController(myView : MyViewController)
+    func openViewController(toView : MyViewController)
 }

@@ -6,7 +6,7 @@
 import UIKit
 
 protocol UserDisplayLogic: AnyObject {
-    func displayModule(viewModel: User.ShowModule.ViewModel)
+    func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel)
 }
 
 protocol UserRouterAppearance: AnyObject {
@@ -41,26 +41,24 @@ class UserViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("User view DidLoad")
-        showModule()
+        print("UserViewController viewDidLoad")
+        display(newState: state)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("View frame: \(view.frame)")
         view.bounds = view.safeAreaLayoutGuide.layoutFrame
-        print("View frame2: \(view.frame)")
     }
 
     // MARK: Do something
-    func showModule() {
-        let request = User.ShowModule.Request()
-        interactor.showModule(request: request)
+    func showUserInfo() {
+        let request = User.ShowUserInfo.Request()
+        interactor.showUserInfo(request: request)
     }
 }
 
 extension UserViewController: UserDisplayLogic {
-    func displayModule(viewModel: User.ShowModule.ViewModel) {
+    func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel) {
         display(newState: viewModel.state)
     }
 
@@ -70,7 +68,7 @@ extension UserViewController: UserDisplayLogic {
         case .loading:
             print("loading...")
             customView?.showLoading()
-            showModule()
+            showUserInfo()
         case let .error(message):
             print("error \(message)")
             customView?.showError(message: message)
@@ -78,9 +76,9 @@ extension UserViewController: UserDisplayLogic {
             print("print info")
             customView?.presentUserInfo(userInfo: info)
             //customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
-        case .auth:
+        case .notAuthorized:
             print("need auth")
-            router?.openViewController(myView: MyViewController.authentification)
+            router?.openViewController(toView: MyViewController.authentification)
         }
     }
 }

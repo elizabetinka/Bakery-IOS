@@ -62,8 +62,8 @@ class UserCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with cellPresentable: CommonViewModel) {
-        if let unwrapped = cellPresentable.userInfo {
+    func configure(with cellPresentable: CommonUserViewModel?) {
+        if let unwrapped = cellPresentable {
             nameLabel.text = unwrapped.name
             pointsLabel.text = String(unwrapped.points)
         }

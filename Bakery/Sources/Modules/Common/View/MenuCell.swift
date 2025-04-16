@@ -17,6 +17,7 @@ extension MenuCell {
         let labelLeftOffset: CGFloat = 8
         let favoriteIconHeight: CGFloat = 30
         let favoriteIconRightOffset: CGFloat = -8
+        let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
     }
 }
 
@@ -55,8 +56,13 @@ class MenuCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with cellPresentable: CommonViewModel) {
-        myImageView.image = cellPresentable.menuImage
+    func configure(with cellPresentable: CommonItemViewModel?) {
+        if let unwrapped = cellPresentable {
+            myImageView.image = unwrapped.menuImage
+        }
+        else{
+            myImageView.image = UIImage()
+        }
     }
 
     
