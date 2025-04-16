@@ -10,13 +10,37 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var tabBarRouter: TabBarRouterProtocol?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+                window = UIWindow(windowScene: windowScene)
+//                let placesViewController = UserBuilder().build()
+//                let navigationController = UINavigationController(rootViewController: placesViewController)
+//        
+//                let appearance = UINavigationBarAppearance()
+//                    appearance.configureWithOpaqueBackground()
+//                    appearance.backgroundColor = .white // или другой желаемый цвет
+//                    navigationController.navigationBar.standardAppearance = appearance
+//                    navigationController.navigationBar.scrollEdgeAppearance = appearance
+//
+//                navigationController.navigationBar.isTranslucent = false
+//                window?.rootViewController = navigationController
+//                window?.makeKeyAndVisible()
+        
+        // Инициализация TabBarRouter и запуск
+                let router = TabBarRouter()
+                router.start()
+                tabBarRouter = router
+                
+                // Установка таб-бара как корневого контроллера
+                window?.rootViewController = router.tabBarController
+                window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
