@@ -5,6 +5,7 @@
 
 protocol UserAutentificationBusinessLogic {
     func login(request: UserAutentification.Login.Request)
+    func validatePhoneNumber(number: String) -> Bool
 }
 
 /// Класс для описания бизнес-логики модуля UserAutentification
@@ -42,6 +43,10 @@ class UserAutentificationInteractor: UserAutentificationBusinessLogic {
             self.presenter.presentLoginResult(response: UserAutentification.Login.Response(result: result))
         }
             
+    }
+    
+    func validatePhoneNumber(number: String) -> Bool{
+        return number.isValidPhone(AppConfig.phoneRegex)
     }
     
 }

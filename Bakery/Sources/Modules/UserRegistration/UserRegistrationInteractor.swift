@@ -5,6 +5,8 @@
 
 protocol UserRegistrationBusinessLogic {
     func registration(request: UserRegistration.Registration.Request)
+    func validatePhoneNumber(number: String) -> Bool
+    func validateName(name: String) -> Bool
 }
 
 /// Класс для описания бизнес-логики модуля UserRegistration
@@ -26,7 +28,7 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
             var result: UserRegistration.UserRegistrationRequestResult
             if let error = error {
                 switch error {
-                case let .getUserFailed(underlyingError):
+                case .getUserFailed(_):
                     result = .failure(.someError(message: error.localizedDescription))
                 case .alreadyExists:
                     result = .alreadyExists
@@ -43,5 +45,13 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
             self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
         }
         
+    }
+    
+    func validatePhoneNumber(number: String) -> Bool{
+        return number.isValidPhone(AppConfig.phoneRegex)
+    }
+    
+    func validateName(name: String) -> Bool{
+        return name.isEmpty == false
     }
 }

@@ -13,13 +13,18 @@ protocol UserRegistrationDisplayLogic: AnyObject {
     func displaySomething(viewModel: UserRegistration.Registration.ViewModel)
 }
 
+protocol UserRegistrationValidateDelegate: AnyObject {
+    func validatePhoneNumber(number: String)
+    func validateName(name: String)
+}
+
 class UserRegistrationViewController: UIViewController {
     let interactor: UserRegistrationBusinessLogic
     var state: UserRegistration.ViewControllerState
     
     weak var router: TabBarRouterProtocol?
     
-    lazy var customView = self.view as? UserRegistrationView
+    lazy var customView = self.view as? UserRegistrationViewProtocol
 
     init(interactor: UserRegistrationBusinessLogic, initialState: UserRegistration.ViewControllerState = .loading) {
         self.interactor = interactor
@@ -33,9 +38,8 @@ class UserRegistrationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserRegistrationView(frame: UIScreen.main.bounds, delegate: self, refreshDelegate: self)
+        let view = UserRegistrationView(frame: UIScreen.main.bounds, delegate: self, refreshDelegate: self, validateDelegate: self)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -83,3 +87,16 @@ extension UserRegistrationViewController : RegistrationButtonDelegate {
         registration(number: number, name: name)
     }
 }
+
+extension  UserRegistrationViewController: UserRegistrationValidateDelegate {
+    func validateName(name: String) {
+        let isValid = interactor.validateName(name: name)
+        customView?.validatedName(isValid: isValid)
+    }
+    
+    func validatePhoneNumber(number: String) {
+        let isValid = interactor.validatePhoneNumber(number: number)
+        customView?.validatedPhone(isValid: isValid)
+    }
+}
+

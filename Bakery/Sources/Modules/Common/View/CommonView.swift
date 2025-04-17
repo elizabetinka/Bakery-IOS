@@ -15,11 +15,6 @@ extension CommonView {
 
 class CommonView: UIView {
     let appearance = Appearance()
-
-//    fileprivate(set) lazy var customView: UIView = {
-//        let view = UIView()
-//        return view
-//    }()
     
     fileprivate(set) lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .plain)
@@ -33,13 +28,6 @@ class CommonView: UIView {
         }()
 
     weak var refreshActionsDelegate: ErrorViewDelegate?
-    
-//    private lazy var tableBackgroundView: UIView = UIView()
-//    
-//    fileprivate(set) lazy var userInfoView: UIView = {
-//        let view = UIView()
-//        return view
-//    }()
 
 
     init(frame: CGRect = CGRect.zero, tableDataSource: UITableViewDataSource,

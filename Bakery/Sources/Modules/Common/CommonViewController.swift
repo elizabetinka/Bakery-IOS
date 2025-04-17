@@ -164,21 +164,3 @@ extension CommonViewController: ErrorViewDelegate {
     }
 }
 
-//
-//extension CommonViewController : CommonRouterLogic {
-//    
-//    func applyTabBarSettigs() {
-//        let tabBarSetting  = TabBarSetting()
-//        tabBarItem = UITabBarItem(
-//            title: tabBarSetting.tabBarTitle,
-//            image: tabBarSetting.image,
-//            selectedImage: tabBarSetting.selectedImage)
-//    }
-//    
-//    struct TabBarSetting {
-//        let tabBarTitle = String("профиль")
-//        let image = UIImage(systemName: "person")
-//        let selectedImage = UIImage(systemName: "person.fill")
-//    }
-//}
-

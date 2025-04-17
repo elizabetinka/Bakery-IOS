@@ -9,38 +9,18 @@ import Foundation
 import UIKit
 
 extension TabBarRouter {
-    struct Appearance {
-        let backgroundColor=UIColor.white
-        let tabBarBackgroundColor=UIColor.appPink
-        let activeTintColor: UIColor = .white
-        let inactiveTintColor: UIColor = .appPink
+    struct LocalAppearance {
+        static let tabBarBackgroundColor=UIColor.appPink
+        static let activeTintColor: UIColor = .white
+        static let inactiveTintColor: UIColor = .appPink
         
     }
     
     func applyApperance() {
-        let appearance = Appearance()
-        
-        
-        lazy var tabBarAppearance: UITabBarAppearance = {
-            let appearance = Appearance()
-            let tabBarAppearance = UITabBarAppearance()
-            tabBarAppearance.configureWithOpaqueBackground()
-            tabBarAppearance.backgroundColor = appearance.backgroundColor
-            tabBarAppearance.stackedLayoutAppearance.selected.iconColor = appearance.activeTintColor
-            tabBarAppearance.stackedLayoutAppearance.normal.iconColor = appearance.inactiveTintColor
-            return tabBarAppearance
-        }()
-        
-       
-        tabBarController.view.backgroundColor = appearance.backgroundColor
-        tabBarController.tabBar.tintColor = appearance.activeTintColor
-        tabBarController.tabBar.barTintColor = appearance.inactiveTintColor
-        tabBarController.tabBar.backgroundColor = appearance.tabBarBackgroundColor
-        
-//        tabBarController.tabBar.standardAppearance = tabBarAppearance
-//        if #available(iOS 15.0, *) {
-//            tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
-//        }
+        Appearance.mainViewApplyAppereance(view: tabBarController.view)
+        tabBarController.tabBar.tintColor = LocalAppearance.activeTintColor
+        tabBarController.tabBar.barTintColor = LocalAppearance.inactiveTintColor
+        tabBarController.tabBar.backgroundColor = LocalAppearance.tabBarBackgroundColor
     }
 }
 
@@ -109,14 +89,12 @@ class TabBarRouter: TabBarRouterProtocol {
             let authController = UserAutentificationBuilder().set(router: self).build()
             authController.modalPresentationStyle = .overFullScreen // Это позволяет экрану накладываться поверх текущего
             authController.modalTransitionStyle = .coverVertical
-            print("open Autentification")
-            //tabBarController.viewControllers?[tabBarController.selectedIndex].present(authController, animated: true, completion: nil)
-            
+
             if let sheet = authController.sheetPresentationController {
-                sheet.detents = [.medium(), .large()]  // или .custom(...) на iOS 16+
-                sheet.prefersGrabberVisible = true     // показывает "граббер" наверху
+                sheet.detents = [.medium(), .large()]
+                sheet.prefersGrabberVisible = true
             }
-            // Важно указать стиль:
+            
             authController.modalPresentationStyle = .pageSheet
             
             tabBarController.present(authController, animated: true, completion: nil)
@@ -125,16 +103,13 @@ class TabBarRouter: TabBarRouterProtocol {
     func openRegistration(){
         openViewController(toView: .home)
         let regController = UserRegistrationBuilder().set(router: self).build()
-        regController.modalPresentationStyle = .overFullScreen // Это позволяет экрану накладываться поверх текущего
+        regController.modalPresentationStyle = .overFullScreen
         regController.modalTransitionStyle = .coverVertical
-        print("open Registration")
-        //tabBarController.viewControllers?[tabBarController.selectedIndex].present(authController, animated: true, completion: nil)
-        
+       
         if let sheet = regController.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]  // или .custom(...) на iOS 16+
-            sheet.prefersGrabberVisible = true     // показывает "граббер" наверху
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
         }
-        // Важно указать стиль:
         regController.modalPresentationStyle = .pageSheet
         
         tabBarController.present(regController, animated: true, completion: nil)

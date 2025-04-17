@@ -25,7 +25,7 @@ class UserInteractor: UserBusinessLogic {
 
             if let error = error {
                 switch error {
-                case let .getUserFailed(underlyingError):
+                case .getUserFailed(_):
                     result = .failure(.someError(message: error.localizedDescription))
                 case .notAuthorized:
                     result = .notAuthorized

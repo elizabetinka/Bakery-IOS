@@ -35,8 +35,6 @@ class UserViewController: UIViewController {
         let view = UserView(refreshDelegate: self)
         
         self.view = view
-        
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -82,7 +80,6 @@ extension UserViewController: UserDisplayLogic {
         case let .result(info):
             print("print info")
             customView?.presentUserInfo(userInfo: info)
-            //customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
         case .notAuthorized:
             print("need auth")
             router?.openViewController(toView: MyViewController.authentification)
