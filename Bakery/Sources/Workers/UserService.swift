@@ -18,13 +18,26 @@ enum UserServiceError: Error {
     case notExists
     case alreadyExists
 }
+
+extension UserServiceError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case let .getUserFailed(underlyingError):
+            return NSLocalizedString(underlyingError.localizedDescription, comment: "")
+        case .notExists:
+            return NSLocalizedString("Такого пользователя нет", comment: "")
+        case .alreadyExists:
+            return NSLocalizedString("Пользователь с таким номером уже существует", comment: "")
+        }
+    }
+}
 /// Получает данные для модуля Menu
 class UserService: UserServiceProtocol {
     static let shared = UserService()
     private init() {}
     
-    private var lastId : UniqueIdentifier = 0;
-    private var users: [UserModel] = [UserModel(uid: 0, name: "Елизавета Кравченкова", points: 1000, phoneNumner: "1233444567")]
+    private var lastId : UniqueIdentifier = 1;
+    private var users: [UserModel] = [UserModel(uid: 1, name: "Елизавета Кравченкова", points: 1000, phoneNumner: "1233444567")]
     
     func fetchUsers(completion: @escaping ([UserModel]?, UserServiceError?) -> Void) {
         completion(users, nil)

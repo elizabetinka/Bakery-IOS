@@ -57,7 +57,7 @@ class TabBarRouter: TabBarRouterProtocol {
         case.authentification:
             openAutentification()
         case .registration:
-            selectTab(at: 0)
+            openRegistration()
         case let .itemDetails(itemId):
             openItemDetails(itemId: itemId)
         }
@@ -121,6 +121,24 @@ class TabBarRouter: TabBarRouterProtocol {
             
             tabBarController.present(authController, animated: true, completion: nil)
         }
+    
+    func openRegistration(){
+        openViewController(toView: .home)
+        let regController = UserRegistrationBuilder().set(router: self).build()
+        regController.modalPresentationStyle = .overFullScreen // Это позволяет экрану накладываться поверх текущего
+        regController.modalTransitionStyle = .coverVertical
+        print("open Registration")
+        //tabBarController.viewControllers?[tabBarController.selectedIndex].present(authController, animated: true, completion: nil)
+        
+        if let sheet = regController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]  // или .custom(...) на iOS 16+
+            sheet.prefersGrabberVisible = true     // показывает "граббер" наверху
+        }
+        // Важно указать стиль:
+        regController.modalPresentationStyle = .pageSheet
+        
+        tabBarController.present(regController, animated: true, completion: nil)
+    }
     
     func openItemDetails(itemId: UniqueIdentifier){
         let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).set(router: self).build()

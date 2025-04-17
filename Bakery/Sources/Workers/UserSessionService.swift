@@ -20,7 +20,7 @@ class UserSessionService: UserSessionServiceProtocol {
     var currentUserId : UniqueIdentifier? = nil;
     
     func getCurrentUserId() -> UniqueIdentifier? {
-        currentUserId
+       return currentUserId
     }
     
     func setCurrentUserId(id: UniqueIdentifier){

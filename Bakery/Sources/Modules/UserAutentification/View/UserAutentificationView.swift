@@ -18,12 +18,6 @@ class UserAutentificationView: UIView {
     weak var buttonDelegate: LoginButtonDelegate?
     weak var refreshActionsDelegate: ErrorViewDelegate?
     
-    lazy var errorView: ErrorView = {
-        let view = ErrorView()
-            view.delegate = self.refreshActionsDelegate
-            return view
-    }()
-    
 
     init(frame: CGRect = CGRect.zero, delegate: LoginButtonDelegate, refreshDelegate: ErrorViewDelegate) {
         buttonDelegate=delegate
@@ -61,7 +55,6 @@ class UserAutentificationView: UIView {
 
     func showLoading() {
         errorView.isHidden = true
-        phoneTextField.placeholder = "+7"
     }
     
     func showError(message: String) {
@@ -83,6 +76,11 @@ class UserAutentificationView: UIView {
     }
     
     
+    lazy private var errorView: ErrorView = {
+        let view = ErrorView()
+            view.delegate = self.refreshActionsDelegate
+            return view
+    }()
     
     lazy private var scrollView = UIScrollView()
     
@@ -228,20 +226,29 @@ class UserAutentificationView: UIView {
             )
         }
 
+    private var isKeyoardShown: Bool = false
+
         @objc private func keyboardWillShow(_ notification: Notification) {
             if let userInfo = notification.userInfo,
             let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-                frame.origin.y -= keyboardFrame.height
+                
+                if !isKeyoardShown {
+                    frame.origin.y -= keyboardFrame.height
+                }
+                isKeyoardShown = true
+                
             }
         }
 
         @objc private func keyboardWillHide(_ notification: Notification) {
             frame.origin.y = 0
+            isKeyoardShown = false
         }
     
         @objc private func dismissKeyboard() {
             endEditing(true)
             frame.origin.y = 0
+            isKeyoardShown = false
         }
     
 }

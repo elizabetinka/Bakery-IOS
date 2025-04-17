@@ -132,12 +132,14 @@ extension CommonViewController : CommonRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("главная")
         let image = UIImage(systemName: "house")
         let selectedImage = UIImage(systemName: "house.fill")
+        let title = "главная"
     }
     
 }

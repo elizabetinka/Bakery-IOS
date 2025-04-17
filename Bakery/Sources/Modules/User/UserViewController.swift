@@ -32,7 +32,7 @@ class UserViewController: UIViewController {
     // MARK: View lifecycle
     override func loadView() {
         print("Loading User view")
-        let view = UserView()
+        let view = UserView(refreshDelegate: self)
         
         self.view = view
         
@@ -47,6 +47,7 @@ class UserViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
+            state = .loading
             display(newState: state)
             print("UserViewController viewWillAppear")
         }
@@ -98,12 +99,14 @@ extension UserViewController : UserRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("профиль")
         let image = UIImage(systemName: "person")
         let selectedImage = UIImage(systemName: "person.fill")
+        let title = "профиль"
     }
     
 }

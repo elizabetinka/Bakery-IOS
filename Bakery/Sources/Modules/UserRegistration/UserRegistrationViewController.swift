@@ -33,7 +33,7 @@ class UserRegistrationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserRegistrationView(frame: UIScreen.main.bounds, delegate: self)
+        let view = UserRegistrationView(frame: UIScreen.main.bounds, delegate: self, refreshDelegate: self)
         self.view = view
         // make additional setup of view or save references to subviews
     }
@@ -61,6 +61,7 @@ extension UserRegistrationViewController: UserRegistrationDisplayLogic {
         switch state {
         case .loading:
             print("loading...")
+            customView?.showLoading()
         case let .error(message):
             print("error \(message)")
             customView?.showError(message: message)
