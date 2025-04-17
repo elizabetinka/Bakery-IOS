@@ -11,11 +11,36 @@ import UIKit
 extension TabBarRouter {
     struct Appearance {
         let backgroundColor=UIColor.white
+        let tabBarBackgroundColor=UIColor.appPink
+        let activeTintColor: UIColor = .white
+        let inactiveTintColor: UIColor = .appPink
+        
     }
     
     func applyApperance() {
         let appearance = Appearance()
+        
+        
+        lazy var tabBarAppearance: UITabBarAppearance = {
+            let appearance = Appearance()
+            let tabBarAppearance = UITabBarAppearance()
+            tabBarAppearance.configureWithOpaqueBackground()
+            tabBarAppearance.backgroundColor = appearance.backgroundColor
+            tabBarAppearance.stackedLayoutAppearance.selected.iconColor = appearance.activeTintColor
+            tabBarAppearance.stackedLayoutAppearance.normal.iconColor = appearance.inactiveTintColor
+            return tabBarAppearance
+        }()
+        
+       
         tabBarController.view.backgroundColor = appearance.backgroundColor
+        tabBarController.tabBar.tintColor = appearance.activeTintColor
+        tabBarController.tabBar.barTintColor = appearance.inactiveTintColor
+        tabBarController.tabBar.backgroundColor = appearance.tabBarBackgroundColor
+        
+//        tabBarController.tabBar.standardAppearance = tabBarAppearance
+//        if #available(iOS 15.0, *) {
+//            tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
+//        }
     }
 }
 
@@ -41,26 +66,25 @@ class TabBarRouter: TabBarRouterProtocol {
     
     
     let tabBarController: UITabBarController
-    lazy var authController = UserAutentificationBuilder().build()
 
     init() {
         self.tabBarController = UITabBarController()
-        applyApperance()
     }
     
     func start() {
 
-        let mainVC = CommonBuilder().build()
+        let mainVC = CommonBuilder().set(router: self).build()
         if let routerApperance = mainVC as? CommonRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
+    
         
-        let menuVC = MenuBuilder().build()
+        let menuVC = MenuBuilder().set(router: self).build()
         if let routerApperance = menuVC as? MenuRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
         
-        let userVC = UserBuilder().build()
+        let userVC = UserBuilder().set(router: self).build()
         if let routerApperance = userVC as? UserRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
@@ -70,6 +94,7 @@ class TabBarRouter: TabBarRouterProtocol {
         let userNavController = UINavigationController(rootViewController: userVC)
         
         tabBarController.viewControllers = [mainNavController, menuNavController, userNavController]
+        applyApperance()
     }
     
     func selectTab(at index: Int) {
@@ -80,15 +105,25 @@ class TabBarRouter: TabBarRouterProtocol {
     }
         
         func openAutentification(){
+            openViewController(toView: .home)
+            let authController = UserAutentificationBuilder().set(router: self).build()
             authController.modalPresentationStyle = .overFullScreen // Это позволяет экрану накладываться поверх текущего
             authController.modalTransitionStyle = .coverVertical
-            if let curViewController = tabBarController.viewControllers?[tabBarController.selectedIndex] {
-                curViewController.present(authController, animated: true, completion: nil)
+            print("open Autentification")
+            //tabBarController.viewControllers?[tabBarController.selectedIndex].present(authController, animated: true, completion: nil)
+            
+            if let sheet = authController.sheetPresentationController {
+                sheet.detents = [.medium(), .large()]  // или .custom(...) на iOS 16+
+                sheet.prefersGrabberVisible = true     // показывает "граббер" наверху
             }
+            // Важно указать стиль:
+            authController.modalPresentationStyle = .pageSheet
+            
+            tabBarController.present(authController, animated: true, completion: nil)
         }
     
     func openItemDetails(itemId: UniqueIdentifier){
-        let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).build()
+        let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).set(router: self).build()
         
         if let routerApperance = detailsVC as? MenuDetailsRouterAppearance {
             routerApperance.applyRouterSettigs()

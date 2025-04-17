@@ -68,6 +68,7 @@
 		0B42DB142DAEEC5700540BCE /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DB132DAEEC5700540BCE /* UserModel.swift */; };
 		0B42DB162DAEEDC700540BCE /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DB152DAEEDC700540BCE /* UserService.swift */; };
 		0B42DB182DAEF11800540BCE /* UserSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DB172DAEF11800540BCE /* UserSessionService.swift */; };
+		0BF1653F2DAFC3F900642319 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BF1653E2DAFC3F900642319 /* logo.png */; };
 		3EFBEF2433547655B1F3DAD9 /* MenuDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CB320D9C4E37709247D435 /* MenuDetailsViewModel.swift */; };
 		40EBE383BD46C6A9D3D4C0F6 /* MenuDetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF59962A3C15B49F9CF42C55 /* MenuDetailsPresenter.swift */; };
 		41323E0E2DA5DEF100E0F3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41323E0D2DA5DEF100E0F3F4 /* AppDelegate.swift */; };
@@ -145,6 +146,7 @@
 		0B42DB132DAEEC5700540BCE /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		0B42DB152DAEEDC700540BCE /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		0B42DB172DAEF11800540BCE /* UserSessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionService.swift; sourceTree = "<group>"; };
+		0BF1653E2DAFC3F900642319 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0D60726B56A03BFADC52F0C0 /* MenuDetailsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuDetailsViewController.swift; sourceTree = "<group>"; };
 		41323E0A2DA5DEF100E0F3F4 /* Bakery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bakery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41323E0D2DA5DEF100E0F3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 				41323E112DA5DEF100E0F3F4 /* ViewController.swift */,
 				41323E132DA5DEF200E0F3F4 /* Main.storyboard */,
 				41323E162DA5DEF500E0F3F4 /* Assets.xcassets */,
+				0BF1653E2DAFC3F900642319 /* logo.png */,
 				41323E182DA5DEF500E0F3F4 /* LaunchScreen.storyboard */,
 				41323E1B2DA5DEF500E0F3F4 /* Info.plist */,
 			);
@@ -571,6 +574,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BF1653F2DAFC3F900642319 /* logo.png in Resources */,
 				41323E1A2DA5DEF500E0F3F4 /* LaunchScreen.storyboard in Resources */,
 				41323E172DA5DEF500E0F3F4 /* Assets.xcassets in Resources */,
 				41323E152DA5DEF200E0F3F4 /* Main.storyboard in Resources */,

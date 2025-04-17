@@ -8,11 +8,17 @@ import UIKit
 class MenuBuilder: ModuleBuilder {
 
     var initialState: Menu.ViewControllerState?
+    var router: TabBarRouterProtocol?
 
     func set(initialState: Menu.ViewControllerState) -> MenuBuilder {
         self.initialState = initialState
         return self
-    } 
+    }
+    
+    func set(router : TabBarRouterProtocol) -> MenuBuilder {
+        self.router = router
+        return self
+    }
 
     func build() -> UIViewController {
         let presenter = MenuPresenter()
@@ -20,6 +26,7 @@ class MenuBuilder: ModuleBuilder {
         let controller = MenuViewController(interactor: interactor)
 
         presenter.viewController = controller
+        controller.router = router
         return controller
     }
 }

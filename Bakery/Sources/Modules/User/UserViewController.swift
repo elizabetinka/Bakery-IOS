@@ -45,6 +45,12 @@ class UserViewController: UIViewController {
         display(newState: state)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            display(newState: state)
+            print("UserViewController viewWillAppear")
+        }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.bounds = view.safeAreaLayoutGuide.layoutFrame

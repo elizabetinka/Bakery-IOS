@@ -33,7 +33,7 @@ class UserAutentificationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self)
+        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self, refreshDelegate: self)
         self.view = view
         // make additional setup of view or save references to subviews
     }
@@ -43,6 +43,11 @@ class UserAutentificationViewController: UIViewController {
         print("UserAutentificationViewController.viewDidLoad")
         display(newState: state)
     }
+    
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        view.bounds = view.safeAreaLayoutGuide.layoutFrame
+//    }
 
     // MARK: Do something
     func login(number : String) {
@@ -78,7 +83,14 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
 
 extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton(number : String) {
+        print("didTapLoginButton: \(number)")
         login(number: number)
         //dismiss(animated: true, completion: nil)
+    }
+}
+
+extension UserAutentificationViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        display(newState: .loading)
     }
 }

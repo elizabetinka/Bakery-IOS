@@ -33,7 +33,7 @@ class UserAutentificationInteractor: UserAutentificationBusinessLogic {
                     result = .failure(.someError(message: "No Data"))
                 }
             }
-            if info != nil {
+            else if info != nil {
                 result = .success
             }
             else {
