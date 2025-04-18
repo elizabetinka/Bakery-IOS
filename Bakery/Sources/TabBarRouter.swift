@@ -9,13 +9,18 @@ import Foundation
 import UIKit
 
 extension TabBarRouter {
-    struct Appearance {
-        let backgroundColor=UIColor.white
+    struct LocalAppearance {
+        static let tabBarBackgroundColor=UIColor.appPink
+        static let activeTintColor: UIColor = .white
+        static let inactiveTintColor: UIColor = .appPink
+        
     }
     
     func applyApperance() {
-        let appearance = Appearance()
-        tabBarController.view.backgroundColor = appearance.backgroundColor
+        Appearance.mainViewApplyAppereance(view: tabBarController.view)
+        tabBarController.tabBar.tintColor = LocalAppearance.activeTintColor
+        tabBarController.tabBar.barTintColor = LocalAppearance.inactiveTintColor
+        tabBarController.tabBar.backgroundColor = LocalAppearance.tabBarBackgroundColor
     }
 }
 
@@ -32,7 +37,7 @@ class TabBarRouter: TabBarRouterProtocol {
         case.authentification:
             openAutentification()
         case .registration:
-            selectTab(at: 0)
+            openRegistration()
         case let .itemDetails(itemId):
             openItemDetails(itemId: itemId)
         }
@@ -41,26 +46,25 @@ class TabBarRouter: TabBarRouterProtocol {
     
     
     let tabBarController: UITabBarController
-    lazy var authController = UserAutentificationBuilder().build()
 
     init() {
         self.tabBarController = UITabBarController()
-        applyApperance()
     }
     
     func start() {
 
-        let mainVC = CommonBuilder().build()
+        let mainVC = CommonBuilder().set(router: self).build()
         if let routerApperance = mainVC as? CommonRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
+    
         
-        let menuVC = MenuBuilder().build()
+        let menuVC = MenuBuilder().set(router: self).build()
         if let routerApperance = menuVC as? MenuRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
         
-        let userVC = UserBuilder().build()
+        let userVC = UserBuilder().set(router: self).build()
         if let routerApperance = userVC as? UserRouterAppearance {
             routerApperance.applyRouterSettigs()
         }
@@ -70,6 +74,7 @@ class TabBarRouter: TabBarRouterProtocol {
         let userNavController = UINavigationController(rootViewController: userVC)
         
         tabBarController.viewControllers = [mainNavController, menuNavController, userNavController]
+        applyApperance()
     }
     
     func selectTab(at index: Int) {
@@ -80,15 +85,38 @@ class TabBarRouter: TabBarRouterProtocol {
     }
         
         func openAutentification(){
+            openViewController(toView: .home)
+            let authController = UserAutentificationBuilder().set(router: self).build()
             authController.modalPresentationStyle = .overFullScreen // Это позволяет экрану накладываться поверх текущего
             authController.modalTransitionStyle = .coverVertical
-            if let curViewController = tabBarController.viewControllers?[tabBarController.selectedIndex] {
-                curViewController.present(authController, animated: true, completion: nil)
+
+            if let sheet = authController.sheetPresentationController {
+                sheet.detents = [.medium(), .large()]
+                sheet.prefersGrabberVisible = true
             }
+            
+            authController.modalPresentationStyle = .pageSheet
+            
+            tabBarController.present(authController, animated: true, completion: nil)
         }
     
+    func openRegistration(){
+        openViewController(toView: .home)
+        let regController = UserRegistrationBuilder().set(router: self).build()
+        regController.modalPresentationStyle = .overFullScreen
+        regController.modalTransitionStyle = .coverVertical
+       
+        if let sheet = regController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        regController.modalPresentationStyle = .pageSheet
+        
+        tabBarController.present(regController, animated: true, completion: nil)
+    }
+    
     func openItemDetails(itemId: UniqueIdentifier){
-        let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).build()
+        let detailsVC = MenuDetailsBuilder().set(initialState: MenuDetails.ViewControllerState.initial(id: itemId)).set(router: self).build()
         
         if let routerApperance = detailsVC as? MenuDetailsRouterAppearance {
             routerApperance.applyRouterSettigs()

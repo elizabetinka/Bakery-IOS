@@ -33,7 +33,6 @@ class MenuDetailsViewController: UIViewController {
     override func loadView() {
         let view = MenuDetailsView(frame: UIScreen.main.bounds)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {

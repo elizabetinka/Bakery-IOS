@@ -23,8 +23,8 @@ class MenuView: UIView {
     }()
     
     
-    lazy var errorView: CommonErrorView = {
-            let view = CommonErrorView()
+    lazy var errorView: ErrorView = {
+            let view = ErrorView()
             view.delegate = self.refreshActionsDelegate
             return view
         }()

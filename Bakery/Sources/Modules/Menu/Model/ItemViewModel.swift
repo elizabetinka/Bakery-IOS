@@ -6,7 +6,6 @@ import UIKit
 
 /// Модель данных, описывающая ...
 struct ItemViewModel: UniqueIdentifiable {
-    // Example
     let uid: UniqueIdentifier
     let name: String
     let cost: Int

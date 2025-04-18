@@ -24,12 +24,8 @@ enum UserAutentification {
         let phoneNumner : String
     }
     
-    enum UserAutentificationError: Error {
-        case someError(message: String)
-    }
-    
     enum UserAutentificationRequestResult {
-        case failure(UserAutentificationError)
+        case failure(message: String)
         case success
         case notRegistred
     }

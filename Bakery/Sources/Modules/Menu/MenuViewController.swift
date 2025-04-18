@@ -97,12 +97,14 @@ extension MenuViewController : MenuRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("меню")
         let image = UIImage(systemName: "birthday.cake")
         let selectedImage = UIImage(systemName: "birthday.cake.fill")
+        let title = "меню"
     }
     
 }

@@ -5,6 +5,7 @@
 
 protocol UserAutentificationBusinessLogic {
     func login(request: UserAutentification.Login.Request)
+    func validatePhoneNumber(number: String) -> Bool
 }
 
 /// Класс для описания бизнес-логики модуля UserAutentification
@@ -25,23 +26,27 @@ class UserAutentificationInteractor: UserAutentificationBusinessLogic {
             var result: UserAutentification.UserAutentificationRequestResult
             if let error = error {
                 switch error {
-                case let .getUserFailed(underlyingError):
-                    result = .failure(.someError(message: error.localizedDescription))
+                case .getUserFailed(_):
+                    result = .failure(message: error.localizedDescription)
                 case .notRegistred:
                     result = .notRegistred
                 case .unknown:
-                    result = .failure(.someError(message: "No Data"))
+                    result = .failure(message: "No Data")
                 }
             }
-            if info != nil {
+            else if info != nil {
                 result = .success
             }
             else {
-                result = .failure(.someError(message: "No Data"))
+                result = .failure(message: "No Data")
             }
             self.presenter.presentLoginResult(response: UserAutentification.Login.Response(result: result))
         }
             
+    }
+    
+    func validatePhoneNumber(number: String) -> Bool{
+        return number.isValidPhone(AppConfig.phoneRegex)
     }
     
 }

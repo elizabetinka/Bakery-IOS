@@ -9,6 +9,10 @@ protocol LoginButtonDelegate: AnyObject {
     func didTapLoginButton(number: String)
 }
 
+protocol UserAutentificationValidateDelegate: AnyObject {
+    func validatePhoneNumber(number: String)
+}
+
 protocol UserAutentificationDisplayLogic: AnyObject {
     func displaySomething(viewModel: UserAutentification.Login.ViewModel)
 }
@@ -18,7 +22,7 @@ class UserAutentificationViewController: UIViewController {
     var state: UserAutentification.ViewControllerState
     weak var router: TabBarRouterProtocol?
     
-    lazy var customView = self.view as? UserAutentificationView
+    lazy var customView = self.view as? UserAutentificationViewProtocol
     
 
     init(interactor: UserAutentificationBusinessLogic, initialState: UserAutentification.ViewControllerState = .loading) {
@@ -33,7 +37,7 @@ class UserAutentificationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self)
+        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self, refreshDelegate: self, validateDelegate: self)
         self.view = view
         // make additional setup of view or save references to subviews
     }
@@ -43,6 +47,11 @@ class UserAutentificationViewController: UIViewController {
         print("UserAutentificationViewController.viewDidLoad")
         display(newState: state)
     }
+    
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        view.bounds = view.safeAreaLayoutGuide.layoutFrame
+//    }
 
     // MARK: Do something
     func login(number : String) {
@@ -78,7 +87,21 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
 
 extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton(number : String) {
+        print("didTapLoginButton: \(number)")
         login(number: number)
         //dismiss(animated: true, completion: nil)
+    }
+}
+
+extension UserAutentificationViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
+}
+
+extension  UserAutentificationViewController: UserAutentificationValidateDelegate {
+    func validatePhoneNumber(number: String) {
+        let isValid = interactor.validatePhoneNumber(number: number)
+        customView?.updateUI(isValid: isValid)
     }
 }
