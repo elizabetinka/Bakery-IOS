@@ -18,6 +18,8 @@
 		0B29BCB92DB18AF2007DDF67 /* UserRegistrationViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCB82DB18AF2007DDF67 /* UserRegistrationViewExtension.swift */; };
 		0B29BCBC2DB18C2E007DDF67 /* ViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCBA2DB18C2E007DDF67 /* ViewProtocol.swift */; };
 		0B29BCBD2DB18C2E007DDF67 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCBB2DB18C2E007DDF67 /* ErrorView.swift */; };
+		0B29BCBF2DB19C41007DDF67 /* UserViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCBE2DB19C41007DDF67 /* UserViewExtension.swift */; };
+		0B29BCC12DB259AA007DDF67 /* UserInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCC02DB259AA007DDF67 /* UserInfoCard.swift */; };
 		0B42DAC52DAE804D00540BCE /* CommonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA752DAE804D00540BCE /* CommonBuilder.swift */; };
 		0B42DAC62DAE804D00540BCE /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA8D2DAE804D00540BCE /* MenuViewController.swift */; };
 		0B42DAC72DAE804D00540BCE /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA962DAE804D00540BCE /* UserView.swift */; };
@@ -104,6 +106,8 @@
 		0B29BCB82DB18AF2007DDF67 /* UserRegistrationViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationViewExtension.swift; sourceTree = "<group>"; };
 		0B29BCBA2DB18C2E007DDF67 /* ViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProtocol.swift; sourceTree = "<group>"; };
 		0B29BCBB2DB18C2E007DDF67 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		0B29BCBE2DB19C41007DDF67 /* UserViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewExtension.swift; sourceTree = "<group>"; };
+		0B29BCC02DB259AA007DDF67 /* UserInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCard.swift; sourceTree = "<group>"; };
 		0B42DA6B2DAE804D00540BCE /* CommonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewModel.swift; sourceTree = "<group>"; };
 		0B42DA6E2DAE804D00540BCE /* CommonProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonProvider.swift; sourceTree = "<group>"; };
 		0B42DA712DAE804D00540BCE /* CommonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonView.swift; sourceTree = "<group>"; };
@@ -307,7 +311,9 @@
 		0B42DA972DAE804D00540BCE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0B29BCBE2DB19C41007DDF67 /* UserViewExtension.swift */,
 				0B42DA962DAE804D00540BCE /* UserView.swift */,
+				0B29BCC02DB259AA007DDF67 /* UserInfoCard.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -627,6 +633,8 @@
 				0B42DAD92DAE804D00540BCE /* CommonPresenter.swift in Sources */,
 				0B42DADA2DAE804D00540BCE /* UserRegistrationView.swift in Sources */,
 				0B42DADB2DAE804D00540BCE /* UserRegistrationInteractor.swift in Sources */,
+				0B29BCBF2DB19C41007DDF67 /* UserViewExtension.swift in Sources */,
+				0B29BCC12DB259AA007DDF67 /* UserInfoCard.swift in Sources */,
 				0B42DADC2DAE804D00540BCE /* UserViewController.swift in Sources */,
 				0B42DB0C2DAEA33000540BCE /* MenuDataStore.swift in Sources */,
 				0B05A6F12DB187E900C12749 /* UserAutentificationViewExtension.swift in Sources */,

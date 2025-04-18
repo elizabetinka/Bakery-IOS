@@ -107,3 +107,10 @@ extension UserViewController : UserRouterAppearance {
     }
     
 }
+
+
+extension UserViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
+}

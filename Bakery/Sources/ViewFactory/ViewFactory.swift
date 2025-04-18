@@ -54,21 +54,21 @@ public struct ViewFactory {
         return imageView
     }
     
-    static func getTitleLable(title : String,  level : Appearance.TitleLabel.TitleFont  = .Level2) -> UIView {
+    static func getTitleLable(title : String,  level : Appearance.TitleLabel.TitleFont  = .Level2) -> UILabel {
         let text =  UILabel()
         text.text = title
     
         Appearance.textLabelApplyAppereance(textLabel: text, level: level)
     
-        let mainView = UIView()
-        text.translatesAutoresizingMaskIntoConstraints = false
-        mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.addSubview(text)
-        text.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-        text.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
-        mainView.heightAnchor.constraint(equalTo: text.heightAnchor, multiplier: 2).isActive = true
+//        let mainView = UIView()
+//        text.translatesAutoresizingMaskIntoConstraints = false
+//        mainView.translatesAutoresizingMaskIntoConstraints = false
+//        mainView.addSubview(text)
+//        text.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+//        text.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
+//        mainView.heightAnchor.constraint(equalTo: text.heightAnchor, multiplier: 2).isActive = true
     
-        return mainView
+        return text
     }
     
     static func getErrorView (refreshDelegate: ErrorViewDelegate?) -> ErrorView {

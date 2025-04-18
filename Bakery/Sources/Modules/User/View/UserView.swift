@@ -4,23 +4,30 @@
 
 import UIKit
 
+protocol UserViewProtocol : ViewProtocol {
+    func showLoading()
+    func showError(message: String)
+    func presentUserInfo(userInfo : UserInfoViewModel)
+}
+
 extension UserView {
-    struct Appearance {
-        let exampleOffset: CGFloat = 10
-        let backgroundColor = UIColor.white
-        let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
+    struct LocalAppearance {
+        static let exampleOffset: CGFloat = 10
+        static  let backgroundColor = UIColor.white
+        static  let labelFont = UIFont.systemFont(ofSize: 17, weight: .medium)
+        static  let bonusImage : UIImage = .points
+        static  let statusImage : UIImage = .statistics
     }
 }
 
-class UserView: UIView {
-    let appearance = Appearance()
+class UserView: UIView, UserViewProtocol {
     weak var refreshActionsDelegate: ErrorViewDelegate?
 
 
     init(frame: CGRect = CGRect.zero, refreshDelegate: ErrorViewDelegate) {
         refreshActionsDelegate=refreshDelegate
         super.init(frame: frame)
-        backgroundColor=appearance.backgroundColor
+        backgroundColor=LocalAppearance.backgroundColor
         addSubviews()
         makeConstraints()
         
@@ -31,112 +38,74 @@ class UserView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy private var errorView: ErrorView = {
-        let view = ErrorView()
-            view.delegate = self.refreshActionsDelegate
-            return view
-    }()
+    func showLoading() {
+        errorView.isHidden = true
+    }
     
-    lazy private var scrollView = UIScrollView()
+    func showError(message: String) {
+        errorView.configure(withMessage: message)
+        errorView.isHidden = false
+    }
+
     
-    lazy private var nameTextLabel: UILabel = {
-            let text =  UILabel()
-            text.text = "Неизвестно"
-            text.textAlignment = .center
-            text.textColor = .gray
-            text.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-            text.translatesAutoresizingMaskIntoConstraints = false
-        
-            return text
-        }()
+    func presentUserInfo(userInfo : UserInfoViewModel){
+        nameTextLabel.text = userInfo.name
+        phoneTextLabel.text = userInfo.phoneNumber
+        bonusCard.configure(value: String(userInfo.points))
+        statusCard.configure(value: "Карта 3%")
+    }
     
-    lazy private var nameTextView: UIView = {
-        
-            let mainView = UIView()
-            mainView.translatesAutoresizingMaskIntoConstraints = false
-            mainView.addSubview(nameTextLabel)
-            nameTextLabel.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-            nameTextLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
-            mainView.heightAnchor.constraint(equalTo: nameTextLabel.heightAnchor, multiplier: 2).isActive = true
-        
-            return mainView
-        }()
+    lazy private var errorView: ErrorView = ViewFactory.getErrorView(refreshDelegate: refreshActionsDelegate)
+    lazy private var scrollView = ViewFactory.getScrollView()
+    lazy private var bonusCard = UserInfoCard(icon: LocalAppearance.bonusImage, titleText: "Бонусы")
+    lazy private var statusCard = UserInfoCard(icon: LocalAppearance.statusImage, titleText: "Текущий статус")
     
-    lazy private var phoneTextLabel: UILabel = {
-            let text =  UILabel()
-            text.text = "+0(000)000-00-00"
-            text.textAlignment = .center
-            text.textColor = .gray
-            text.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-            text.translatesAutoresizingMaskIntoConstraints = false
-            return text
-        }()
+    lazy private var nameTextLabel: UILabel = ViewFactory.getTitleLable(title: "Неизвестно", level: Appearance.TitleLabel.TitleFont.Level1)
     
-    lazy private var phoneTextView: UIView = {
+    lazy private var phoneTextLabel: UILabel = ViewFactory.getTitleLable(title: "+0(000)000-00-00", level: Appearance.TitleLabel.TitleFont.Level2)
     
-            let mainView = UIView()
-            mainView.translatesAutoresizingMaskIntoConstraints = false
-            mainView.addSubview(phoneTextLabel)
-            phoneTextLabel.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-            phoneTextLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
-            mainView.heightAnchor.constraint(equalTo: phoneTextLabel.heightAnchor, multiplier: 2).isActive = true
-        
-            return mainView
-        }()
+    lazy private var contentView: UIView = createContentView(nameTextLabel: nameTextLabel, phoneTextLabel: phoneTextLabel, bonusCard: bonusCard, statusCard: statusCard)
     
-    lazy private var pointsTextLabel: UILabel = {
-            let text =  UILabel()
-            text.text = "0 бонусов"
-            text.textAlignment = .center
-            text.textColor = .gray
-            text.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-            text.translatesAutoresizingMaskIntoConstraints = false
-            return text
-        }()
-    
-    lazy private var pointsTextView: UIView = {
-    
-            let mainView = UIView()
-            mainView.translatesAutoresizingMaskIntoConstraints = false
-            mainView.addSubview(pointsTextLabel)
-            pointsTextLabel.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-            pointsTextLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
-            mainView.heightAnchor.constraint(equalTo: pointsTextLabel.heightAnchor, multiplier: 2).isActive = true
-        
-            return mainView
-        }()
-    
-    
-    lazy private var contentView: UIView = {
-        let stack = UIView()
-        
-        stack.addSubview(nameTextView)
-        stack.addSubview(phoneTextView)
-        stack.addSubview(pointsTextView)
-        
-        nameTextView.translatesAutoresizingMaskIntoConstraints = false
-        phoneTextView.translatesAutoresizingMaskIntoConstraints = false
-        pointsTextView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-           
-            nameTextView.topAnchor.constraint(equalTo: stack.topAnchor),
-            nameTextView.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant:15),
-            nameTextView.leadingAnchor.constraint(equalTo: stack.leadingAnchor, constant: -15),
-            
-            phoneTextView.topAnchor.constraint(equalTo: nameTextView.bottomAnchor, constant: 30),
-            phoneTextView.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant:15),
-            phoneTextView.leadingAnchor.constraint(equalTo: stack.leadingAnchor, constant: -15),
-            
-            pointsTextView.topAnchor.constraint(equalTo: phoneTextView.bottomAnchor, constant: 30),
-            pointsTextView.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant:15),
-            pointsTextView.leadingAnchor.constraint(equalTo: stack.leadingAnchor, constant: -15),
-    
-        ])
-        
-        
-        return stack
-    }()
+//    {
+//        let view = UIView()
+//        
+//        view.addSubview(nameTextLabel)
+//        view.addSubview(phoneTextLabel)
+//        
+//        let stack = UIStackView(arrangedSubviews: [bonusCard, statusCard])
+//        
+//        stack.axis = .horizontal
+//        stack.spacing = 16
+//        stack.distribution = .fillEqually
+//        stack.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        
+//        view.addSubview(stack)
+//        
+//        nameTextLabel.translatesAutoresizingMaskIntoConstraints = false
+//        phoneTextLabel.translatesAutoresizingMaskIntoConstraints = false
+//        stack.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//           
+//            nameTextLabel.topAnchor.constraint(equalTo: view.topAnchor),
+//            nameTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
+//            nameTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
+//            
+//            phoneTextLabel.topAnchor.constraint(equalTo: nameTextLabel.bottomAnchor, constant: 30),
+//            phoneTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
+//            phoneTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
+//            
+//            stack.topAnchor.constraint(equalTo: phoneTextLabel.bottomAnchor, constant: 50),
+//            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+//            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+//            stack.heightAnchor.constraint(equalToConstant: 120)
+//    
+//        ])
+//        
+//        
+//        return view
+//    }()
 
     func addSubviews(){
         addSubview(scrollView)
@@ -174,27 +143,5 @@ class UserView: UIView {
             errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
 
         ])
-    }
-    
-    func showLoading() {
-        errorView.isHidden = true
-    }
-    
-    func showError(message: String) {
-        errorView.configure(withMessage: message)
-        errorView.isHidden = false
-    }
-
-    
-    func presentUserInfo(userInfo : UserInfoViewModel){
-        nameTextLabel.text = userInfo.name
-        phoneTextLabel.text = userInfo.phoneNumber
-        pointsTextLabel.text = "\(userInfo.points) бонусов"
-    }
-}
-
-extension UserViewController: ErrorViewDelegate {
-    func reloadButtonWasTapped() {
-        display(newState: .loading)
     }
 }
