@@ -80,6 +80,14 @@ struct Appearance {
         static let image: UIImage = .logo
     }
     
+    struct RefreshControl {
+        static let attributedTitle = "Обновление данных..."
+    }
+    
+    static func refreshControlApplyAppereance(refreshControl: UIRefreshControl) {
+        refreshControl.attributedTitle = NSAttributedString(string: RefreshControl.attributedTitle)
+    }
+    
     static func mainViewApplyAppereance(view : UIView) {
         view.backgroundColor = Appearance.MainView.backgroundColor
     }

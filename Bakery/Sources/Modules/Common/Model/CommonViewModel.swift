@@ -15,7 +15,7 @@ struct CommonUserViewModel {
 }
 
 struct CommonItemViewModel {
-    let menuImage: UIImage
+    let menuImage: UIImage?
 }
 
 struct CommonViewModel {

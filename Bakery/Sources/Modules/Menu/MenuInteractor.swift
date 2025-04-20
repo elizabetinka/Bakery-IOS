@@ -35,5 +35,10 @@ class MenuInteractor: MenuBusinessLogic {
             result = .failure(.someError(message: "No Data"))
         }
         await self.presenter.presentItems(response: Menu.ShowItems.Response(result: result))
-}
+        
+        if let items = items {
+            let itemsWithImage = await provider.setImagesToItems(items: items)
+            await self.presenter.presentItems(response: Menu.ShowItems.Response(result: .success(itemsWithImage)))
+        }
+    }
 }

@@ -12,7 +12,7 @@ import UIKit
 extension UserInfoCard {
     struct LocalAppearance {
         struct MainView {
-            static let backgroundColor = UIColor.secondarySystemBackground
+            static let backgroundColor = UIColor.systemGray6
             static let cornerRadius : CGFloat = 12
             static let shadowColor = UIColor.black.cgColor
             static let shadowOpacity : Float = 0.05

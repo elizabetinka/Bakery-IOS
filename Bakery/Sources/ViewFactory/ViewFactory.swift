@@ -65,6 +65,10 @@ public struct ViewFactory {
     static func getErrorView (refreshDelegate: ErrorViewDelegate?) -> ErrorView {
         let view = ErrorView()
         view.delegate = refreshDelegate
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 300).isActive=true
+        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
         return view
     }
     
@@ -76,5 +80,17 @@ public struct ViewFactory {
         let ind = UIActivityIndicatorView(style: .large)
         ind.hidesWhenStopped = true
         return ind
+    }
+    
+    static func getRefreshControl (delegate: @escaping () -> Void) -> UIRefreshControl {
+        
+        let action = UIAction { _ in
+            delegate()
+        }
+        
+        let ans = UIRefreshControl()
+        ans.addAction(action, for: .valueChanged)
+        Appearance.refreshControlApplyAppereance(refreshControl: ans)
+        return ans
     }
 }
