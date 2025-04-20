@@ -4,7 +4,7 @@
 //
 
 protocol UserRegistrationBusinessLogic {
-    func registration(request: UserRegistration.Registration.Request)
+    func registration(request: UserRegistration.Registration.Request) async
     func validatePhoneNumber(number: String) -> Bool
     func validateName(name: String) -> Bool
 }
@@ -20,31 +20,30 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
     }
     
     // MARK: Registration
-    func registration(request: UserRegistration.Registration.Request) {
+    func registration(request: UserRegistration.Registration.Request) async {
         
-        let addModel = UserModel(uid: undefId, name: request.form.name, points: 0, phoneNumner: request.form.phoneNumner)
+        let addModel = UserModel(uid: undefId, name: request.form.name, points: 0, phoneNumber: request.form.phoneNumner)
         
-        provider.registryNewUser(addModel: addModel) { (isSuccess, error) in
-            var result: UserRegistration.UserRegistrationRequestResult
-            if let error = error {
-                switch error {
-                case .getUserFailed(_):
-                    result = .failure(.someError(message: error.localizedDescription))
-                case .alreadyExists:
-                    result = .alreadyExists
-                case .unknown:
-                    result = .failure(.someError(message: "No Data"))
-                }
-            }
-            if isSuccess {
-                result = .success
-            }
-            else {
+        let (isSuccess, error) = await provider.registryNewUser(addModel: addModel)
+        
+        var result: UserRegistration.UserRegistrationRequestResult
+        if let error = error {
+            switch error {
+            case .getUserFailed(_):
+                result = .failure(.someError(message: error.localizedDescription))
+            case .alreadyExists:
+                result = .alreadyExists
+            case .unknown:
                 result = .failure(.someError(message: "No Data"))
             }
-            self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
         }
-        
+        if isSuccess {
+            result = .success
+        }
+        else {
+            result = .failure(.someError(message: "No Data"))
+        }
+        await self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
     }
     
     func validatePhoneNumber(number: String) -> Bool{

@@ -42,9 +42,9 @@ class MenuDetailsViewController: UIViewController {
     }
 
     // MARK: Do something
-    func fetchItemDetails(withId uuid: UniqueIdentifier) {
+    func fetchItemDetails(withId uuid: UniqueIdentifier) async {
         let request = MenuDetails.ShowDetails.Request(itemId: uuid)
-        interactor.fetchItemDetails(request: request)
+        await interactor.fetchItemDetails(request: request)
     }
 }
 
@@ -70,7 +70,9 @@ extension MenuDetailsViewController: MenuDetailsDisplayLogic {
             customView?.showEmptyView()
         case .initial(id: let id):
             customView?.showLoading()
-            fetchItemDetails(withId: id)
+            Task{
+                await fetchItemDetails(withId: id)
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 extension CommonView {
     struct Appearance {
         let exampleOffset: CGFloat = 10
@@ -13,6 +14,7 @@ extension CommonView {
     
 }
 
+@MainActor
 class CommonView: UIView {
     let appearance = Appearance()
     

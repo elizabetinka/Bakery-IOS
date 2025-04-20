@@ -4,7 +4,7 @@
 //
 
 protocol MenuDetailsBusinessLogic {
-    func fetchItemDetails(request: MenuDetails.ShowDetails.Request)
+    func fetchItemDetails(request: MenuDetails.ShowDetails.Request) async
 }
 
 /// Класс для описания бизнес-логики модуля MenuDetails
@@ -18,24 +18,25 @@ class MenuDetailsInteractor: MenuDetailsBusinessLogic {
     }
     
     // MARK: Do something
-    func fetchItemDetails(request: MenuDetails.ShowDetails.Request) {
-        provider.fetchItemDetails(by: request.itemId ) {(item, error) in
-            let result: MenuDetails.MenuDetailsRequestResult
-            if let items = item {
-                result = .success(items)
-            } else if let error = error {
-                switch error {
-                case .notExist:
-                    result = .notExists
-                case let .getItemFailed(underlyingError):
-                    result = .failure(.someError(message: error.localizedDescription))
-                default:
-                    result = .failure(.someError(message: "No Data"))
-                }
-            } else {
+    func fetchItemDetails(request: MenuDetails.ShowDetails.Request)  async {
+        let (item, error) = await provider.fetchItemDetails(by: request.itemId )
+        
+        let result: MenuDetails.MenuDetailsRequestResult
+        if let items = item {
+            result = .success(items)
+        } else if let error = error {
+            switch error {
+            case .notExist:
+                result = .notExists
+            case .getItemFailed(_):
+                result = .failure(.someError(message: error.localizedDescription))
+            default:
                 result = .failure(.someError(message: "No Data"))
             }
-            self.presenter.presentItemDetails(response: MenuDetails.ShowDetails.Response(result: result))
+        } else {
+            result = .failure(.someError(message: "No Data"))
         }
+        
+        await self.presenter.presentItemDetails(response: MenuDetails.ShowDetails.Response(result: result))
     }
 }

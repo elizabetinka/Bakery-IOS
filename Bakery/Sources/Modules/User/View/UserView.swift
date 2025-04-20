@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 protocol UserViewProtocol : ViewProtocol {
     func showLoading()
     func showError(message: String)
@@ -20,6 +21,7 @@ extension UserView {
     }
 }
 
+@MainActor
 class UserView: UIView, UserViewProtocol {
     weak var refreshActionsDelegate: ErrorViewDelegate?
 
@@ -39,22 +41,30 @@ class UserView: UIView, UserViewProtocol {
     }
     
     func showLoading() {
+        activityIndicator.startAnimating()
+    }
+    
+    func stopError() {
         errorView.isHidden = true
+        activityIndicator.stopAnimating()
     }
     
     func showError(message: String) {
+        activityIndicator.stopAnimating()
         errorView.configure(withMessage: message)
         errorView.isHidden = false
     }
 
     
     func presentUserInfo(userInfo : UserInfoViewModel){
+        activityIndicator.stopAnimating()
         nameTextLabel.text = userInfo.name
         phoneTextLabel.text = userInfo.phoneNumber
         bonusCard.configure(value: String(userInfo.points))
         statusCard.configure(value: "Карта 3%")
     }
     
+    lazy private var activityIndicator : UIActivityIndicatorView = ViewFactory.getActivityIndicator()
     lazy private var errorView: ErrorView = ViewFactory.getErrorView(refreshDelegate: refreshActionsDelegate)
     lazy private var scrollView = ViewFactory.getScrollView()
     lazy private var bonusCard = UserInfoCard(icon: LocalAppearance.bonusImage, titleText: "Бонусы")
@@ -66,47 +76,6 @@ class UserView: UIView, UserViewProtocol {
     
     lazy private var contentView: UIView = createContentView(nameTextLabel: nameTextLabel, phoneTextLabel: phoneTextLabel, bonusCard: bonusCard, statusCard: statusCard)
     
-//    {
-//        let view = UIView()
-//        
-//        view.addSubview(nameTextLabel)
-//        view.addSubview(phoneTextLabel)
-//        
-//        let stack = UIStackView(arrangedSubviews: [bonusCard, statusCard])
-//        
-//        stack.axis = .horizontal
-//        stack.spacing = 16
-//        stack.distribution = .fillEqually
-//        stack.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        
-//        view.addSubview(stack)
-//        
-//        nameTextLabel.translatesAutoresizingMaskIntoConstraints = false
-//        phoneTextLabel.translatesAutoresizingMaskIntoConstraints = false
-//        stack.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//           
-//            nameTextLabel.topAnchor.constraint(equalTo: view.topAnchor),
-//            nameTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
-//            nameTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
-//            
-//            phoneTextLabel.topAnchor.constraint(equalTo: nameTextLabel.bottomAnchor, constant: 30),
-//            phoneTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
-//            phoneTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
-//            
-//            stack.topAnchor.constraint(equalTo: phoneTextLabel.bottomAnchor, constant: 50),
-//            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-//            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-//            stack.heightAnchor.constraint(equalToConstant: 120)
-//    
-//        ])
-//        
-//        
-//        return view
-//    }()
-
     func addSubviews(){
         addSubview(scrollView)
         
@@ -121,12 +90,14 @@ class UserView: UIView, UserViewProtocol {
         
         scrollView.addSubview(contentView)
         scrollView.addSubview(errorView)
+        scrollView.addSubview(activityIndicator)
     }
 
     func makeConstraints() {
         
         contentView.translatesAutoresizingMaskIntoConstraints = false
         errorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
            
@@ -141,7 +112,9 @@ class UserView: UIView, UserViewProtocol {
             errorView.heightAnchor.constraint(equalToConstant: 200),
             errorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
     }
 }

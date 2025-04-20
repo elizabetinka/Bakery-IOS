@@ -4,13 +4,14 @@
 
 import UIKit
 
-
+@MainActor
 protocol UserAutentificationViewProtocol : ViewProtocol {
     func showLoading()
     func showError(message: String)
     func updateUI(isValid: Bool)
 }
 
+@MainActor
 class UserAutentificationView: UIView, UserAutentificationViewProtocol {
     
     private weak var buttonDelegate: LoginButtonDelegate?
@@ -43,10 +44,16 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
     }
     
     func showLoading() {
+        activityIndicator.startAnimating()
+    }
+    
+    func stopError() {
         errorView.isHidden = true
+        activityIndicator.stopAnimating()
     }
     
     func showError(message: String) {
+        activityIndicator.stopAnimating()
         errorView.configure(withMessage: message)
         errorView.isHidden = false
     }
@@ -56,6 +63,7 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
         Appearance.textFieldApplyAppereance(textField: phoneTextField, isValid: isValid)
     }
     
+    lazy private var activityIndicator : UIActivityIndicatorView = ViewFactory.getActivityIndicator()
     lazy private var scrollView : UIScrollView =  ViewFactory.getScrollView()
     lazy private var logoImageView: UIImageView =  ViewFactory.getLogoImageView()
     lazy private var textLabel: UIView = ViewFactory.getTitleLable(title: "Введите номер телефона")
@@ -80,6 +88,7 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
         scrollView.addSubview(logoImageView)
         scrollView.addSubview(contentView)
         scrollView.addSubview(errorView)
+        scrollView.addSubview(activityIndicator)
     }
 
     func makeConstraints() {
@@ -87,6 +96,7 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         errorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             logoImageView.widthAnchor.constraint(equalToConstant: 200),
@@ -105,7 +115,9 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
             errorView.heightAnchor.constraint(equalToConstant: 200),
             errorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
     
     }

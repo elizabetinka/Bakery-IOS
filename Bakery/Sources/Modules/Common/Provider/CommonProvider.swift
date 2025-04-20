@@ -5,8 +5,8 @@
 import UIKit
 
 protocol CommonProviderProtocol {
-    func getRandomItem(completion: @escaping (ItemModel?, CommonItemProviderError?) -> Void)
-    func getCurrentUserInfo(completion: @escaping (UserModel?, CommonUserProviderError?) -> Void)
+    func getRandomItem() async -> (ItemModel?, CommonItemProviderError?)
+    func getCurrentUserInfo() async -> (UserModel?, CommonUserProviderError?)
 }
 
 enum CommonItemProviderError: Error {
@@ -39,55 +39,54 @@ struct CommonProvider: CommonProviderProtocol {
         self.userService = userService
     }
     
-    func getCurrentUserInfo(completion: @escaping (UserModel?, CommonUserProviderError?) -> Void) {
+    func getCurrentUserInfo() async -> (UserModel?, CommonUserProviderError?){
         guard let id = self.sessionService.getCurrentUserId() else {
-            return completion(nil, .notAuthorized)
+            return (nil, .notAuthorized)
         }
         
         if let info = userDataStore.fetchUser(by: id) {
-            return completion(info, nil)
+            return (info, nil)
         }
         
-        userService.fetchUser(by: id ) { (info, error) in
-            if let error = error {
-                switch error {
-                case .notExists:
-                    completion(nil, .notAuthorized)
-                default:
-                    completion(nil, .getUserFailed(underlyingError: error))
-                }
-            } else if let model = info {
-                userDataStore.addUser(model)
-                completion(model, nil)
+        let (info, error) = await userService.fetchUser(by: id )
+        
+        if let error = error {
+            switch error {
+            case .notExists:
+                return (nil, .notAuthorized)
+            default:
+                return (nil, .getUserFailed(underlyingError: error))
             }
-            else{
-                completion(nil, .unknown)
-            }
+        } else if let model = info {
+            userDataStore.addUser(model)
+            return (model, nil)
         }
-        
-        
+        else{
+            return (nil, .unknown)
+        }
     }
 
-    func getRandomItem(completion: @escaping (ItemModel?, CommonItemProviderError?) -> Void) {
-        let items = menuDataStore.fetchItems()
-        if items.isEmpty == false {
-            return completion(items[0], nil)
+    func getRandomItem() async -> (ItemModel?, CommonItemProviderError?) {
+        let cashedItems = menuDataStore.fetchItems()
+        if cashedItems.isEmpty == false {
+            return (cashedItems[0], nil)
         }
-        menuService.fetchItems { (items, error) in
-            if let error = error {
-                completion(nil, .getItemFailed(underlyingError: error))
-                return
-            } else if let images = items {
-                if images.isEmpty == false {
-                    menuDataStore.saveItems(images)
-                    completion(images[0], nil)
-                    return
-                }
-                completion(nil, .emptyData)
+        
+        let (items, error) = await menuService.fetchItems()
+        
+        if let error = error {
+            return (nil, .getItemFailed(underlyingError: error))
+        } else if let images = items {
+            if images.isEmpty == false {
+                menuDataStore.saveItems(images)
+                return (images[0], nil)
             }
-            else {
-                completion(nil, .unknown)
+            else{
+                return (nil, .emptyData)
             }
+        }
+        else {
+            return (nil, .unknown)
         }
     }
 }

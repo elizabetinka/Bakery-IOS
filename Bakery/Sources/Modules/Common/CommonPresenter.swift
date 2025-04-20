@@ -5,17 +5,26 @@
 
 import UIKit
 
+@MainActor
 protocol CommonPresentationLogic {
     func presentUserInfo(response: Common.ShowUserInfo.Response)
     func presentItem(response: Common.ShowItem.Response)
 }
 
+@MainActor
 /// Отвечает за отображение данных модуля Common
 class CommonPresenter: CommonPresentationLogic {
     weak var viewController: CommonDisplayLogic?
 
     // MARK: Do something
     func presentUserInfo(response: Common.ShowUserInfo.Response) {
+        
+        if Thread.isMainThread {
+            print("CommonPresenter: Мы на главном потоке")
+        } else {
+            print("CommonPresenter: Мы на фоновом потоке")
+        }
+        
         var viewModel: Common.ShowUserInfo.ViewModel
         
         switch response.result {

@@ -24,9 +24,11 @@ extension TabBarRouter {
     }
 }
 
+@MainActor
 class TabBarRouter: TabBarRouterProtocol {
     
     func openViewController(toView: MyViewController) {
+        print("openViewController \(toView)")
         switch toView {
         case .home:
             selectTab(at: 0)

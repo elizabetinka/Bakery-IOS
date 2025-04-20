@@ -14,20 +14,6 @@ extension MenuView {
 
 class MenuView: UIView {
     let appearance = Appearance()
-
-    
-    fileprivate(set) lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        return view
-    }()
-    
-    
-    lazy var errorView: ErrorView = {
-            let view = ErrorView()
-            view.delegate = self.refreshActionsDelegate
-            return view
-        }()
     
     weak var refreshActionsDelegate: ErrorViewDelegate?
 
@@ -57,21 +43,57 @@ class MenuView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    fileprivate(set) lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return view
+    }()
+    
+    lazy private var activityIndicator : UIActivityIndicatorView = ViewFactory.getActivityIndicator()
+    lazy private var errorView: ErrorView = ViewFactory.getErrorView(refreshDelegate: refreshActionsDelegate)
+    lazy private var scrollView = ViewFactory.getScrollView()
 
     func addSubviews(){
-        addSubview(collectionView)
-        addSubview(errorView)
+        addSubview(scrollView)
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
+        
+        scrollView.addSubview(collectionView)
+        scrollView.addSubview(errorView)
+        scrollView.addSubview(activityIndicator)
     }
 
     func makeConstraints() {
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            errorView.widthAnchor.constraint(equalToConstant: 300),
+            errorView.heightAnchor.constraint(equalToConstant: 200),
+            errorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
+        ])
     }
     
     
     func showLoading() {
+        activityIndicator.startAnimating()
         show(view: collectionView)
     }
 
     func showError(message: String) {
+        activityIndicator.stopAnimating()
         show(view: errorView)
         errorView.title.text = message
     }
