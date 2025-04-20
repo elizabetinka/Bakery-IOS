@@ -59,15 +59,6 @@ public struct ViewFactory {
         text.text = title
     
         Appearance.textLabelApplyAppereance(textLabel: text, level: level)
-    
-//        let mainView = UIView()
-//        text.translatesAutoresizingMaskIntoConstraints = false
-//        mainView.translatesAutoresizingMaskIntoConstraints = false
-//        mainView.addSubview(text)
-//        text.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-//        text.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
-//        mainView.heightAnchor.constraint(equalTo: text.heightAnchor, multiplier: 2).isActive = true
-    
         return text
     }
     
@@ -79,5 +70,11 @@ public struct ViewFactory {
     
     static func getScrollView () -> UIScrollView {
         return UIScrollView()
+    }
+    
+    static func getActivityIndicator () -> UIActivityIndicatorView {
+        let ind = UIActivityIndicatorView(style: .large)
+        ind.hidesWhenStopped = true
+        return ind
     }
 }

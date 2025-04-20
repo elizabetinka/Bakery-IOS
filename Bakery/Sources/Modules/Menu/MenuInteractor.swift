@@ -4,7 +4,7 @@
 //
 
 protocol MenuBusinessLogic {
-    func fetchItems(request: Menu.ShowItems.Request)
+    func fetchItems(request: Menu.ShowItems.Request) async
 }
 
 /// Класс для описания бизнес-логики модуля Menu
@@ -18,22 +18,22 @@ class MenuInteractor: MenuBusinessLogic {
     }
     
     // MARK: fetch items
-    func fetchItems(request: Menu.ShowItems.Request) {
-        provider.getItems { (items, error) in
-            let result: Menu.MenuRequestResult
-            if let items = items {
-                result = .success(items)
-            } else if let error = error {
-                switch error {
-                case let .getMenuFailed(underlyingError):
-                    result = .failure(.someError(message: error.localizedDescription))
-                default:
-                    result = .failure(.someError(message: "No Data"))
-                }
-            } else {
+    func fetchItems(request: Menu.ShowItems.Request) async {
+        let (items, error)  = await provider.getItems ()
+        
+        let result: Menu.MenuRequestResult
+        if let items = items {
+            result = .success(items)
+        } else if let error = error {
+            switch error {
+            case .getMenuFailed(_):
+                result = .failure(.someError(message: error.localizedDescription))
+            default:
                 result = .failure(.someError(message: "No Data"))
             }
-            self.presenter.presentItems(response: Menu.ShowItems.Response(result: result))
+        } else {
+            result = .failure(.someError(message: "No Data"))
         }
-    }
+        await self.presenter.presentItems(response: Menu.ShowItems.Response(result: result))
+}
 }

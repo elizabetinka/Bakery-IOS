@@ -50,7 +50,6 @@ class CommonViewController: UIViewController {
     override func loadView() {
         let view = CommonView(frame: UIScreen.main.bounds, tableDataSource: commonTableDataSource, tableDelegate: commonTableDelegate, refreshDelegate: self)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -66,17 +65,15 @@ class CommonViewController: UIViewController {
     }
 
     // MARK: Do something
-    func showUserInfo() {
+    func showUserInfo() async{
         let request = Common.ShowUserInfo.Request()
-        interactor.showUserInfo(request: request)
+        await interactor.showUserInfo(request: request)
     }
     
-    func showItem() {
+    func showItem() async {
         let request = Common.ShowItem.Request()
-        interactor.showItem(request: request)
+        await interactor.showItem(request: request)
     }
-    
-
 }
 
 extension CommonViewController: CommonDisplayLogic {
@@ -93,9 +90,10 @@ extension CommonViewController: CommonDisplayLogic {
         switch userState {
         case .loading:
             customView?.showUserLoading()
-            showUserInfo()
+            Task {
+                await showUserInfo()
+            }
         case let .error(message):
-            print("error \(message)")
             customView?.showError(message: message)
         case let .authorizedResult(viewModel):
             commonTableDataSource.setUserModel(viewModel)
@@ -110,9 +108,10 @@ extension CommonViewController: CommonDisplayLogic {
         switch itemState {
         case .loading:
             customView?.showItemLoading()
-            showItem()
+            Task {
+                await showItem()
+            }
         case let .error(message):
-            print("error \(message)")
             customView?.showError(message: message)
         case let .result(viewModel):
             commonTableDataSource.setItemModel(viewModel)
@@ -143,7 +142,6 @@ extension CommonViewController : CommonRouterAppearance {
     }
     
 }
-
 
 extension CommonViewController: CommonViewControllerDelegate {
     func openMenu() {

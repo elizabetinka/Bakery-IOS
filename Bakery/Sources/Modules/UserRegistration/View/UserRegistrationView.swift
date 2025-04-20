@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 protocol UserRegistrationViewProtocol : ViewProtocol {
     func showLoading()
     func showError(message: String)
@@ -11,6 +12,7 @@ protocol UserRegistrationViewProtocol : ViewProtocol {
     func validatedPhone(isValid: Bool)
 }
 
+@MainActor
 class UserRegistrationView: UIView, UserRegistrationViewProtocol {
     private weak var buttonDelegate: RegistrationButtonDelegate?
     private weak var refreshActionsDelegate: ErrorViewDelegate?
@@ -33,10 +35,16 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
     }
     
     func showLoading() {
+        activityIndicator.startAnimating()
+    }
+    
+    func stopError() {
         errorView.isHidden = true
+        activityIndicator.stopAnimating()
     }
     
     func showError(message: String) {
+        activityIndicator.stopAnimating()
         errorView.configure(withMessage: message)
         errorView.isHidden = false
     }
@@ -51,6 +59,7 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
         Appearance.textFieldApplyAppereance(textField: phoneTextField, isValid: isValid)
     }
     
+    lazy private var activityIndicator : UIActivityIndicatorView = ViewFactory.getActivityIndicator()
     lazy private var errorView: ErrorView = ViewFactory.getErrorView(refreshDelegate: refreshActionsDelegate)
     lazy private var scrollView : UIScrollView =  ViewFactory.getScrollView()
     lazy private var logoImageView: UIImageView =  ViewFactory.getLogoImageView()
@@ -80,6 +89,7 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
         scrollView.addSubview(logoImageView)
         scrollView.addSubview(contentView)
         scrollView.addSubview(errorView)
+        scrollView.addSubview(activityIndicator)
     }
 
     private func makeConstraints() {
@@ -87,6 +97,7 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         errorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             logoImageView.widthAnchor.constraint(equalToConstant: 200),
@@ -106,6 +117,8 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
             errorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             
+            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         ])
         
     }
@@ -185,11 +198,5 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-}
-
-extension UserRegistrationViewController: ErrorViewDelegate {
-    func reloadButtonWasTapped() {
-        display(newState: .loading)
     }
 }

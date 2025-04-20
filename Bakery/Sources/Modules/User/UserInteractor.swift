@@ -3,8 +3,10 @@
 //  Created by Елизавета Кравченкова on 09/04/2025.
 //
 
+import Foundation
+
 protocol UserBusinessLogic {
-    func showUserInfo(request: User.ShowUserInfo.Request)
+    func showUserInfo(request: User.ShowUserInfo.Request) async
 }
 
 /// Класс для описания бизнес-логики модуля User
@@ -18,30 +20,28 @@ class UserInteractor: UserBusinessLogic {
     }
     
     // MARK: Do something
-    func showUserInfo(request: User.ShowUserInfo.Request) {
-                
-        provider.getCurrentUserInfo { (info, error) in
-            let result: User.UserRequestResult
+    func showUserInfo(request: User.ShowUserInfo.Request) async {
+        
+        let (info, error) = await provider.getCurrentUserInfo()
+        
+        let result: User.UserRequestResult
 
-            if let error = error {
-                switch error {
-                case .getUserFailed(_):
-                    result = .failure(.someError(message: error.localizedDescription))
-                case .notAuthorized:
-                    result = .notAuthorized
-                case .unknown:
-                    result = .failure(.someError(message: "No Data"))
-                }
-            }
-            else if let info = info {
-                result = .success(info)
-            }
-            else {
+        if let error = error {
+            switch error {
+            case .getUserFailed(_):
+                result = .failure(.someError(message: error.localizedDescription))
+            case .notAuthorized:
+                result = .notAuthorized
+            case .unknown:
                 result = .failure(.someError(message: "No Data"))
             }
-            self.presenter.presentUserInfo(response: User.ShowUserInfo.Response(result: result))
-            
         }
-        
+        else if let info = info {
+            result = .success(info)
+        }
+        else {
+            result = .failure(.someError(message: "No Data"))
+        }
+        await self.presenter.presentUserInfo(response: User.ShowUserInfo.Response(result: result))
     }
 }

@@ -5,10 +5,12 @@
 
 import UIKit
 
+@MainActor
 protocol UserRegistrationPresentationLogic {
     func presentRegistrationResult(response: UserRegistration.Registration.Response)
 }
 
+@MainActor
 /// Отвечает за отображение данных модуля UserRegistration
 class UserRegistrationPresenter: UserRegistrationPresentationLogic {
     weak var viewController: UserRegistrationDisplayLogic?
