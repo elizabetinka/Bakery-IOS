@@ -15,7 +15,14 @@ protocol ImageLoaderProtocol {
 
 class ImageLoader: ImageLoaderProtocol {
     static let shared = ImageLoader()
-    private init() {}
+    private init() {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = AppConfig.timeoutIntervalForRequest
+        config.timeoutIntervalForResource = AppConfig.timeoutIntervalForResource
+        session = URLSession(configuration: config)
+    }
+    
+    let session : URLSession
     
     func downloadImage(path: String) async -> (UIImage?, Error?){
         guard let url = URL(string: path) else {
@@ -23,7 +30,7 @@ class ImageLoader: ImageLoaderProtocol {
         }
         
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await session.data(from: url)
             
             guard let httpRes = response as? HTTPURLResponse,
                 200..<300 ~= httpRes.statusCode else {

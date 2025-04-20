@@ -6,8 +6,6 @@ import UIKit
 
 @MainActor
 protocol UserViewProtocol : ViewProtocol {
-    func showLoading()
-    func showError(message: String)
     func presentUserInfo(userInfo : UserInfoViewModel)
 }
 
