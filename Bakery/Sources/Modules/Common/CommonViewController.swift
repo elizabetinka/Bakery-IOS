@@ -132,12 +132,14 @@ extension CommonViewController : CommonRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("главная")
         let image = UIImage(systemName: "house")
         let selectedImage = UIImage(systemName: "house.fill")
+        let title = "главная"
     }
     
 }
@@ -161,22 +163,4 @@ extension CommonViewController: ErrorViewDelegate {
         display(newState: itemState)
     }
 }
-
-//
-//extension CommonViewController : CommonRouterLogic {
-//    
-//    func applyTabBarSettigs() {
-//        let tabBarSetting  = TabBarSetting()
-//        tabBarItem = UITabBarItem(
-//            title: tabBarSetting.tabBarTitle,
-//            image: tabBarSetting.image,
-//            selectedImage: tabBarSetting.selectedImage)
-//    }
-//    
-//    struct TabBarSetting {
-//        let tabBarTitle = String("профиль")
-//        let image = UIImage(systemName: "person")
-//        let selectedImage = UIImage(systemName: "person.fill")
-//    }
-//}
 

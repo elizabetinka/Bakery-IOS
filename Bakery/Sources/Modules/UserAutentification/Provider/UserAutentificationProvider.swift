@@ -2,6 +2,8 @@
 //  Created by Елизавета Кравченкова on 10/04/2025.
 //
 
+import Foundation
+
 protocol UserAutentificationProviderProtocol {
     func getUserByPhoneNumber(phoneNumber: String, completion: @escaping (UserModel?, UserAutentificationProviderError?) -> Void)
 }
@@ -10,6 +12,19 @@ enum UserAutentificationProviderError: Error {
     case getUserFailed(underlyingError: Error)
     case notRegistred
     case unknown
+}
+
+extension UserAutentificationProviderError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case let .getUserFailed(underlyingError):
+            return NSLocalizedString(underlyingError.localizedDescription, comment: "")
+        case .notRegistred:
+            return NSLocalizedString("Такого пользователя нет", comment: "")
+        case .unknown:
+            return NSLocalizedString("Неизвестная ошибка", comment: "")
+        }
+    }
 }
 
 /// Отвечает за получение данных модуля User

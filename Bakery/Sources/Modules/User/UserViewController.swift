@@ -32,11 +32,9 @@ class UserViewController: UIViewController {
     // MARK: View lifecycle
     override func loadView() {
         print("Loading User view")
-        let view = UserView()
+        let view = UserView(refreshDelegate: self)
         
         self.view = view
-        
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -44,6 +42,13 @@ class UserViewController: UIViewController {
         print("UserViewController viewDidLoad")
         display(newState: state)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            state = .loading
+            display(newState: state)
+            print("UserViewController viewWillAppear")
+        }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -75,7 +80,6 @@ extension UserViewController: UserDisplayLogic {
         case let .result(info):
             print("print info")
             customView?.presentUserInfo(userInfo: info)
-            //customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
         case .notAuthorized:
             print("need auth")
             router?.openViewController(toView: MyViewController.authentification)
@@ -92,12 +96,21 @@ extension UserViewController : UserRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("профиль")
         let image = UIImage(systemName: "person")
         let selectedImage = UIImage(systemName: "person.fill")
+        let title = "профиль"
     }
     
+}
+
+
+extension UserViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
 }

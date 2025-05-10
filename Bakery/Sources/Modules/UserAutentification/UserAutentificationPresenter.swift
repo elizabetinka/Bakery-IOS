@@ -19,7 +19,7 @@ class UserAutentificationPresenter: UserAutentificationPresentationLogic {
         
         switch response.result {
         case let .failure(error):
-            viewModel = UserAutentification.Login.ViewModel(state: .error(message: error.localizedDescription))
+            viewModel = UserAutentification.Login.ViewModel(state: .error(message: error))
         case .success:
             viewModel=UserAutentification.Login.ViewModel(state: .success)
         case .notRegistred:
