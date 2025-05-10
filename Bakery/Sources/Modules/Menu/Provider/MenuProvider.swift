@@ -3,7 +3,7 @@
 //
 
 protocol MenuProviderProtocol {
-    func getItems(completion: @escaping ([ItemModel]?, MenuProviderError?) -> Void)
+    func getItems()  async -> ([ItemModel]?, MenuProviderError?)
 }
 
 enum MenuProviderError: Error {
@@ -21,20 +21,24 @@ struct MenuProvider: MenuProviderProtocol {
         self.service = service
     }
 
-    func getItems(completion: @escaping ([ItemModel]?, MenuProviderError?) -> Void) {
-        if dataStore.fetchItems().isEmpty == false {
-            return completion(self.dataStore.fetchItems(), nil)
+    func getItems() async -> ([ItemModel]?, MenuProviderError?){
+        
+        let cashedItems =  dataStore.fetchItems()
+        if cashedItems.isEmpty == false {
+            return (cashedItems, nil)
         }
-        service.fetchItems { (array, error) in
-            if let error = error {
-                completion(nil, .getMenuFailed(underlyingError: error))
-            } else if let models = array {
-                self.dataStore.saveItems(models)
-                completion(models, nil)
-            }
-            else{
-                completion(nil, .unknown)
-            }
+        
+        let (array, error) = await service.fetchItems()
+        
+        if let error = error {
+            return (nil, .getMenuFailed(underlyingError: error))
+        } else if let models = array {
+            self.dataStore.saveItems(models)
+            return (models, nil)
         }
+        else{
+            return (nil, .unknown)
+        }
+        
     }
 }

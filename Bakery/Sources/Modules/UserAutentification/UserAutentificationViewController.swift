@@ -39,24 +39,17 @@ class UserAutentificationViewController: UIViewController {
     override func loadView() {
         let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self, refreshDelegate: self, validateDelegate: self)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print("UserAutentificationViewController.viewDidLoad")
-        display(newState: state)
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        view.bounds = view.safeAreaLayoutGuide.layoutFrame
-//    }
 
     // MARK: Do something
-    func login(number : String) {
+    func login(number : String) async {
         let request = UserAutentification.Login.Request(form: UserAutentification.UserAutentificationRequest(phoneNumner: number))
-        interactor.login(request: request)
+        await interactor.login(request: request)
     }
 }
 
@@ -69,16 +62,14 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
         state = newState
         switch state {
         case .loading:
-            print("loading...")
             customView?.showLoading()
         case let .error(message):
-            print("error \(message)")
             customView?.showError(message: message)
         case .success:
-            dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
         case .notRegistred:
-            dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.registration)
         }
     }
@@ -88,14 +79,16 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
 extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton(number : String) {
         print("didTapLoginButton: \(number)")
-        login(number: number)
-        //dismiss(animated: true, completion: nil)
+        customView?.showLoading()
+        Task {
+            await login(number: number)
+        }
     }
 }
 
 extension UserAutentificationViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
-        display(newState: .loading)
+        self.customView?.stopError()
     }
 }
 

@@ -5,10 +5,12 @@
 
 import UIKit
 
+@MainActor
 protocol UserPresentationLogic {
     func presentUserInfo(response: User.ShowUserInfo.Response)
 }
 
+@MainActor
 /// Отвечает за отображение данных модуля User
 class UserPresenter: UserPresentationLogic {
     weak var viewController: UserDisplayLogic?
@@ -21,7 +23,7 @@ class UserPresenter: UserPresentationLogic {
         case let .failure(error):
             viewModel = User.ShowUserInfo.ViewModel(state: .error(message: error.localizedDescription))
         case let .success(result):
-            let userInfo = UserInfoViewModel(name: result.name, points: result.points, phoneNumber: result.phoneNumner)
+            let userInfo = UserInfoViewModel(name: result.name, points: result.points, phoneNumber: result.phoneNumber)
             viewModel = User.ShowUserInfo.ViewModel(state: .result(userInfo))
         case .notAuthorized:
             viewModel = User.ShowUserInfo.ViewModel(state: .notAuthorized)

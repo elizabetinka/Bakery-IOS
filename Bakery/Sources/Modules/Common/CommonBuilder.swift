@@ -22,7 +22,7 @@ class CommonBuilder: ModuleBuilder {
         return self
     }
 
-    func build() -> UIViewController {
+    @MainActor func build() -> UIViewController {
         let presenter = CommonPresenter()
         let interactor = CommonInteractor(presenter: presenter)
         let controller = CommonViewController(interactor: interactor)

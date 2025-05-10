@@ -5,10 +5,12 @@
 
 import UIKit
 
+@MainActor
 protocol UserAutentificationPresentationLogic {
     func presentLoginResult(response: UserAutentification.Login.Response)
 }
 
+@MainActor
 /// Отвечает за отображение данных модуля UserAutentification
 class UserAutentificationPresenter: UserAutentificationPresentationLogic {
     weak var viewController: UserAutentificationDisplayLogic?

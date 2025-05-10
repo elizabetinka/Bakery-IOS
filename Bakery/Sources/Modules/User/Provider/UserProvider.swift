@@ -3,7 +3,7 @@
 //
 
 protocol UserProviderProtocol {
-    func getCurrentUserInfo(completion: @escaping (UserModel?, UserProviderError?) -> Void)
+    func getCurrentUserInfo() async -> (UserModel?, UserProviderError?)
 }
 
 enum UserProviderError: Error {
@@ -25,32 +25,31 @@ struct UserProvider: UserProviderProtocol {
         self.sessionService = sessionService
     }
     
-    func getCurrentUserInfo(completion: @escaping (UserModel?, UserProviderError?) -> Void) {
+    func getCurrentUserInfo() async -> (UserModel?, UserProviderError?) {
         guard let id = self.sessionService.getCurrentUserId() else {
-            return completion(nil, .notAuthorized)
+            return (nil, .notAuthorized)
         }
         
         if let info = dataStore.fetchUser(by: id) {
-            return completion(info, nil)
+            return (info, nil)
         }
         
-        service.fetchUser(by: id ) { (info, error) in
-            if let error = error {
-                switch error {
-                case .notExists:
-                    completion(nil, .notAuthorized)
-                default:
-                    completion(nil, .getUserFailed(underlyingError: error))
-                }
-            } else if let model = info {
-                self.dataStore.addUser(model)
-                completion(model, nil)
-            }
-            else{
-                completion(nil, .unknown)
-            }
-        }
+        let (info, error) = await service.fetchUser(by: id )
         
+        if let error = error {
+            switch error {
+            case .notExists:
+                return (nil, .notAuthorized)
+            default:
+                return (nil, .getUserFailed(underlyingError: error))
+            }
+        } else if let model = info {
+            self.dataStore.addUser(model)
+            return (model, nil)
+        }
+        else{
+            return (nil, .unknown)
+        }
         
     }
 }

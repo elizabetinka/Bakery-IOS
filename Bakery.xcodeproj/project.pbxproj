@@ -20,6 +20,10 @@
 		0B29BCBD2DB18C2E007DDF67 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCBB2DB18C2E007DDF67 /* ErrorView.swift */; };
 		0B29BCBF2DB19C41007DDF67 /* UserViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCBE2DB19C41007DDF67 /* UserViewExtension.swift */; };
 		0B29BCC12DB259AA007DDF67 /* UserInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCC02DB259AA007DDF67 /* UserInfoCard.swift */; };
+		0B29BCC32DB3D519007DDF67 /* JsonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCC22DB3D519007DDF67 /* JsonModel.swift */; };
+		0B29BCC52DB46F84007DDF67 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCC42DB46F84007DDF67 /* ImageLoader.swift */; };
+		0B29BCC72DB48B61007DDF67 /* userSecrets.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B29BCC62DB48B53007DDF67 /* userSecrets.txt */; };
+		0B29BCC92DB48BC8007DDF67 /* SecretService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29BCC82DB48BC8007DDF67 /* SecretService.swift */; };
 		0B42DAC52DAE804D00540BCE /* CommonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA752DAE804D00540BCE /* CommonBuilder.swift */; };
 		0B42DAC62DAE804D00540BCE /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA8D2DAE804D00540BCE /* MenuViewController.swift */; };
 		0B42DAC72DAE804D00540BCE /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA962DAE804D00540BCE /* UserView.swift */; };
@@ -55,7 +59,6 @@
 		0B42DAF22DAE804D00540BCE /* CommonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA7B2DAE804D00540BCE /* CommonViewController.swift */; };
 		0B42DAF32DAE804D00540BCE /* MenuDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA8A2DAE804D00540BCE /* MenuDataFlow.swift */; };
 		0B42DAF42DAE804D00540BCE /* CommonTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA792DAE804D00540BCE /* CommonTableDataSource.swift */; };
-		0B42DAF62DAE804D00540BCE /* MenuWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DABD2DAE804D00540BCE /* MenuWorker.swift */; };
 		0B42DAF72DAE804D00540BCE /* UserRegistrationDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DAB52DAE804D00540BCE /* UserRegistrationDataFlow.swift */; };
 		0B42DAF82DAE804D00540BCE /* MenuProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA812DAE804D00540BCE /* MenuProvider.swift */; };
 		0B42DAF92DAE804D00540BCE /* CollectionTableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42DA882DAE804D00540BCE /* CollectionTableDelegate.swift */; };
@@ -108,6 +111,10 @@
 		0B29BCBB2DB18C2E007DDF67 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		0B29BCBE2DB19C41007DDF67 /* UserViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewExtension.swift; sourceTree = "<group>"; };
 		0B29BCC02DB259AA007DDF67 /* UserInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCard.swift; sourceTree = "<group>"; };
+		0B29BCC22DB3D519007DDF67 /* JsonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonModel.swift; sourceTree = "<group>"; };
+		0B29BCC42DB46F84007DDF67 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		0B29BCC62DB48B53007DDF67 /* userSecrets.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = userSecrets.txt; sourceTree = "<group>"; };
+		0B29BCC82DB48BC8007DDF67 /* SecretService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretService.swift; sourceTree = "<group>"; };
 		0B42DA6B2DAE804D00540BCE /* CommonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewModel.swift; sourceTree = "<group>"; };
 		0B42DA6E2DAE804D00540BCE /* CommonProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonProvider.swift; sourceTree = "<group>"; };
 		0B42DA712DAE804D00540BCE /* CommonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonView.swift; sourceTree = "<group>"; };
@@ -153,7 +160,6 @@
 		0B42DAB62DAE804D00540BCE /* UserRegistrationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationInteractor.swift; sourceTree = "<group>"; };
 		0B42DAB72DAE804D00540BCE /* UserRegistrationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationPresenter.swift; sourceTree = "<group>"; };
 		0B42DAB82DAE804D00540BCE /* UserRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationViewController.swift; sourceTree = "<group>"; };
-		0B42DABD2DAE804D00540BCE /* MenuWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuWorker.swift; sourceTree = "<group>"; };
 		0B42DAC02DAE804D00540BCE /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
 		0B42DAC12DAE804D00540BCE /* TabBarRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarRouter.swift; sourceTree = "<group>"; };
 		0B42DAC22DAE804D00540BCE /* TabBarRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarRouterProtocol.swift; sourceTree = "<group>"; };
@@ -415,10 +421,12 @@
 				0B42DB0F2DAEEB0200540BCE /* ItemModel.swift */,
 				0B42DB0D2DAEA37500540BCE /* MenuService.swift */,
 				0B42DB0B2DAEA33000540BCE /* MenuDataStore.swift */,
-				0B42DABD2DAE804D00540BCE /* MenuWorker.swift */,
 				0B42DB132DAEEC5700540BCE /* UserModel.swift */,
 				0B42DB152DAEEDC700540BCE /* UserService.swift */,
 				0B42DB172DAEF11800540BCE /* UserSessionService.swift */,
+				0B29BCC22DB3D519007DDF67 /* JsonModel.swift */,
+				0B29BCC42DB46F84007DDF67 /* ImageLoader.swift */,
+				0B29BCC82DB48BC8007DDF67 /* SecretService.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -484,6 +492,7 @@
 		41323E0C2DA5DEF100E0F3F4 /* Bakery */ = {
 			isa = PBXGroup;
 			children = (
+				0B29BCC62DB48B53007DDF67 /* userSecrets.txt */,
 				0B05A6DA2DB11CBD00C12749 /* AppConfig.swift */,
 				0B42DB092DAE805400540BCE /* Extensions */,
 				0B42DAC42DAE804D00540BCE /* Sources */,
@@ -597,6 +606,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BF1653F2DAFC3F900642319 /* logo.png in Resources */,
+				0B29BCC72DB48B61007DDF67 /* userSecrets.txt in Resources */,
 				41323E1A2DA5DEF500E0F3F4 /* LaunchScreen.storyboard in Resources */,
 				41323E172DA5DEF500E0F3F4 /* Assets.xcassets in Resources */,
 				41323E152DA5DEF200E0F3F4 /* Main.storyboard in Resources */,
@@ -615,10 +625,12 @@
 				41323E0E2DA5DEF100E0F3F4 /* AppDelegate.swift in Sources */,
 				0B42DAC52DAE804D00540BCE /* CommonBuilder.swift in Sources */,
 				0B42DAC62DAE804D00540BCE /* MenuViewController.swift in Sources */,
+				0B29BCC92DB48BC8007DDF67 /* SecretService.swift in Sources */,
 				0B42DAC72DAE804D00540BCE /* UserView.swift in Sources */,
 				0B42DAC92DAE804D00540BCE /* CommonViewModel.swift in Sources */,
 				0B29BCBC2DB18C2E007DDF67 /* ViewProtocol.swift in Sources */,
 				0B29BCBD2DB18C2E007DDF67 /* ErrorView.swift in Sources */,
+				0B29BCC32DB3D519007DDF67 /* JsonModel.swift in Sources */,
 				0B42DACA2DAE804D00540BCE /* UserRegistrationProvider.swift in Sources */,
 				0B42DACB2DAE804D00540BCE /* ModuleBuilder.swift in Sources */,
 				0B42DACC2DAE804D00540BCE /* UserRegistrationViewController.swift in Sources */,
@@ -643,6 +655,7 @@
 				0B42DB142DAEEC5700540BCE /* UserModel.swift in Sources */,
 				0B42DADF2DAE804D00540BCE /* ItemCell.swift in Sources */,
 				0B42DAE12DAE804D00540BCE /* TabBarRouter.swift in Sources */,
+				0B29BCC52DB46F84007DDF67 /* ImageLoader.swift in Sources */,
 				0B42DAE22DAE804D00540BCE /* MenuCell.swift in Sources */,
 				0B42DAE32DAE804D00540BCE /* UserAutentificationPresenter.swift in Sources */,
 				0B42DAE52DAE804D00540BCE /* CommonInteractor.swift in Sources */,
@@ -661,7 +674,6 @@
 				0B42DAF32DAE804D00540BCE /* MenuDataFlow.swift in Sources */,
 				0B42DB0E2DAEA37500540BCE /* MenuService.swift in Sources */,
 				0B42DAF42DAE804D00540BCE /* CommonTableDataSource.swift in Sources */,
-				0B42DAF62DAE804D00540BCE /* MenuWorker.swift in Sources */,
 				0B42DAF72DAE804D00540BCE /* UserRegistrationDataFlow.swift in Sources */,
 				0B42DAF82DAE804D00540BCE /* MenuProvider.swift in Sources */,
 				0B42DAF92DAE804D00540BCE /* CollectionTableDelegate.swift in Sources */,

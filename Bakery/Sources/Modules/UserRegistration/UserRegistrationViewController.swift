@@ -45,13 +45,12 @@ class UserRegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("UserRegistrationViewController.viewDidLoad")
-        display(newState: state)
     }
 
     // MARK: registration
-    func registration(number : String, name: String) {
+    func registration(number : String, name: String) async {
         let request = UserRegistration.Registration.Request(form: UserRegistration.UserRegistrationRequest(phoneNumner: number, name: name))
-        interactor.registration(request: request)
+        await interactor.registration(request: request)
     }
 }
 
@@ -64,14 +63,9 @@ extension UserRegistrationViewController: UserRegistrationDisplayLogic {
         state = newState
         switch state {
         case .loading:
-            print("loading...")
             customView?.showLoading()
         case let .error(message):
-            print("error \(message)")
             customView?.showError(message: message)
-            dismiss(animated: true, completion: nil)
-            router?.openViewController(toView: MyViewController.home)
-            
         case .success:
             dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
@@ -84,7 +78,10 @@ extension UserRegistrationViewController: UserRegistrationDisplayLogic {
 
 extension UserRegistrationViewController : RegistrationButtonDelegate {    
     func didTapRegistrationButton(number : String, name: String) {
-        registration(number: number, name: name)
+        customView?.showLoading()
+        Task {
+            await registration(number: number, name: name)
+        }
     }
 }
 
@@ -100,3 +97,8 @@ extension  UserRegistrationViewController: UserRegistrationValidateDelegate {
     }
 }
 
+extension UserRegistrationViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        customView?.stopError()
+    }
+}

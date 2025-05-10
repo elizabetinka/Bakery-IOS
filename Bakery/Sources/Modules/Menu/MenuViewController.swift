@@ -43,7 +43,6 @@ class MenuViewController: UIViewController {
     override func loadView() {
         let view = MenuView(frame: UIScreen.main.bounds, collectionDataSource: collectionDataSource, collectionDelegate: collectionHandler, refreshDelegate: self)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -58,9 +57,9 @@ class MenuViewController: UIViewController {
     }
     
     // MARK: Do something
-    func fetchItems() {
+    func fetchItems() async {
             let request = Menu.ShowItems.Request()
-            interactor.fetchItems(request: request)
+            await interactor.fetchItems(request: request)
         }
 }
 
@@ -74,7 +73,9 @@ extension MenuViewController: MenuDisplayLogic {
         switch state {
         case .loading:
             customView?.showLoading()
-            fetchItems()
+            Task{
+                await fetchItems()
+            }
         case let .error(message):
             customView?.showError(message: message)
         case let .result(items):

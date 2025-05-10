@@ -33,21 +33,18 @@ class UserViewController: UIViewController {
     override func loadView() {
         print("Loading User view")
         let view = UserView(refreshDelegate: self)
-        
         self.view = view
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print("UserViewController viewDidLoad")
-        display(newState: state)
     }
     
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            state = .loading
-            display(newState: state)
             print("UserViewController viewWillAppear")
+            display(newState: .loading)
         }
     
     override func viewDidLayoutSubviews() {
@@ -56,9 +53,9 @@ class UserViewController: UIViewController {
     }
 
     // MARK: Do something
-    func showUserInfo() {
+    func showUserInfo() async {
         let request = User.ShowUserInfo.Request()
-        interactor.showUserInfo(request: request)
+        await interactor.showUserInfo(request: request)
     }
 }
 
@@ -71,18 +68,16 @@ extension UserViewController: UserDisplayLogic {
         state = newState
         switch state {
         case .loading:
-            print("loading...")
-            customView?.showLoading()
-            showUserInfo()
+            self.customView?.showLoading()
+            Task {
+                await showUserInfo()
+            }
         case let .error(message):
-            print("error \(message)")
-            customView?.showError(message: message)
+            self.customView?.showError(message: message)
         case let .result(info):
-            print("print info")
-            customView?.presentUserInfo(userInfo: info)
+            self.customView?.presentUserInfo(userInfo: info)
         case .notAuthorized:
-            print("need auth")
-            router?.openViewController(toView: MyViewController.authentification)
+            self.router?.openViewController(toView: MyViewController.authentification)
         }
     }
 }
@@ -111,6 +106,6 @@ extension UserViewController : UserRouterAppearance {
 
 extension UserViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
-        display(newState: .loading)
+        self.customView?.stopError()
     }
 }
