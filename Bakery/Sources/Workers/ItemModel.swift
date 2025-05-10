@@ -12,14 +12,17 @@ struct ItemModel: UniqueIdentifiable {
     let cost: Int
     let kcal: Int
     let description: String
-    var itemImage: UIImage = .loadingItem
+    var itemImage: UIImage?
+    var imagePath: String
     
-    init(uid: UniqueIdentifier, name: String, cost: Int, kcal: Int, description: String) {
+    
+    init(uid: UniqueIdentifier, name: String, cost: Int, kcal: Int, description: String, imagePath: String) {
         self.uid = uid
         self.name = name
         self.cost = cost
         self.kcal = kcal
         self.description = description
+        self.imagePath = imagePath
     }
 }
 

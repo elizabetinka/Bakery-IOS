@@ -23,29 +23,27 @@ class MenuService: MenuServiceProtocol {
             self.username = name
             self.password = pass
         }
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = AppConfig.timeoutIntervalForRequest
+        config.timeoutIntervalForResource = AppConfig.timeoutIntervalForResource
+        session = URLSession(configuration: config)
     }
     
-    private let imageLoader: ImageLoaderProtocol = ImageLoader.shared
-    let session = URLSession(configuration: .default)
+    let session : URLSession
+    let imageLoader: ImageLoaderProtocol = ImageLoader.shared
     private let baseURL = AppConfig.itemBaseUrl
     private var username = ""
     private var password = ""
     
     func fetchItems() async -> ([ItemModel]?, MenuServiceError?){
-        var (items, error) = await getItems()
+        let (items, error) = await getItems()
         
         guard let items = items else {
             return (nil, error)
         }
         
-        var ans = items.map{ItemModel(uid: $0.uid, name: $0.name, cost: $0.cost, kcal: $0.kcal, description: $0.description)}
+        let ans = items.map{ItemModel(uid: $0.uid, name: $0.name, cost: $0.cost, kcal: $0.kcal, description: $0.description, imagePath: $0.itemImage)}
         
-        for (idx, item) in items.enumerated() {
-            let (image, _) = await imageLoader.downloadImage(path: item.itemImage)
-            if let image = image {
-                ans[idx].itemImage = image
-            }
-        }
         return (ans, nil)
     }
     
@@ -61,12 +59,7 @@ class MenuService: MenuServiceProtocol {
             return (nil, .notExists)
         }
         
-        var ans = ItemModel(uid: item.uid, name: item.name, cost: item.cost, kcal: item.kcal, description: item.description)
-        
-        let (image, _) = await imageLoader.downloadImage(path: item.itemImage)
-        if let image = image {
-            ans.itemImage = image
-        }
+        let ans = ItemModel(uid: item.uid, name: item.name, cost: item.cost, kcal: item.kcal, description: item.description, imagePath: item.itemImage)
         
         return (ans, nil)
     }
@@ -90,6 +83,11 @@ class MenuService: MenuServiceProtocol {
             
         do {
             let (data, _) = try await session.data(for: request)
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("JSON response:\n\(jsonString)")
+            } else {
+                print("Не удалось декодировать data как UTF-8 строку")
+            }
             let decoder = JSONDecoder()
             let ans = try decoder.decode(ItemResponse.self, from: data).items
             return (ans, nil)

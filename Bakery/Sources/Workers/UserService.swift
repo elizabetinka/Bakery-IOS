@@ -43,9 +43,14 @@ class UserService: UserServiceProtocol {
             self.username = name
             self.password = pass
         }
+        
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = AppConfig.timeoutIntervalForRequest
+        config.timeoutIntervalForResource = AppConfig.timeoutIntervalForResource
+        session = URLSession(configuration: config)
     }
     
-    let session = URLSession(configuration: .default)
+    let session : URLSession
     private let baseURL = AppConfig.userBaseUrl
     private var username = ""
     private var password = ""

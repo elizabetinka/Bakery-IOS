@@ -31,7 +31,7 @@ class MenuDetailsViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = MenuDetailsView(frame: UIScreen.main.bounds)
+        let view = MenuDetailsView(frame: UIScreen.main.bounds, refreshDelegate: self)
         self.view = view
     }
 
@@ -57,16 +57,12 @@ extension MenuDetailsViewController: MenuDetailsDisplayLogic {
         state = newState
         switch state {
         case .loading:
-            print("loading...")
             customView?.showLoading()
         case let .error(message):
-            print("error \(message)")
             customView?.showError(message: message)
         case let .result(menuDetails):
-            print("result: \(menuDetails)")
             customView?.updateData(details: menuDetails)
         case .emptyResult:
-            print("empty result")
             customView?.showEmptyView()
         case .initial(id: let id):
             customView?.showLoading()
@@ -91,9 +87,15 @@ extension MenuDetailsViewController : MenuDetailsRouterAppearance {
     }
     
     struct TabBarSetting {
-        let detents: [UISheetPresentationController.Detent] = [ .medium() ]
+        let detents: [UISheetPresentationController.Detent] = [.custom { _ in return 600 }]
         let prefersGrabberVisible = true
         let preferredCornerRadius: CGFloat = 24
     }
     
+}
+
+extension MenuDetailsViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
 }

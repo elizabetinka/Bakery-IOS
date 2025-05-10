@@ -38,5 +38,10 @@ class MenuDetailsInteractor: MenuDetailsBusinessLogic {
         }
         
         await self.presenter.presentItemDetails(response: MenuDetails.ShowDetails.Response(result: result))
+        
+        if let item = item {
+            let itemWithImage = await provider.setImageToItem(item: item)
+            await self.presenter.presentItemDetails(response: MenuDetails.ShowDetails.Response(result: .success(itemWithImage)))
+        }
     }
 }

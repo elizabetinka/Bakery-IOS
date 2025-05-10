@@ -13,26 +13,22 @@ protocol MenuRouterAppearance: AnyObject {
     func applyRouterSettigs()
 }
 
-protocol MenuViewControllerDelegate: AnyObject {
-    func openItemDetails(_ itemId: UniqueIdentifier)
-}
-
 class MenuViewController: UIViewController {
     let interactor: MenuBusinessLogic
     var state: Menu.ViewControllerState
     weak var router: TabBarRouterProtocol?
     lazy var customView = self.view as? MenuView
     
-    var collectionDataSource: MenuCollectionDataSource = MenuCollectionDataSource()
-    var collectionHandler: MenuCollectionDelegate = MenuCollectionDelegate()
+    private var tableManager : TableManagerProtocol
 
-    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading) {
+    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading, tableManager: TableManagerProtocol = TableManager()) {
         self.interactor = interactor
         self.state = initialState
+        self.tableManager = tableManager
         
         super.init(nibName: nil, bundle: nil)
         
-        collectionHandler.delegate = self
+        self.tableManager.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -41,7 +37,7 @@ class MenuViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = MenuView(frame: UIScreen.main.bounds, collectionDataSource: collectionDataSource, collectionDelegate: collectionHandler, refreshDelegate: self)
+        let view = MenuView(frame: UIScreen.main.bounds, refreshDelegate: self, refreshControlDelegate: self)
         self.view = view
     }
 
@@ -51,16 +47,11 @@ class MenuViewController: UIViewController {
         display(newState: state)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.bounds = view.safeAreaLayoutGuide.layoutFrame
-    }
-    
     // MARK: Do something
     func fetchItems() async {
             let request = Menu.ShowItems.Request()
             await interactor.fetchItems(request: request)
-        }
+    }
 }
 
 extension MenuViewController: MenuDisplayLogic {
@@ -79,13 +70,9 @@ extension MenuViewController: MenuDisplayLogic {
         case let .error(message):
             customView?.showError(message: message)
         case let .result(items):
-            collectionHandler.representableViewModel = items
-            collectionDataSource.representableViewModel = items
-            customView?.updateTableViewData(delegate: collectionHandler, dataSource: collectionDataSource)
+            tableManager.updateData(with: items)
         case .emptyResult:
-            collectionHandler.representableViewModel = []
-            collectionDataSource.representableViewModel = []
-            customView?.updateTableViewData(delegate: collectionHandler, dataSource: collectionDataSource)
+            tableManager.updateData(with: [])
         }
     }
 }
@@ -110,9 +97,12 @@ extension MenuViewController : MenuRouterAppearance {
     
 }
 
-
-extension MenuViewController: MenuViewControllerDelegate {
-    func openItemDetails(_ itemId: UniqueIdentifier) {
+extension MenuViewController: TableManagerDelegate {
+    func didUpdateData() {
+        customView?.updateTableViewData(delegate: tableManager, dataSource: tableManager)
+    }
+    
+    func openItemTapped(_ itemId: UniqueIdentifier) {
         router?.openViewController(toView: MyViewController.itemDetails(itemId: itemId))
     }
 }
@@ -120,6 +110,13 @@ extension MenuViewController: MenuViewControllerDelegate {
 
 extension MenuViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
+}
+
+
+extension MenuViewController: RefreshControlDelegate {
+    func refreshData() {
         display(newState: .loading)
     }
 }
