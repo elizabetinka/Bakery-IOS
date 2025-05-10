@@ -25,7 +25,7 @@ class CommonView: UIView {
     
     lazy var errorView: ErrorView = {
             let view = ErrorView()
-            view.delegate = self.refreshActionsDelegate
+            //view.delegate = self.refreshActionsDelegate
             return view
         }()
 
@@ -77,7 +77,7 @@ class CommonView: UIView {
 
     func showError(message: String) {
         show(view: errorView)
-        errorView.title.text = message
+        //errorView.title.text = message
     }
 
 

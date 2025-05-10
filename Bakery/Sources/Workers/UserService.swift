@@ -90,6 +90,7 @@ class UserService: UserServiceProtocol {
     func addUser(user: UserModel) async -> (UserModel?, UserServiceError?){
         
         let (users, error) = await getUsers()
+        print(users)
         
         guard error == nil else {
             return (nil, error)
@@ -97,6 +98,14 @@ class UserService: UserServiceProtocol {
         
         guard var users = users else {
             return (nil, .unknowm)
+        }
+        
+        let exists = users.contains { u in
+            u.phoneNumber == user.phoneNumber
+        }
+        
+        guard !exists else {
+            return (nil, .alreadyExists)
         }
         
         if lastId == nil {

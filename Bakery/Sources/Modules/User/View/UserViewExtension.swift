@@ -6,7 +6,7 @@ import UIKit
 
 extension UserView {
     
-    func createContentView(nameTextLabel: UILabel, phoneTextLabel: UILabel, bonusCard: UIView, statusCard: UIView) -> UIView{
+    func createContentView(nameTextLabel: UIView, phoneTextLabel: UIView, bonusCard: UIView, statusCard: UIView) -> UIView{
         let view = UIView()
         
         view.addSubview(nameTextLabel)
@@ -28,13 +28,13 @@ extension UserView {
         
         NSLayoutConstraint.activate([
            
-            nameTextLabel.topAnchor.constraint(equalTo: view.topAnchor),
-            nameTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
-            nameTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
-            
-            phoneTextLabel.topAnchor.constraint(equalTo: nameTextLabel.bottomAnchor, constant: 30),
-            phoneTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
-            phoneTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
+//            nameTextLabel.topAnchor.constraint(equalTo: view.topAnchor),
+//            nameTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
+//            nameTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
+//            
+//            phoneTextLabel.topAnchor.constraint(equalTo: nameTextLabel.bottomAnchor, constant: 30),
+//            phoneTextLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:15),
+//            phoneTextLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -15),
             
             stack.topAnchor.constraint(equalTo: phoneTextLabel.bottomAnchor, constant: 50),
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),

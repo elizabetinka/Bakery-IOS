@@ -6,178 +6,143 @@ import UIKit
 
 @MainActor
 protocol UserAutentificationViewProtocol : ViewProtocol {
-    func showLoading()
-    func showError(message: String)
-    func updateUI(isValid: Bool)
+    func setup(with model: UserAutentificationViewModel)
+    func configure(with model: UserAutentificationViewModel)
+    func getInfo() -> UserAutentificationViewInfo
 }
 
 @MainActor
 class UserAutentificationView: UIView, UserAutentificationViewProtocol {
     
-    private weak var buttonDelegate: LoginButtonDelegate?
-    private weak var refreshActionsDelegate: ErrorViewDelegate?
-    private weak var validateDelegate: UserAutentificationValidateDelegate?
-    
-
-    init(frame: CGRect = CGRect.zero, delegate: LoginButtonDelegate, refreshDelegate: ErrorViewDelegate, validateDelegate: UserAutentificationValidateDelegate) {
-        self.buttonDelegate=delegate
-        self.refreshActionsDelegate=refreshDelegate
-        self.validateDelegate=validateDelegate
-        
+    override init(frame: CGRect = CGRect.zero) {
         super.init(frame: frame)
-        addSubviews()
-        makeConstraints()
-        
-        registerForKeyboardNotifications()
-        
-        Appearance.mainViewApplyAppereance(view: self)
-        errorView.isHidden = true
-    }
-    
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 
+        setupKeyboardObservers()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setup(with model: UserAutentificationViewModel){
+        viewModel = model
+        
+        backgroundColor = model.style.backgroundColor
+        
+        let content = model.content
+        contentView = ComponentFactory.makeView(from: content)
+        
+        guard let contentView else { return }
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.subviews.forEach { $0.removeFromSuperview() }
+        self.addSubview(contentView)
+        bottomConstraint = contentView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        topConstraint = contentView.topAnchor.constraint(equalTo: self.topAnchor)
+        topConstraint?.priority = UILayoutPriority(750)
+        
+        NSLayoutConstraint.activate([
+            topConstraint!,
+            contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            bottomConstraint!,
+            contentView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        ])
+    }
+    
+    
+    func configure(with model: UserAutentificationViewModel){
+        viewModel = model
+        
+        backgroundColor = model.style.backgroundColor
+        
+        let content = model.content
+        
+        guard contentView != nil else { return }
+        
+        contentView!.configure(with: content)
+    }
+    
     func showLoading() {
-        activityIndicator.startAnimating()
     }
     
     func stopError() {
-        errorView.isHidden = true
-        activityIndicator.stopAnimating()
     }
     
     func showError(message: String) {
-        activityIndicator.stopAnimating()
-        errorView.configure(withMessage: message)
-        errorView.isHidden = false
-    }
-    
-    func updateUI(isValid: Bool) {
-        loginButton.isEnabled = isValid
-        Appearance.textFieldApplyAppereance(textField: phoneTextField, isValid: isValid)
-    }
-    
-    lazy private var activityIndicator : UIActivityIndicatorView = ViewFactory.getActivityIndicator()
-    lazy private var scrollView : UIScrollView =  ViewFactory.getScrollView()
-    lazy private var logoImageView: UIImageView =  ViewFactory.getLogoImageView()
-    lazy private var textLabel: UIView = ViewFactory.getTitleLable(title: "Введите номер телефона")
-    lazy private var phoneTextField: UITextField = ViewFactory.getTextField(placeholder: "+7", onTextChanged: phoneTextChanged)
-    lazy private var loginButton: UIButton = ViewFactory.getButton(with: "Войти", onTap: loginButtonTapped)
-    lazy private var errorView: ErrorView = ViewFactory.getErrorView(refreshDelegate: refreshActionsDelegate)
-    lazy private var contentView: UIView = createContentView(textLabel: textLabel, phoneTextField: phoneTextField, loginButton: loginButton)
-    
-    
-    func addSubviews(){
-        addSubview(scrollView)
-        
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
-        ])
-        
-        scrollView.addSubview(logoImageView)
-        scrollView.addSubview(contentView)
-        scrollView.addSubview(errorView)
-        scrollView.addSubview(activityIndicator)
     }
 
-    func makeConstraints() {
-        
-        logoImageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        errorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            logoImageView.widthAnchor.constraint(equalToConstant: 200),
-            logoImageView.heightAnchor.constraint(equalToConstant: 170),
-            logoImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            logoImageView.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor, constant: 50),
-            
-            contentView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 150),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            
 
-            errorView.widthAnchor.constraint(equalToConstant: 300),
-            errorView.heightAnchor.constraint(equalToConstant: 200),
-            errorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            errorView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
-        ])
+    private var contentView : DSView?
+ 
+    private var bottomConstraint: NSLayoutConstraint?
+    private var topConstraint: NSLayoutConstraint?
+    private var viewModel: UserAutentificationViewModel?
     
-    }
-    
-    @objc private func loginButtonTapped() {
-        guard let phoneNumber = phoneTextField.text, !phoneNumber.isEmpty else {
-            showError(message: "Введите номер телефона")
-            return
+    func getInfo() -> UserAutentificationViewInfo{
+        let field = contentView?.findView(withAccessibilityIdentifier: "phoneTextField")
+        
+        guard field != nil else {
+            return .init(phoneTextField : .init(text: ""))
         }
-        buttonDelegate?.didTapLoginButton(number: phoneNumber)
+        
+        guard let field = field as? DSTextField else {
+            return .init(phoneTextField : .init(text: ""))
+        }
+        
+        return .init(phoneTextField : field.getInfo())
     }
     
-    @objc private func phoneTextChanged(_ textField: UITextField) {
-        let text = textField.text ?? ""
-        validateDelegate?.validatePhoneNumber(number: text)
-    }
-    
-    private func registerForKeyboardNotifications() {
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(keyboardWillShow(_:)),
-                name: UIResponder.keyboardWillShowNotification,
-                object: nil
-            )
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(keyboardWillHide(_:)),
-                name: UIResponder.keyboardWillHideNotification,
-                object: nil
-            )
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-                tapGesture.cancelsTouchesInView = false
-                addGestureRecognizer(tapGesture)
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+                        tapGesture.cancelsTouchesInView = false
+                        addGestureRecognizer(tapGesture)
     }
 
-    private var isKeyoardShown: Bool = false
-
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        if let userInfo = notification.userInfo,
-        let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            
-            if !isKeyoardShown {
-                frame.origin.y -= keyboardFrame.height
-            }
-            isKeyoardShown = true
-            
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let kbFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        topConstraint?.isActive = false
+        bottomConstraint?.constant = -kbFrame.height
+        UIView.animate(withDuration: duration) {
+            self.layoutIfNeeded()
         }
     }
 
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        frame.origin.y = 0
-        isKeyoardShown = false
+    @objc func keyboardWillHide(_ notification: Notification) {
+        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        topConstraint?.isActive = true
+        bottomConstraint?.constant = 0
+        UIView.animate(withDuration: duration) {
+            self.layoutIfNeeded()
+        }
     }
-
+    
     @objc private func dismissKeyboard() {
         endEditing(true)
-        frame.origin.y = 0
-        isKeyoardShown = false
+        topConstraint?.isActive = true
+        bottomConstraint?.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.layoutIfNeeded()
+        }
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 

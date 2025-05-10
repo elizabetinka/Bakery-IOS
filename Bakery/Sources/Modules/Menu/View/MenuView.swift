@@ -17,7 +17,7 @@ extension MenuView {
     struct LocalAppearance {
         
         struct CollectionView {
-            static let backgroundColor = UIColor.systemGray6
+            static let backgroundColor = UIColor.appGrayBackground
         }
         
         static func collectionViewApplyAppereance(view: UICollectionView){

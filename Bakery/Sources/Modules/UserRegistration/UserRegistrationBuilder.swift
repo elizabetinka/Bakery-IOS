@@ -26,6 +26,9 @@ class UserRegistrationBuilder: ModuleBuilder {
         let controller = UserRegistrationViewController(interactor: interactor)
 
         presenter.viewController = controller
+        presenter.buttonDelegate = controller as? any RegistrationButtonDelegate
+        presenter.refreshActionsDelegate = controller as? any ErrorViewDelegate
+        presenter.validateDelegate = controller as? any UserRegistrationValidateDelegate
         controller.router = router
         return controller
     }

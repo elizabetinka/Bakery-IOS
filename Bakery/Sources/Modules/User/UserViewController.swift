@@ -7,6 +7,9 @@ import UIKit
 
 protocol UserDisplayLogic: AnyObject {
     func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel)
+    func displaySomething(viewModel: User.Init.ViewModel)
+    func displaySomething(viewModel: User.Loading.ViewModel)
+    func displaySomething(viewModel: User.Reload.ViewModel)
 }
 
 protocol UserRouterAppearance: AnyObject {
@@ -19,7 +22,7 @@ class UserViewController: UIViewController {
     weak var router: TabBarRouterProtocol?
     lazy var customView = self.view as? UserView
 
-    init(interactor: UserBusinessLogic, initialState: User.ViewControllerState = .loading) {
+    init(interactor: UserBusinessLogic, initialState: User.ViewControllerState = .initial) {
         self.interactor = interactor
         self.state = initialState
         super.init(nibName: nil, bundle: nil)
@@ -32,24 +35,38 @@ class UserViewController: UIViewController {
     // MARK: View lifecycle
     override func loadView() {
         print("Loading User view")
-        let view = UserView(refreshDelegate: self)
+        let view = UserView()
         self.view = view
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print("UserViewController viewDidLoad")
+        //display(newState: state)
     }
     
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
             print("UserViewController viewWillAppear")
-            display(newState: .loading)
+            display(newState: .initial)
         }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.bounds = view.safeAreaLayoutGuide.layoutFrame
+    }
+    
+    func initRequest() async {
+        loadingRequest()
+        await interactor.initRequest(request: User.Init.Request())
+    }
+    
+    func loadingRequest(){
+        interactor.loadingRequest(request: User.Loading.Request())
+    }
+    
+    func reloadRequest(){
+        interactor.reloadRequest(request: User.Reload.Request())
     }
 
     // MARK: Do something
@@ -60,6 +77,18 @@ class UserViewController: UIViewController {
 }
 
 extension UserViewController: UserDisplayLogic {
+    func displaySomething(viewModel: User.Init.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    
+    func displaySomething(viewModel: User.Loading.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    
+    func displaySomething(viewModel: User.Reload.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    
     func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel) {
         display(newState: viewModel.state)
     }
@@ -67,15 +96,23 @@ extension UserViewController: UserDisplayLogic {
     func display(newState: User.ViewControllerState) {
         state = newState
         switch state {
-        case .loading:
-            self.customView?.showLoading()
+        case .initial:
             Task {
-                await showUserInfo()
+                await  initRequest()
             }
-        case let .error(message):
-            self.customView?.showError(message: message)
-        case let .result(info):
-            self.customView?.presentUserInfo(userInfo: info)
+        case let .setup(model):
+            customView?.setup(with: model)
+        case let .configure(model):
+            customView?.configure(with: model)
+        //case .loading:
+//            self.customView?.showLoading()
+//            Task {
+//                await showUserInfo()
+//            }
+//        case let .error(message):
+//            self.customView?.showError(message: message)
+//        case let .result(info):
+//            self.customView?.presentUserInfo(userInfo: info)
         case .notAuthorized:
             self.router?.openViewController(toView: MyViewController.authentification)
         }
