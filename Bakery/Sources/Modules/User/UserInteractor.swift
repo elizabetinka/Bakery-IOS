@@ -6,7 +6,7 @@
 import Foundation
 
 protocol UserBusinessLogic {
-    func showUserInfo(request: User.ShowUserInfo.Request) async
+    //func showUserInfo(request: User.ShowUserInfo.Request) async
     func initRequest(request: User.Init.Request) async
     @MainActor  func loadingRequest(request: User.Loading.Request)
     @MainActor  func reloadRequest(request: User.Reload.Request)
@@ -20,32 +20,6 @@ class UserInteractor: UserBusinessLogic {
     init(presenter: UserPresentationLogic, provider: UserProviderProtocol = UserProvider()) {
         self.presenter = presenter
         self.provider = provider
-    }
-    
-    // MARK: Do something
-    func showUserInfo(request: User.ShowUserInfo.Request) async {
-        
-        let (info, error) = await provider.getCurrentUserInfo()
-        
-        let result: User.UserRequestResult
-        
-        if let error = error {
-            switch error {
-            case .getUserFailed(_):
-                result = .failure(.someError(message: error.localizedDescription))
-            case .notAuthorized:
-                result = .notAuthorized
-            case .unknown:
-                result = .failure(.someError(message: "No Data"))
-            }
-        }
-        else if let info = info {
-            result = .success(info)
-        }
-        else {
-            result = .failure(.someError(message: "No Data"))
-        }
-        await self.presenter.presentUserInfo(response: User.ShowUserInfo.Response(result: result))
     }
     
     func initRequest(request: User.Init.Request) async {

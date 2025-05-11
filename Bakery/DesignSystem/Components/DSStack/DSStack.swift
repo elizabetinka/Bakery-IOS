@@ -44,7 +44,7 @@ final class DSStack : UIView, DSView {
         
         viewModel.items.forEach {
             let view = ComponentFactory.makeView(from: $0)
-            print("in stack view.frame \(view.frame)")
+            //print("in stack view.frame \(view.frame)")
             items.append(view)
             stack.addArrangedSubview(view)
         }
@@ -83,7 +83,7 @@ final class DSStack : UIView, DSView {
         //stack.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
         //layoutIfNeeded()
-        print("stack \(stack.frame)")
-        print("stack self \(self.frame)")
+        //print("stack \(stack.frame)")
+        //print("stack self \(self.frame)")
     }
 }

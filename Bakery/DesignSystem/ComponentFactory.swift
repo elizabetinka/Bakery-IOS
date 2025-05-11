@@ -98,6 +98,14 @@ struct ComponentFactory {
                 view.configure(with: vm)
                 view.accessibilityIdentifier = vm.identifier
                 return view
+            case .commonCard:
+                guard let vm = viewModel as? CommonCardViewModel else {
+                    fatalError("Invalid ViewModel for text")
+                }
+                let view = CommonCard(vm: vm)
+                view.configure(with: vm)
+                view.accessibilityIdentifier = vm.identifier
+                return view
             default:
                 fatalError("Unsupported component type")
             }

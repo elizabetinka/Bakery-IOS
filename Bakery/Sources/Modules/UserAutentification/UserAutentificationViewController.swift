@@ -117,7 +117,6 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
     }
 }
 
-
 extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton() {
         let info = customView?.getInfo()

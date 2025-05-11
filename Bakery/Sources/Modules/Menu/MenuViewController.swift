@@ -19,16 +19,16 @@ class MenuViewController: UIViewController {
     weak var router: TabBarRouterProtocol?
     lazy var customView = self.view as? MenuView
     
-    private var tableManager : TableManagerProtocol
+    private var collectionManager : CollectionManagerProtocol
 
-    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading, tableManager: TableManagerProtocol = TableManager()) {
+    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading, collectionManager: CollectionManagerProtocol = CollectionManager()) {
         self.interactor = interactor
         self.state = initialState
-        self.tableManager = tableManager
+        self.collectionManager = collectionManager
         
         super.init(nibName: nil, bundle: nil)
         
-        self.tableManager.delegate = self
+        self.collectionManager.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -70,9 +70,9 @@ extension MenuViewController: MenuDisplayLogic {
         case let .error(message):
             customView?.showError(message: message)
         case let .result(items):
-            tableManager.updateData(with: items)
+            collectionManager.updateData(with: items)
         case .emptyResult:
-            tableManager.updateData(with: [])
+            collectionManager.updateData(with: [])
         }
     }
 }
@@ -97,9 +97,9 @@ extension MenuViewController : MenuRouterAppearance {
     
 }
 
-extension MenuViewController: TableManagerDelegate {
+extension MenuViewController: CollectionManagerDelegate {
     func didUpdateData() {
-        customView?.updateTableViewData(delegate: tableManager, dataSource: tableManager)
+        customView?.updateTableViewData(delegate: collectionManager, dataSource: collectionManager)
     }
     
     func openItemTapped(_ itemId: UniqueIdentifier) {

@@ -34,7 +34,7 @@ final class DSLabel : UIView, DSView {
         guard let viewModel = viewModel as? DSLabelViewModel else {
             fatalError("DSSpacer received wrong viewModel type")
         }
-        print("configure label \(viewModel.text)")
+        //print("configure label \(viewModel.text)")
         self.viewModel = viewModel
         
         label.text = viewModel.text

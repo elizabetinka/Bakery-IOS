@@ -34,7 +34,7 @@ final class DSContainer : UIView, DSView {
 
 
     func setup(with viewModel: DSContainerViewModel) {
-        print("setuo container")
+        //print("setuo container")
         self.viewModel = viewModel
         updateSubviews(with: viewModel)
     }
@@ -88,10 +88,10 @@ final class DSContainer : UIView, DSView {
                 applyLayoutToView(layout: layout.margin, view: item, topView: nil, botView: items[safe: i+1], superview: container)
             }
             else if i == viewModel?.bottomView {
-                applyLayoutToView(layout: layout.margin, view: item, topView: items[i-1], botView: nil, superview: container)
+                applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: nil, superview: container)
             }
             else {
-                applyLayoutToView(layout: layout.margin, view: item, topView: items[i-1], botView: items[safe: i+1], superview: container)
+                applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: items[safe: i+1], superview: container)
             }
         }
       

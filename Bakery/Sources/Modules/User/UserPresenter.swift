@@ -7,7 +7,6 @@ import UIKit
 
 @MainActor
 protocol UserPresentationLogic {
-    func presentUserInfo(response: User.ShowUserInfo.Response)
     func presentInitialData(response: User.Init.Response)
     func presentLoadingData(response: User.Loading.Response)
     func presentReloadData(response: User.Reload.Response)
@@ -20,23 +19,6 @@ class UserPresenter: UserPresentationLogic {
     weak var refreshActionsDelegate: ErrorViewDelegate?
     
     var vm: UserViewModel?
-
-    // MARK: Do something
-    func presentUserInfo(response: User.ShowUserInfo.Response) {
-//        var viewModel: User.ShowUserInfo.ViewModel
-//        
-//        switch response.result {
-//        case let .failure(error):
-//            viewModel = User.ShowUserInfo.ViewModel(state: .error(message: error.localizedDescription))
-//        case let .success(result):
-//            let userInfo = UserInfoViewModel(name: result.name, points: result.points, phoneNumber: result.phoneNumber)
-//            viewModel = User.ShowUserInfo.ViewModel(state: .result(userInfo))
-//        case .notAuthorized:
-//            viewModel = User.ShowUserInfo.ViewModel(state: .notAuthorized)
-//        }
-//        
-//        viewController?.displayUserInfo(viewModel: viewModel)
-    }
     
     func presentInitialData(response: User.Init.Response) {
         var viewModel: User.Init.ViewModel
@@ -75,18 +57,6 @@ class UserPresenter: UserPresentationLogic {
         viewController?.displaySomething(viewModel: viewModel)
     }
     
-    
-//    private func setInfo(info: UserInfoViewModel){
-//        guard vm != nil else { return }
-//        vm?.nameLabel?.text = info.name
-//        vm?.phoneLabel?.text = info.phoneNumber
-//        if var bonus = vm?.stackCards?.items[0] as? UserInfoCardModelViewModel{
-//            bonus.valueLabel?.text = String(info.points)
-//        }
-//        if var status = vm?.stackCards?.items[1] as? UserInfoCardModelViewModel{
-//            status.valueLabel?.text = "Карта 3%"
-//        }
-//    }
     private func setError(error: String){
         guard vm != nil else { return }
         vm?.errorModel?.state = .error

@@ -66,8 +66,8 @@ class UserView: UIView, UserViewProtocol {
         if (contentView == nil){
             return
         }
-        print("after setup")
-        print("after content view frame \(String(describing: contentView?.frame))")
+        //print("after setup")
+        //print("after content view frame \(String(describing: contentView?.frame))")
         contentView!.translatesAutoresizingMaskIntoConstraints = false
 
         self.subviews.forEach { $0.removeFromSuperview() }
@@ -84,35 +84,6 @@ class UserView: UIView, UserViewProtocol {
             contentView!.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             contentView!.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
-        
-//        addSubview(scrollView)
-//        
-//        scrollView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            scrollView.topAnchor.constraint(equalTo: self.topAnchor),
-//            scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-//            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-//            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
-//        ])
-//        
-//        scrollView.addSubview(contentView!)
-//        
-//        contentView!.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//           
-//            contentView!.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//            contentView!.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//            contentView!.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            contentView!.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-//            contentView!.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//        ])
-//        
-        
-        //layoutIfNeeded()
-      
-
     }
     
     func configure(with model: UserViewModel){
@@ -125,33 +96,6 @@ class UserView: UIView, UserViewProtocol {
         guard contentView != nil else { return }
         
         contentView!.configure(with: content)
-        
-//        if (model.errorModel != nil) {
-//            errorView.configure(with: model.errorModel!)
-//        }
-//
-//        if (model.nameLabel != nil){
-//            nameTextLabel.configure(with: model.nameLabel!)
-//        }
-//        if (model.phoneLabel != nil){
-//            phoneTextLabel.configure(with: model.phoneLabel!)
-//        }
-//        if (model.bonusCard != nil){
-//            bonusCard = ComponentFactory.makeView(from: model.bonusCard!)
-//            //bonusCard.configure(with: model.bonusCard!)
-//        }
-//        if (model.statusCard != nil){
-//            statusCard = ComponentFactory.makeView(from: model.statusCard!)
-//            //statusCard.configure(with: model.statusCard!)
-//        }
-//        if (model.activityIndicator != nil){
-//            activityIndicator.configure(with: model.activityIndicator!)
-//        }
-//        contentView = createContentView(nameTextLabel: nameTextLabel, phoneTextLabel: phoneTextLabel, bonusCard: bonusCard, statusCard: statusCard)
-        
-
-        //makeConfiguredConstraints(viewModel: model)
-        
     }
 
     

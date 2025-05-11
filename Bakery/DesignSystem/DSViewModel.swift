@@ -22,4 +22,5 @@ enum ComponentType {
     case stack
     case spacer
     case userInfoCard
+    case commonCard
 }

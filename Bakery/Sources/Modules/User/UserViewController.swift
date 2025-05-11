@@ -6,7 +6,7 @@
 import UIKit
 
 protocol UserDisplayLogic: AnyObject {
-    func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel)
+    //func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel)
     func displaySomething(viewModel: User.Init.ViewModel)
     func displaySomething(viewModel: User.Loading.ViewModel)
     func displaySomething(viewModel: User.Reload.ViewModel)
@@ -34,20 +34,16 @@ class UserViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        print("Loading User view")
         let view = UserView()
         self.view = view
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("UserViewController viewDidLoad")
-        //display(newState: state)
     }
     
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            print("UserViewController viewWillAppear")
             display(newState: .initial)
         }
     
@@ -56,23 +52,20 @@ class UserViewController: UIViewController {
         view.bounds = view.safeAreaLayoutGuide.layoutFrame
     }
     
+    // MARK: Init
     func initRequest() async {
         loadingRequest()
         await interactor.initRequest(request: User.Init.Request())
     }
     
+    // MARK: Loading
     func loadingRequest(){
         interactor.loadingRequest(request: User.Loading.Request())
     }
     
+    // MARK: Reload
     func reloadRequest(){
         interactor.reloadRequest(request: User.Reload.Request())
-    }
-
-    // MARK: Do something
-    func showUserInfo() async {
-        let request = User.ShowUserInfo.Request()
-        await interactor.showUserInfo(request: request)
     }
 }
 
@@ -104,15 +97,6 @@ extension UserViewController: UserDisplayLogic {
             customView?.setup(with: model)
         case let .configure(model):
             customView?.configure(with: model)
-        //case .loading:
-//            self.customView?.showLoading()
-//            Task {
-//                await showUserInfo()
-//            }
-//        case let .error(message):
-//            self.customView?.showError(message: message)
-//        case let .result(info):
-//            self.customView?.presentUserInfo(userInfo: info)
         case .notAuthorized:
             self.router?.openViewController(toView: MyViewController.authentification)
         }

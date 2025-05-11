@@ -84,7 +84,7 @@ class MenuService: MenuServiceProtocol {
         do {
             let (data, _) = try await session.data(for: request)
             if let jsonString = String(data: data, encoding: .utf8) {
-                print("JSON response:\n\(jsonString)")
+                //print("JSON response:\n\(jsonString)")
             } else {
                 print("Не удалось декодировать data как UTF-8 строку")
             }

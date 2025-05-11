@@ -30,6 +30,16 @@ struct ItemModelJson :  Codable{
     let itemImage: String
 }
 
+struct ActionModelJson :  Codable{
+    let uid: UniqueIdentifier
+    let name: String
+    let image: String
+}
+
 struct ItemResponse :  Codable{
     let items: [ItemModelJson]
+}
+
+struct ActionResponse :  Codable{
+    let actions: [ActionModelJson]
 }

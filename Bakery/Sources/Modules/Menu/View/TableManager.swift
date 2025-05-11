@@ -8,20 +8,20 @@
 import Foundation
 import UIKit
 
-protocol TableManagerDelegate: AnyObject {
+protocol CollectionManagerDelegate: AnyObject {
     func didUpdateData()
     func openItemTapped(_ itemId: UniqueIdentifier)
 }
 
-protocol TableManagerProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
+protocol CollectionManagerProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
     func updateData(with viewModels: [ItemViewModel])
     
-    var delegate: TableManagerDelegate? { get set }
+    var delegate: CollectionManagerDelegate? { get set }
 }
 
-class TableManager: NSObject, TableManagerProtocol {
+class CollectionManager: NSObject, CollectionManagerProtocol {
     
-    weak var delegate: TableManagerDelegate?
+    weak var delegate: CollectionManagerDelegate?
     private var representableViewModel: [ItemViewModel]
 
     init(viewModel: [ItemViewModel] = []) {

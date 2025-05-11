@@ -71,9 +71,27 @@ class TabBarRouter: TabBarRouterProtocol {
             routerApperance.applyRouterSettigs()
         }
         
-        let mainNavController = UINavigationController(rootViewController: mainVC)
-        let menuNavController = UINavigationController(rootViewController: menuVC)
-        let userNavController = UINavigationController(rootViewController: userVC)
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+        
+                    
+        var mainNavController = UINavigationController(rootViewController: mainVC)
+        //mainNavController.navigationBar.standardAppearance = appearance
+        //mainNavController.navigationBar.scrollEdgeAppearance = appearance
+        mainNavController.setNavigationBarHidden(true, animated: false)
+        
+        var menuNavController = UINavigationController(rootViewController: menuVC)
+        menuNavController.navigationBar.standardAppearance = appearance
+        menuNavController.navigationBar.scrollEdgeAppearance = appearance
+        //menuNavController.setNavigationBarHidden(true, animated: false)
+        
+        var userNavController = UINavigationController(rootViewController: userVC)
+        userNavController.navigationBar.standardAppearance = appearance
+        userNavController.navigationBar.scrollEdgeAppearance = appearance
+//        userNavController.navigationBar.standardAppearance = appearance
+//        userNavController.navigationBar.scrollEdgeAppearance = appearance
+        //userNavController.setNavigationBarHidden(true, animated: false)
         
         tabBarController.viewControllers = [mainNavController, menuNavController, userNavController]
         applyApperance()
