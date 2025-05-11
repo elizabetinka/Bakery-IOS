@@ -59,25 +59,36 @@ public struct ViewFactory {
         text.text = title
     
         Appearance.textLabelApplyAppereance(textLabel: text, level: level)
-    
-//        let mainView = UIView()
-//        text.translatesAutoresizingMaskIntoConstraints = false
-//        mainView.translatesAutoresizingMaskIntoConstraints = false
-//        mainView.addSubview(text)
-//        text.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-//        text.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
-//        mainView.heightAnchor.constraint(equalTo: text.heightAnchor, multiplier: 2).isActive = true
-    
         return text
     }
     
     static func getErrorView (refreshDelegate: ErrorViewDelegate?) -> ErrorView {
         let view = ErrorView()
-        view.delegate = refreshDelegate
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 300).isActive=true
+        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
         return view
     }
     
     static func getScrollView () -> UIScrollView {
         return UIScrollView()
+    }
+    
+    static func getActivityIndicator () -> UIActivityIndicatorView {
+        let ind = UIActivityIndicatorView(style: .large)
+        ind.hidesWhenStopped = true
+        return ind
+    }
+    
+    static func getRefreshControl (delegate: @escaping () -> Void) -> UIRefreshControl {
+        
+        let action = UIAction { _ in
+            delegate()
+        }
+        
+        let ans = UIRefreshControl()
+        ans.addAction(action, for: .valueChanged)
+        Appearance.refreshControlApplyAppereance(refreshControl: ans)
+        return ans
     }
 }

@@ -12,7 +12,7 @@ struct UserModel :  UniqueIdentifiable {
     let uid: UniqueIdentifier
     let name: String
     let points: Int
-    let phoneNumner: String
+    let phoneNumber: String
 }
 
 extension UserModel: Equatable {

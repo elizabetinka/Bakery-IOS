@@ -22,13 +22,6 @@ enum Common {
             case success(UserModel)
             case notAuthorized
         }
-        
-        enum ViewControllerState {
-            case loading
-            case authorizedResult(CommonUserViewModel)
-            case notAuthorized
-            case error(message: String)
-        }
     }
     
     enum ShowItem {
@@ -46,15 +39,68 @@ enum Common {
         enum CommonRequestResult {
             case failure(CommonError)
             case success(ItemModel)
-            case emptyResult
+        }
+    }
+    
+    enum ShowAction {
+        struct Request {
+        }
+
+        struct Response {
+            var result: CommonRequestResult
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
         }
         
-        enum ViewControllerState {
-            case loading
-            case result(CommonItemViewModel)
-            case emptyResult
-            case error(message: String)
+        enum CommonRequestResult {
+            case failure(CommonError)
+            case success(ActionModel)
         }
+    }
+    
+    enum LoadingUserInfo {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum LoadingItem {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum LoadingAction {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    
+    enum ViewControllerState {
+        case initial
+        case setup(model: CommonViewModel)
+        case configure(model: CommonViewModel)
     }
 
     enum CommonError: Error {

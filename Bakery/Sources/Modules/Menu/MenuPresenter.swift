@@ -5,10 +5,12 @@
 
 import UIKit
 
+@MainActor
 protocol MenuPresentationLogic {
     func presentItems(response: Menu.ShowItems.Response)
 }
 
+@MainActor
 /// Отвечает за отображение данных модуля Menu
 class MenuPresenter: MenuPresentationLogic {
     weak var viewController: MenuDisplayLogic?

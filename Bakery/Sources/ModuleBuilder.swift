@@ -9,5 +9,6 @@ import Foundation
 import UIKit
 
 protocol ModuleBuilder {
+    @MainActor
     func build() -> UIViewController
 }

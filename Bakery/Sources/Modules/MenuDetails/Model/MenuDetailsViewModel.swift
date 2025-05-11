@@ -11,7 +11,7 @@ struct MenuDetailsViewModel: UniqueIdentifiable {
     let cost: Int
     let kcal: Int
     let description: String
-    let itemImage: UIImage
+    let itemImage: UIImage?
 }
 
 extension MenuDetailsViewModel: Equatable {
