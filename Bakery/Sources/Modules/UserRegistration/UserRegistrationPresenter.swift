@@ -163,10 +163,6 @@ class UserRegistrationPresenter: UserRegistrationPresentationLogic {
         
         model.activityIndicator = DSActivityIndicatorViewModel(state: .stopped, size: .large, style: .primary, layout: activityIndicatorLayout)
         
-//        let imageLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .l), padding: DSLayoutPadding())
-//        
-//        model.logoImage = DSImageViewModel(image: UIImage.logo, size: .default, layout: imageLayout)
-        
         return model
         
     }

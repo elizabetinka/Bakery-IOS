@@ -5,7 +5,7 @@
 import UIKit
 
 @MainActor
-protocol MenuViewProtocol : ViewProtocol {
+protocol MenuViewProtocol {
     func showLoading()
     func showError(message: String)
     

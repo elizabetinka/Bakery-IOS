@@ -123,7 +123,6 @@ class CommonPresenter: CommonPresentationLogic {
     
     private func setItem(item:ItemModel){
         guard item.itemImage != nil else { return }
-        let image = item.itemImage!//.scaled(by:1.8)?.resizableImage(withCapInsets: .zero)
         vm?.card2.backroundImageView = item.itemImage!
         vm?.card2.text = nil
     }
@@ -135,11 +134,11 @@ class CommonPresenter: CommonPresentationLogic {
     }
     
     private func  getInitialViewModel() -> CommonViewModel {
-        var titleLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero), padding: .init())
-        var titleViewModel = DSLabelViewModel(identifier: "Fairy cakes", text: "Fairy cakes", style: .beautyful, state: .default, size: .l, layout: titleLayout)
+        let titleLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero), padding: .init())
+        let titleViewModel = DSLabelViewModel(identifier: "Fairy cakes", text: "Fairy cakes", style: .beautyful, state: .default, size: .l, layout: titleLayout)
         
-        var valueLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
-        var valueViewModel = DSLabelViewModel(identifier: "commonCardEnter", text: "Вход/Регистрация", style: .beautyful, state: .default, size: .m, layout: valueLayout)
+        let valueLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
+        let valueViewModel = DSLabelViewModel(identifier: "commonCardEnter", text: "Вход/Регистрация", style: .beautyful, state: .default, size: .m, layout: valueLayout)
         
         let activityIndicatorLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: DSLayoutPadding())
         
@@ -152,30 +151,30 @@ class CommonPresenter: CommonPresentationLogic {
         card0.onTap = cardsDelegate?.didTapUserCard
         
         
-        var promotionLayout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
-        var promotionViewModel = DSLabelViewModel(identifier: "promotionLabel", text: "Акции и новости", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout)
+        let promotionLayout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
+        let promotionViewModel = DSLabelViewModel(identifier: "promotionLabel", text: "Акции и новости", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout)
         
-        var valueLayout1 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: .init())
-        var valueViewModel1 = DSLabelViewModel(identifier: "card1Description", text: "Акции", style: .primary, state: .default, size: .s, layout: valueLayout1)
+        let valueLayout1 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: .init())
+        let valueViewModel1 = DSLabelViewModel(identifier: "card1Description", text: "Акции", style: .primary, state: .default, size: .s, layout: valueLayout1)
         
         let card1Layout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .xs, HMargin: .m))
         
-        var image1 = UIImage.init(color: .appSoftGray)!
+        let image1 = UIImage.init(color: .appSoftGray)!
         var card1 = CommonCardViewModel(text: valueViewModel1, activityIndicator: activityIndicator, backroundImageView: image1, style: .image, size: .medium, layout: card1Layout)
         
         card1.onTap = cardsDelegate?.didTapActionCard
         
         
-        var promotionLayout2 = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
-        var promotionViewModel2 = DSLabelViewModel(identifier: "promotionLabel2", text: "Посмотреть меню", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout2)
+        let promotionLayout2 = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
+        let promotionViewModel2 = DSLabelViewModel(identifier: "promotionLabel2", text: "Посмотреть меню", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout2)
         
         
-        var valueLayout2 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
-        var valueViewModel2 = DSLabelViewModel(identifier: "card2Description", text: "Меню", style: .primary, state: .default, size: .s, layout: valueLayout2)
+        let valueLayout2 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
+        let valueViewModel2 = DSLabelViewModel(identifier: "card2Description", text: "Меню", style: .primary, state: .default, size: .s, layout: valueLayout2)
         
         let card2Layout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .xs, bottomMargin: .zero, HMargin: .m))
         
-        var image2 = UIImage.init(color: .appSoftGray)!
+        let image2 = UIImage.init(color: .appSoftGray)!
         var card2 = CommonCardViewModel(text: valueViewModel2, activityIndicator: activityIndicator, backroundImageView: image2, style: .image, size: .medium, layout: card2Layout)
         
         card2.onTap = cardsDelegate?.didTapItemCard

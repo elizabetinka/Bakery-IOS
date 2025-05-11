@@ -24,23 +24,12 @@ final class DSButton : UIView, DSView {
 
     private func commonInit() {
         let hoverGR = UIHoverGestureRecognizer(target: self, action: #selector(handleHover(_:)))
-        button.addGestureRecognizer(hoverGR)
         
+        button.addGestureRecognizer(hoverGR)
         button.addTarget(self, action: #selector(didTap), for: .touchUpInside)
         
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
-        
-        //button.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        //button.isUserInteractionEnabled = true
-        //button.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        
-        
-        
-        
-        button.clipsToBounds = true
-        
-        //button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
     }
 
 
@@ -54,7 +43,8 @@ final class DSButton : UIView, DSView {
         button.titleLabel?.font = viewModel.size.font
         button.backgroundColor = viewModel.style.backgroundColor(for: viewModel.state)
         button.layer.cornerRadius = viewModel.size.cornerRadius
-        
+        button.clipsToBounds = viewModel.style.clipsToBounds
+
         button.heightAnchor.constraint(equalToConstant: viewModel.size.height).isActive = true
         
         button.isEnabled = viewModel.state != .disabled
@@ -65,11 +55,6 @@ final class DSButton : UIView, DSView {
     }
     
     func makeConfiguredConstraints(viewModel: DSButtonViewModel){
-//        let all = self.constraints.filter {
-//            $0.firstItem === button
-//        }
-//        NSLayoutConstraint.deactivate(all)
-        
         let layout = viewModel.layout.padding
         
         button.contentEdgeInsets = UIEdgeInsets(top: layout.vPadding, left: layout.hPadding, bottom: layout.vPadding, right: layout.hPadding)
@@ -78,12 +63,9 @@ final class DSButton : UIView, DSView {
         button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         button.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         button.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        
-        //layoutIfNeeded()
     }
 
     @objc private func didTap() {
-        print("Tap!")
         guard viewModel?.state != .disabled else { return }
         viewModel?.onTap?()
     }

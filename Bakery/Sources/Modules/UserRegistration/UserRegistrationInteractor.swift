@@ -5,8 +5,6 @@
 
 protocol UserRegistrationBusinessLogic {
     func registration(request: UserRegistration.Registration.Request) async
-//    func validatePhoneNumber(number: String) -> Bool
-//    func validateName(name: String) -> Bool
     
     @MainActor  func initRequest(request: UserRegistration.Init.Request)
     @MainActor  func loadingRequest(request: UserRegistration.Loading.Request)
@@ -84,7 +82,7 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
     
     @MainActor func validateName(request: UserRegistration.ValidateName.Request){
         
-        var nameResult = validateName(name: request.name)
+        let nameResult = validateName(name: request.name)
     
         self.presenter.presentValidatedName(response:  UserRegistration.ValidateName.Response(result: nameResult))
     }
@@ -92,7 +90,7 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
     
     @MainActor func validatePhone(request: UserRegistration.ValidatePhone.Request){
         
-        var phoneResult =  validatePhoneNumber(number: request.phone)
+        let phoneResult =  validatePhoneNumber(number: request.phone)
         
         self.presenter.presentValidatedPhone(response:  UserRegistration.ValidatePhone.Response(result: phoneResult))
     }

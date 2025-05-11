@@ -34,7 +34,6 @@ final class DSContainer : UIView, DSView {
 
 
     func setup(with viewModel: DSContainerViewModel) {
-        //print("setuo container")
         self.viewModel = viewModel
         updateSubviews(with: viewModel)
     }

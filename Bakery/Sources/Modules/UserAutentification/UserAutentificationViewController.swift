@@ -97,20 +97,20 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
         state = newState
         switch state {
         case .initial:
+            print("ayth state init")
             initRequest()
         case let .setup(model):
+            print("ayth state setup")
             customView?.setup(with: model)
         case let .configure(model):
+            print("ayth state configure")
             customView?.configure(with: model)
-//        case .loading:
-//            loadingRequest()
-//        case let .error(message):
-//            customView?.showError(message: message)
         case .success:
+            print("ayth state success")
             self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
         case .notRegistred:
-            print(".notRegistred")
+            print("ayth state not registred")
             self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.registration)
         }
@@ -121,8 +121,6 @@ extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton() {
         let info = customView?.getInfo()
         let number = info?.phoneTextField.text ?? ""
-        print("didTapLoginButton: \(number)")
-        //customView?.showLoading()
         Task {
             await login(number: number)
         }
@@ -131,7 +129,6 @@ extension UserAutentificationViewController : LoginButtonDelegate {
 
 extension UserAutentificationViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
-        print("reloadButtonWasTapped")
         reloadRequest()
     }
 }

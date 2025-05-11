@@ -16,10 +16,8 @@ struct DSTextFieldViewModel: DSViewModel {
     var onEditingChanged: ((String) -> Void)?
     var errorLabel: DSLabelViewModel
     var layout: DSLayout
-    //var validator: ((String) -> Bool)?
 
     public init(
-        //text: String? = nil,
         placeholder: String,
         style: DSTextFieldStyle = .default,
         state: DSTextFieldState = .default,
@@ -27,9 +25,7 @@ struct DSTextFieldViewModel: DSViewModel {
         layout: DSLayout = .init(),
         onEditingChanged: ((String) -> Void)? = nil,
         errorLabel: DSLabelViewModel
-        //validator: ((String) -> Bool)? = nil
     ) {
-        //self.text = text
         self.placeholder = placeholder
         self.style = style
         self.state = state
@@ -37,6 +33,5 @@ struct DSTextFieldViewModel: DSViewModel {
         self.onEditingChanged = onEditingChanged
         self.errorLabel = errorLabel
         self.layout = layout
-        //self.validator = validator
     }
 }

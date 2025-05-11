@@ -29,11 +29,6 @@ final class DSStack : UIView, DSView {
         addSubview(stack)
         self.translatesAutoresizingMaskIntoConstraints = false
         stack.translatesAutoresizingMaskIntoConstraints = false
-//        stack.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-//        stack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-//        stack.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-//        stack.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        //label.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
     }
 
     
@@ -44,11 +39,11 @@ final class DSStack : UIView, DSView {
         
         viewModel.items.forEach {
             let view = ComponentFactory.makeView(from: $0)
-            //print("in stack view.frame \(view.frame)")
             items.append(view)
             stack.addArrangedSubview(view)
         }
     }
+    
     func configure(with viewModel: DSViewModel) {
         guard let viewModel = viewModel as? DSStackViewModel else {
             fatalError("DSSpacer received wrong viewModel type")
@@ -62,7 +57,6 @@ final class DSStack : UIView, DSView {
         
         
         NSLayoutConstraint.deactivate(self.constraints)
-        //NSLayoutConstraint.deactivate(stack.constraints)
         
         
         for (i, item) in items.enumerated() {
@@ -72,18 +66,11 @@ final class DSStack : UIView, DSView {
             }
         }
         
-        
         let padding = viewModel.layout.padding
         
         stack.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.vPadding).isActive = true
         stack.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -padding.vPadding).isActive = true
         stack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding.hPadding).isActive = true
         stack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.hPadding).isActive = true
-        
-        //stack.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
-        //layoutIfNeeded()
-        //print("stack \(stack.frame)")
-        //print("stack self \(self.frame)")
     }
 }

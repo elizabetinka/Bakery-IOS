@@ -89,10 +89,8 @@ enum UserAutentification {
         case initial
         case setup(model: UserAutentificationViewModel)
         case configure(model: UserAutentificationViewModel)
-        //case loading
         case success
         case notRegistred
-        //case error(message: String)
     }
 
 }

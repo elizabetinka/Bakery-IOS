@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct UserInfoViewModel{
-    let name: String
-    let points: Int
-    let phoneNumber: String
-}
+//struct UserInfoViewModel{
+//    let name: String
+//    let points: Int
+//    let phoneNumber: String
+//}

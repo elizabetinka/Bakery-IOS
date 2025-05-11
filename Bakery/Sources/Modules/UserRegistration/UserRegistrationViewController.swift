@@ -49,7 +49,6 @@ class UserRegistrationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("UserRegistrationViewController.viewDidLoad")
         display(newState: state)
     }
 
@@ -110,15 +109,9 @@ extension UserRegistrationViewController: UserRegistrationDisplayLogic {
             customView?.setup(with: model)
         case let .configure(model):
             customView?.configure(with: model)
-        //case .loading: break
-            //customView?.showLoading()
-        //case let .error(_): break
-            //customView?.showError(m1essage: message)
         case .success:
             dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
-//        case .alreadyExists:
-//            customView?.showError(message: "Такой номер уже зарегистрирован")
         }
     }
 }
@@ -129,7 +122,6 @@ extension UserRegistrationViewController : RegistrationButtonDelegate {
         let info = customView?.getInfo()
         let number = info?.phoneTextField.text ?? ""
         let name = info?.nameTextField.text ?? ""
-        //customView?.showLoading()
         Task {
             await registration(number: number, name: name)
         }
@@ -152,6 +144,5 @@ extension  UserRegistrationViewController: UserRegistrationValidateDelegate {
 extension UserRegistrationViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
         reloadRequest()
-        //customView?.stopError()
     }
 }

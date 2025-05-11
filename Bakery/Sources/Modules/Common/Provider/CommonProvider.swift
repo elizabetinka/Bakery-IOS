@@ -114,7 +114,7 @@ struct CommonProvider: CommonProviderProtocol {
         
         if let error = error {
             return (nil, .getItemFailed(underlyingError: error))
-        } else if var images = items {
+        } else if let images = items {
             if images.isEmpty == false {
                 actionDataStore.saveActions(images)
                 return (images.randomElement(), nil)

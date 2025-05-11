@@ -63,12 +63,9 @@ enum User {
 
     enum ViewControllerState {
         case initial
-        //case loading
         case setup(model: UserViewModel)
         case configure(model: UserViewModel)
-        //case result(UserInfoViewModel)
         case notAuthorized
-        //case error(message: String)
     }
 
     enum UserError: Error {

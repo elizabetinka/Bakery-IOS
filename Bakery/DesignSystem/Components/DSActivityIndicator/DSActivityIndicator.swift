@@ -25,8 +25,6 @@ final class DSActivityIndicator : UIView, DSView {
     private func commonInit() {
         addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        
-        //abel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
     }
 
 

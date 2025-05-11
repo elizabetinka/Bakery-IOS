@@ -41,5 +41,9 @@ enum DSButtonStyle {
         default: return UIColor.clear
         }
     }
+    
+    public var clipsToBounds : Bool {
+        return true
+    }
 
 }

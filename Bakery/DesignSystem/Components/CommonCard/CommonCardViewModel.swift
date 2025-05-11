@@ -41,8 +41,8 @@ struct CommonCardViewModel: DSViewModel {
             }
         }
         items.append(activityIndicator)
-        var contentLayot = DSLayout(margin: DSLayoutMarging(width:.fill, topMargin: .zero, bottomMargin: .zero, HMargin: .zero), padding: .init())
-        var container = DSContainerViewModel(layout: contentLayot, items: items, topView: topView, bottomView: bottomview)
+        let contentLayot = DSLayout(margin: DSLayoutMarging(width:.fill, topMargin: .zero, bottomMargin: .zero, HMargin: .zero), padding: .init())
+        let container = DSContainerViewModel(layout: contentLayot, items: items, topView: topView, bottomView: bottomview)
         return container
     }
 }

@@ -6,7 +6,6 @@
 import UIKit
 
 protocol UserDisplayLogic: AnyObject {
-    //func displayUserInfo(viewModel: User.ShowUserInfo.ViewModel)
     func displaySomething(viewModel: User.Init.ViewModel)
     func displaySomething(viewModel: User.Loading.ViewModel)
     func displaySomething(viewModel: User.Reload.ViewModel)
@@ -90,14 +89,18 @@ extension UserViewController: UserDisplayLogic {
         state = newState
         switch state {
         case .initial:
+            print("user state init")
             Task {
                 await  initRequest()
             }
         case let .setup(model):
+            print("user state setup")
             customView?.setup(with: model)
         case let .configure(model):
+            print("user state configure")
             customView?.configure(with: model)
         case .notAuthorized:
+            print("user state not auth")
             self.router?.openViewController(toView: MyViewController.authentification)
         }
     }
@@ -127,6 +130,6 @@ extension UserViewController : UserRouterAppearance {
 
 extension UserViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
-        self.customView?.stopError()
+        reloadRequest()
     }
 }

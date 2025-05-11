@@ -36,16 +36,8 @@ final class DSImage : UIView, DSView {
         
         image.image = viewModel.image
         
-//        let all = self.constraints.filter {
-//            $0.firstItem === image
-//        }
-//        NSLayoutConstraint.deactivate(all)
         NSLayoutConstraint.deactivate(self.constraints)
         NSLayoutConstraint.deactivate(image.constraints)
-        
-//        self.widthAnchor.constraint(equalToConstant: viewModel.size.width+2*layout.vPadding).isActive = true
-//        self.heightAnchor.constraint(equalToConstant: viewModel.size.height+2*layout.hPadding).isActive = true
-//            
         
         image.widthAnchor.constraint(equalToConstant: viewModel.size.width).isActive = true
         image.heightAnchor.constraint(equalToConstant: viewModel.size.height).isActive = true
@@ -56,13 +48,6 @@ final class DSImage : UIView, DSView {
         image.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: layout.hPadding ).isActive = true
         image.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -layout.hPadding ).isActive = true
         
-        
-//        image.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-//        image.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-//        image.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: layout.hPadding).isActive = true
-//        image.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -layout.hPadding).isActive = true
-        
-        //self.layoutIfNeeded()
         invalidateIntrinsicContentSize()
         
     }

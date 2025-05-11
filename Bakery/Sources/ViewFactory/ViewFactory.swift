@@ -64,8 +64,6 @@ public struct ViewFactory {
     
     static func getErrorView (refreshDelegate: ErrorViewDelegate?) -> ErrorView {
         let view = ErrorView()
-        //view.delegate = refreshDelegate
-        
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 300).isActive=true
         view.heightAnchor.constraint(equalToConstant: 200).isActive = true

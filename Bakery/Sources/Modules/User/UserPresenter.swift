@@ -29,8 +29,7 @@ class UserPresenter: UserPresentationLogic {
             setError(error: error.localizedDescription)
             viewModel = User.Init.ViewModel(state: .setup(model: vm!))
         case let .success(result):
-            let userInfo = UserInfoViewModel(name: result.name, points: result.points, phoneNumber: result.phoneNumber)
-            vm = getInitialViewModel(name: userInfo.name, phoneNumber: userInfo.phoneNumber, bonus: String(userInfo.points), status: "Карта 3%")
+            vm = getInitialViewModel(name: result.name, phoneNumber: result.phoneNumber, bonus: String(result.points), status: "Карта 3%")
             viewModel = User.Init.ViewModel(state: .setup(model: vm!))
         case .notAuthorized:
             vm = getInitialViewModel()

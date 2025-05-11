@@ -26,19 +26,11 @@ protocol CardsDelegate: AnyObject {
     func didTapActionCard()
 }
 
-//protocol CommonViewControllerDelegate: AnyObject {
-//    func openMenu()
-//    func openUser()
-//}
-
 class CommonViewController: UIViewController {
     let interactor: CommonBusinessLogic
 
     var state: Common.ViewControllerState
     weak var router: TabBarRouterProtocol?
-    
-//    private let commonTableDataSource: CommonTableDataSource = CommonTableDataSource()
-//    private let commonTableDelegate: CommonTableDelegate = CommonTableDelegate()
     
     lazy var customView = self.view as? CommonView
         
@@ -61,7 +53,6 @@ class CommonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("CommonViewController: viewDidLoad")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,11 +60,6 @@ class CommonViewController: UIViewController {
         print("CommonViewController viewWillAppear")
         display(newState: .initial)
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        //view.bounds = view.safeAreaLayoutGuide.layoutFrame
-//    }
 
     func loadingUserInfo(){
         let request = Common.LoadingUserInfo.Request()
@@ -150,10 +136,6 @@ extension CommonViewController: CommonDisplayLogic {
             customView?.setup(with: model)
         case let .configure(model):
             customView?.configure(with: model)
-            //        case .notAuthorized:
-            //            commonTableDataSource.setUserModel(nil)
-            //            customView?.updateTableViewData(delegate: commonTableDelegate, dataSource: commonTableDataSource)
-            //        }
         }}
     
 }
@@ -177,24 +159,6 @@ extension CommonViewController : CommonRouterAppearance {
     }
     
 }
-
-//extension CommonViewController: CommonViewControllerDelegate {
-//    func openMenu() {
-//        router?.openViewController(toView: MyViewController.menu)
-//    }
-//    
-//    func openUser() {
-//        router?.openViewController(toView: MyViewController.user)
-//    }
-//}
-//
-//extension CommonViewController: ErrorViewDelegate {
-//    func reloadButtonWasTapped() {
-//        state = .initial
-//        display(newState: state)
-//    }
-//}
-
 
 extension CommonViewController : CardsDelegate {
     func didTapUserCard() {

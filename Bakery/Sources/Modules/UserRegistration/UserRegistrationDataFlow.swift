@@ -89,10 +89,6 @@ enum UserRegistration {
         let name: String
     }
     
-//    enum UserRegistrationError: Error {
-//        case someError(message: String)
-//    }
-    
     enum UserRegistrationRequestResult {
         case failure(message: String)
         case success
@@ -106,11 +102,8 @@ enum UserRegistration {
     
     enum ViewControllerState {
         case initial
-        //case loading
         case success
         case setup(model: UserRegistrationViewModel)
         case configure(model: UserRegistrationViewModel)
-        //case alreadyExists
-        //case error(message: String)
     }
 }

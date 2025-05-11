@@ -5,7 +5,7 @@
 import UIKit
 
 @MainActor
-protocol UserRegistrationViewProtocol : ViewProtocol {
+protocol UserRegistrationViewProtocol {
     func getInfo() -> UserRegistrationViewInfo
     func setup(with model: UserRegistrationViewModel)
     func configure(with model: UserRegistrationViewModel)
@@ -81,16 +81,6 @@ class UserRegistrationView: UIView, UserRegistrationViewProtocol {
 
         return .init(phoneTextField : phoneInfo , nameTextField: nameInfo)
     }
-    
-    func showLoading() {
-    }
-    
-    func stopError() {
-    }
-    
-    func showError(message: String) {
-    }
-    
 
     private var contentView : DSView?
  

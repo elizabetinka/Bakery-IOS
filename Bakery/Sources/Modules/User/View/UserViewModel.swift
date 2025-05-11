@@ -9,14 +9,12 @@ struct UserViewModel {
     var nameLabel: DSLabelViewModel?
     var phoneLabel: DSLabelViewModel?
     var stackCards: DSStackViewModel?
-//    var bonusCard: UserInfoCardModelViewModel?
-//    var statusCard: UserInfoCardModelViewModel?
     
     var errorModel: ErrorViewModel?
     var activityIndicator: DSActivityIndicatorViewModel?
     
     var content: DSContainerViewModel {
-        var container = DSContainerViewModel(items: [nameLabel!, phoneLabel!, stackCards! ])
+        var container = DSContainerViewModel(items: [nameLabel!, phoneLabel!, stackCards! , errorModel!, activityIndicator!])
         container.bottomView = 2
         return container
     }

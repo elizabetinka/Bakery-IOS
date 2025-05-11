@@ -22,4 +22,8 @@ enum CommonCardStyle{
         return 8
     }
     
+    public var clipsToBounds : Bool {
+        return true
+    }
+    
 }

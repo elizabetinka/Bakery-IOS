@@ -25,11 +25,12 @@ final class CommonCard: UIView, DSView {
 
     func setup() {
         layer.cornerRadius = vm.style.cornerRadius
-        clipsToBounds = true
-        //print("bounds \(UIScreen.main.bounds.size)")
-        //print("scale \(vm.backroundImageView.size.width/UIScreen.main.bounds.width)")
+        clipsToBounds = vm.style.clipsToBounds
+        
         let scale = vm.backroundImageView.size.width/(UIScreen.main.bounds.width)
+        
         iconImageView.image = vm.backroundImageView.scaled(by: scale)?.resizableImage(withCapInsets: .zero) ?? vm.backroundImageView
+        
         iconImageView.contentMode = vm.style.contentMode()
 
         let contentModel = vm.content

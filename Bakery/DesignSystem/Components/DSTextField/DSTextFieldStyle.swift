@@ -12,7 +12,6 @@ public enum DSTextFieldStyle {
     case `default`
     case placeholder
 
-    /// Цвет фона в зависимости от состояния
     public func backgroundColor(for state: DSTextFieldState) -> UIColor {
         switch (self, state) {
         case (.default, .default):      return UIColor.appGrayTextFieldBackground
@@ -25,7 +24,6 @@ public enum DSTextFieldStyle {
         }
     }
 
-    /// Цвет рамки (или underline) в зависимости от состояния
     public func borderColor(for state: DSTextFieldState) -> CGColor {
         switch (self, state) {
         case (_, .disabled):      return UIColor.appGrayTextFieldBackground.cgColor
@@ -34,7 +32,6 @@ public enum DSTextFieldStyle {
         }
     }
 
-    /// Толщина рамки
     public func borderWidth(for state: DSTextFieldState) -> CGFloat {
         switch state {
         case .default: return 0
@@ -61,7 +58,7 @@ public enum DSTextFieldStyle {
     
     func animation(for state: DSTextFieldState) -> CAKeyframeAnimation? {
         
-        let animation : CAKeyframeAnimation = {
+        let _ : CAKeyframeAnimation = {
             let animation = CAKeyframeAnimation(keyPath: "position.x")
             animation.values = [0, 10, -10, 10, 0]
             animation.keyTimes = [0, 0.16, 0.5, 0.83, 1]

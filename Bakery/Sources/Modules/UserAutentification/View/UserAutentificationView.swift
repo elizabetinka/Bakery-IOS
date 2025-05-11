@@ -5,7 +5,7 @@
 import UIKit
 
 @MainActor
-protocol UserAutentificationViewProtocol : ViewProtocol {
+protocol UserAutentificationViewProtocol{
     func setup(with model: UserAutentificationViewModel)
     func configure(with model: UserAutentificationViewModel)
     func getInfo() -> UserAutentificationViewInfo
@@ -63,16 +63,6 @@ class UserAutentificationView: UIView, UserAutentificationViewProtocol {
         
         contentView!.configure(with: content)
     }
-    
-    func showLoading() {
-    }
-    
-    func stopError() {
-    }
-    
-    func showError(message: String) {
-    }
-
 
     private var contentView : DSView?
  

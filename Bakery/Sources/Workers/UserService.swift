@@ -90,7 +90,6 @@ class UserService: UserServiceProtocol {
     func addUser(user: UserModel) async -> (UserModel?, UserServiceError?){
         
         let (users, error) = await getUsers()
-        print(users)
         
         guard error == nil else {
             return (nil, error)
