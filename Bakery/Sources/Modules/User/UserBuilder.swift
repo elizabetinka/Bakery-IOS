@@ -25,6 +25,7 @@ class UserBuilder: ModuleBuilder {
         let controller = UserViewController(interactor: interactor)
 
         presenter.viewController = controller
+        presenter.refreshActionsDelegate = controller as? any ErrorViewDelegate
         controller.router = router
         return controller
     }

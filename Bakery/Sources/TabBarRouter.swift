@@ -24,9 +24,11 @@ extension TabBarRouter {
     }
 }
 
+@MainActor
 class TabBarRouter: TabBarRouterProtocol {
     
     func openViewController(toView: MyViewController) {
+        print("openViewController \(toView)")
         switch toView {
         case .home:
             selectTab(at: 0)
@@ -69,9 +71,21 @@ class TabBarRouter: TabBarRouterProtocol {
             routerApperance.applyRouterSettigs()
         }
         
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+        
+                    
         let mainNavController = UINavigationController(rootViewController: mainVC)
+        mainNavController.setNavigationBarHidden(true, animated: false)
+        
         let menuNavController = UINavigationController(rootViewController: menuVC)
+        menuNavController.navigationBar.standardAppearance = appearance
+        menuNavController.navigationBar.scrollEdgeAppearance = appearance
+        
         let userNavController = UINavigationController(rootViewController: userVC)
+        userNavController.navigationBar.standardAppearance = appearance
+        userNavController.navigationBar.scrollEdgeAppearance = appearance
         
         tabBarController.viewControllers = [mainNavController, menuNavController, userNavController]
         applyApperance()

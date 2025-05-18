@@ -6,11 +6,16 @@
 import UIKit
 
 protocol RegistrationButtonDelegate: AnyObject {
-    func didTapRegistrationButton(number: String, name: String)
+    func didTapRegistrationButton()
 }
 
 protocol UserRegistrationDisplayLogic: AnyObject {
     func displaySomething(viewModel: UserRegistration.Registration.ViewModel)
+    func displaySomething(viewModel: UserRegistration.Init.ViewModel)
+    func displaySomething(viewModel: UserRegistration.ValidateName.ViewModel)
+    func displaySomething(viewModel: UserRegistration.ValidatePhone.ViewModel)
+    func displaySomething(viewModel: UserRegistration.Loading.ViewModel)
+    func displaySomething(viewModel: UserRegistration.Reload.ViewModel)
 }
 
 protocol UserRegistrationValidateDelegate: AnyObject {
@@ -26,7 +31,7 @@ class UserRegistrationViewController: UIViewController {
     
     lazy var customView = self.view as? UserRegistrationViewProtocol
 
-    init(interactor: UserRegistrationBusinessLogic, initialState: UserRegistration.ViewControllerState = .loading) {
+    init(interactor: UserRegistrationBusinessLogic, initialState: UserRegistration.ViewControllerState = .initial) {
         self.interactor = interactor
         self.state = initialState
         super.init(nibName: nil, bundle: nil)
@@ -38,20 +43,40 @@ class UserRegistrationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserRegistrationView(frame: UIScreen.main.bounds, delegate: self, refreshDelegate: self, validateDelegate: self)
+        let view = UserRegistrationView(frame: UIScreen.main.bounds)
         self.view = view
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("UserRegistrationViewController.viewDidLoad")
         display(newState: state)
     }
 
     // MARK: registration
-    func registration(number : String, name: String) {
+    func registration(number : String, name: String) async {
+        loadingRequest()
         let request = UserRegistration.Registration.Request(form: UserRegistration.UserRegistrationRequest(phoneNumner: number, name: name))
-        interactor.registration(request: request)
+        await interactor.registration(request: request)
+    }
+    
+    func initRequest(){
+        interactor.initRequest(request: UserRegistration.Init.Request())
+    }
+    
+    func loadingRequest(){
+        interactor.loadingRequest(request: UserRegistration.Loading.Request())
+    }
+    
+    func reloadRequest(){
+        interactor.reloadRequest(request: UserRegistration.Reload.Request())
+    }
+    
+    func validateNameRequest(name: String){
+        interactor.validateName(request: UserRegistration.ValidateName.Request(name: name))
+    }
+    
+    func validatePhoneRequestPhone(number : String){
+        interactor.validatePhone(request: UserRegistration.ValidatePhone.Request(phone: number))
     }
 }
 
@@ -59,44 +84,65 @@ extension UserRegistrationViewController: UserRegistrationDisplayLogic {
     func displaySomething(viewModel: UserRegistration.Registration.ViewModel) {
         display(newState: viewModel.state)
     }
+    func displaySomething(viewModel: UserRegistration.Init.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserRegistration.Reload.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserRegistration.Loading.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserRegistration.ValidateName.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserRegistration.ValidatePhone.ViewModel) {
+        display(newState: viewModel.state)
+    }
     
     func display(newState: UserRegistration.ViewControllerState) {
         state = newState
         switch state {
-        case .loading:
-            print("loading...")
-            customView?.showLoading()
-        case let .error(message):
-            print("error \(message)")
-            customView?.showError(message: message)
-            dismiss(animated: true, completion: nil)
-            router?.openViewController(toView: MyViewController.home)
-            
+        case .initial:
+            initRequest()
+        case let .setup(model):
+            customView?.setup(with: model)
+        case let .configure(model):
+            customView?.configure(with: model)
         case .success:
             dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
-        case .alreadyExists:
-            customView?.showError(message: "Такой номер уже зарегистрирован")
         }
     }
 }
 
 
 extension UserRegistrationViewController : RegistrationButtonDelegate {    
-    func didTapRegistrationButton(number : String, name: String) {
-        registration(number: number, name: name)
+    func didTapRegistrationButton() {
+        let info = customView?.getInfo()
+        let number = info?.phoneTextField.text ?? ""
+        let name = info?.nameTextField.text ?? ""
+        Task {
+            await registration(number: number, name: name)
+        }
     }
 }
 
 extension  UserRegistrationViewController: UserRegistrationValidateDelegate {
+    
     func validateName(name: String) {
-        let isValid = interactor.validateName(name: name)
-        customView?.validatedName(isValid: isValid)
+        validateNameRequest(name: name)
     }
     
+    
     func validatePhoneNumber(number: String) {
-        let isValid = interactor.validatePhoneNumber(number: number)
-        customView?.validatedPhone(isValid: isValid)
+        validatePhoneRequestPhone(number: number)
     }
+    
 }
 
+extension UserRegistrationViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        reloadRequest()
+    }
+}

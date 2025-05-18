@@ -4,9 +4,13 @@
 //
 
 protocol UserRegistrationBusinessLogic {
-    func registration(request: UserRegistration.Registration.Request)
-    func validatePhoneNumber(number: String) -> Bool
-    func validateName(name: String) -> Bool
+    func registration(request: UserRegistration.Registration.Request) async
+    
+    @MainActor  func initRequest(request: UserRegistration.Init.Request)
+    @MainActor  func loadingRequest(request: UserRegistration.Loading.Request)
+    @MainActor  func reloadRequest(request: UserRegistration.Reload.Request)
+    @MainActor  func validateName(request: UserRegistration.ValidateName.Request)
+    @MainActor  func validatePhone(request: UserRegistration.ValidatePhone.Request)
 }
 
 /// Класс для описания бизнес-логики модуля UserRegistration
@@ -20,38 +24,97 @@ class UserRegistrationInteractor: UserRegistrationBusinessLogic {
     }
     
     // MARK: Registration
-    func registration(request: UserRegistration.Registration.Request) {
+    func registration(request: UserRegistration.Registration.Request) async {
+        var result: UserRegistration.UserRegistrationRequestResult
         
-        let addModel = UserModel(uid: undefId, name: request.form.name, points: 0, phoneNumner: request.form.phoneNumner)
+        let phoneResult =  validatePhoneNumber(number: request.form.phoneNumner)
+        let nameResult = validateName(name: request.form.name)
         
-        provider.registryNewUser(addModel: addModel) { (isSuccess, error) in
-            var result: UserRegistration.UserRegistrationRequestResult
-            if let error = error {
-                switch error {
-                case .getUserFailed(_):
-                    result = .failure(.someError(message: error.localizedDescription))
-                case .alreadyExists:
-                    result = .alreadyExists
-                case .unknown:
-                    result = .failure(.someError(message: "No Data"))
-                }
-            }
-            if isSuccess {
-                result = .success
-            }
-            else {
-                result = .failure(.someError(message: "No Data"))
-            }
-            self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
+        
+        if case let .failure(message: error) = phoneResult {
+            result = .failure(message: error)
+            await self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
+            return
         }
         
+        if case let .failure(message: error) = nameResult {
+            result = .failure(message: error)
+            await self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
+            return
+        }
+       
+        let addModel = UserModel(uid: undefId, name: request.form.name, points: 0, phoneNumber: request.form.phoneNumner)
+        
+        let (isSuccess, error) = await provider.registryNewUser(addModel: addModel)
+        
+        
+        if let error = error {
+            switch error {
+            case .getUserFailed(_):
+                result = .failure(message: error.localizedDescription)
+            case .alreadyExists:
+                result = .alreadyExists
+            case .unknown:
+                result = .failure(message: "No Data")
+            }
+        }
+        else if isSuccess {
+            result = .success
+        }
+        else {
+            result = .failure(message: "No Data")
+        }
+        await self.presenter.presentRegistrationResult(response: UserRegistration.Registration.Response(result: result))
     }
     
-    func validatePhoneNumber(number: String) -> Bool{
-        return number.isValidPhone(AppConfig.phoneRegex)
+    @MainActor func initRequest(request: UserRegistration.Init.Request) {
+        presenter.presentInitialData(response: UserRegistration.Init.Response())
     }
     
-    func validateName(name: String) -> Bool{
-        return name.isEmpty == false
+    @MainActor func loadingRequest(request: UserRegistration.Loading.Request) {
+        presenter.presentLoadingData(response: UserRegistration.Loading.Response())
+    }
+    
+    func reloadRequest(request: UserRegistration.Reload.Request) {
+        presenter.presentReloadData(response: UserRegistration.Reload.Response())
+    }
+            
+    
+    @MainActor func validateName(request: UserRegistration.ValidateName.Request){
+        
+        let nameResult = validateName(name: request.name)
+    
+        self.presenter.presentValidatedName(response:  UserRegistration.ValidateName.Response(result: nameResult))
+    }
+    
+    
+    @MainActor func validatePhone(request: UserRegistration.ValidatePhone.Request){
+        
+        let phoneResult =  validatePhoneNumber(number: request.phone)
+        
+        self.presenter.presentValidatedPhone(response:  UserRegistration.ValidatePhone.Response(result: phoneResult))
+    }
+    
+    private func validatePhoneNumber(number: String) -> UserRegistration.UserRegistrationValidateResult {
+        var phoneResult: UserRegistration.UserRegistrationValidateResult = .success
+         
+         if number.isEmpty {
+             phoneResult = .failure(message: "Введите номер телефона")
+         }
+         else if (!number.isValidPhone(AppConfig.phoneRegex)){
+             phoneResult = .failure(message: "Неккоректный формат")
+         }
+        return phoneResult
+    }
+    
+    private func validateName(name: String) -> UserRegistration.UserRegistrationValidateResult{
+        
+        var nameResult: UserRegistration.UserRegistrationValidateResult = .success
+        
+        if name.isEmpty {
+            nameResult = .failure(message: "Введите имя")
+        }
+        
+        return nameResult
     }
 }

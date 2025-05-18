@@ -26,6 +26,9 @@ class UserAutentificationBuilder: ModuleBuilder {
         let controller = UserAutentificationViewController(interactor: interactor)
 
         presenter.viewController = controller
+        presenter.buttonDelegate = controller as? any LoginButtonDelegate
+        presenter.refreshActionsDelegate = controller as? any ErrorViewDelegate
+        presenter.validateDelegate = controller as? any UserAutentificationValidateDelegate
         controller.router = router
         return controller
     }
