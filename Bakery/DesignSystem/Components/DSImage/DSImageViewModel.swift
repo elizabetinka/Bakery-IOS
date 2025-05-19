@@ -11,7 +11,7 @@ struct DSImageViewModel: DSViewModel {
     let componentType: ComponentType = .image
     var identifier: String = "image"
     
-    var image: UIImage
+    var image: UIImage?
     var size: DSImageSize
     var layout: DSLayout
 }

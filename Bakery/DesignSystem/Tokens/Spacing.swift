@@ -25,19 +25,3 @@ enum VSpacing: CGFloat {
     case xl   = 70
     case xxl  = 150
 }
-
-enum DSWidth {
-    case `auto`
-    case fill
-    case fixed(CGFloat)
-}
-
-enum DSHeight {
-    case `auto`
-    case fixed(CGFloat)
-}
-
-enum DSAlign {
-    case `auto`
-    case center
-}

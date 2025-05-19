@@ -69,3 +69,19 @@ struct DSLayout {
         self.padding = padding
     }
 }
+
+enum DSWidth: Equatable {
+    case `auto`
+    case fill
+    case fixed(CGFloat)
+}
+
+enum DSHeight: Equatable {
+    case `auto`
+    case fixed(CGFloat)
+}
+
+enum DSAlign {
+    case `auto`
+    case center
+}

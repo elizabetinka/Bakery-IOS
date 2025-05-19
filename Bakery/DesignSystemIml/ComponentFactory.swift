@@ -7,7 +7,12 @@
 
 import UIKit
 
-struct ComponentFactory {
+protocol BdUIMapper {
+    static func makeView(from viewModel: DSViewModel) -> DSView
+}
+
+
+struct ComponentFactory: BdUIMapper {
     static func makeView(from viewModel: DSViewModel) -> DSView {
         switch viewModel.componentType {
             case .button:

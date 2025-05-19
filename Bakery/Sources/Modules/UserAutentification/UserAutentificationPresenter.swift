@@ -23,11 +23,12 @@ class UserAutentificationPresenter: UserAutentificationPresentationLogic {
     weak var refreshActionsDelegate: ErrorViewDelegate?
     weak var validateDelegate: UserAutentificationValidateDelegate?
     
-    lazy var vm: UserAutentificationViewModel = getInitialViewModel()
+    var vm: UserAutentificationViewModel?
 
     // MARK: present login result
     func presentLoginResult(response: UserAutentification.Login.Response) {
         var viewModel: UserAutentification.Login.ViewModel
+        guard var vm = vm else { return }
         
         vm.activityIndicator?.state = .stopped
         
@@ -48,17 +49,19 @@ class UserAutentificationPresenter: UserAutentificationPresentationLogic {
     
     func presentInitialData(response: UserAutentification.Init.Response) {
         vm = getInitialViewModel()
-        let viewModel = UserAutentification.Init.ViewModel(state: .setup(model: vm))
+        let viewModel = UserAutentification.Init.ViewModel(state: .setup(model: vm!))
         viewController?.displaySomething(viewModel: viewModel)
     }
     
     func presentLoadingData(response: UserAutentification.Loading.Response) {
+        guard var vm = vm else { return }
         vm.activityIndicator?.state = .running
         let viewModel = UserAutentification.Loading.ViewModel(state: .configure(model: vm))
         viewController?.displaySomething(viewModel: viewModel)
     }
     
     func presentReloadData(response: UserAutentification.Reload.Response) {
+        guard var vm = vm else { return }
         vm.errorModel?.state = .hidden
         let viewModel = UserAutentification.Reload.ViewModel(state: .configure(model: vm))
         viewController?.displaySomething(viewModel: viewModel)
@@ -66,6 +69,7 @@ class UserAutentificationPresenter: UserAutentificationPresentationLogic {
     
     
     func presentValidatedPhone(response: UserAutentification.ValidatePhoneNumber.Response) {
+        guard var vm = vm else { return }
        switch response.result {
             case .success:
             vm.phoneTextField?.state = .default

@@ -9,9 +9,23 @@ import Foundation
 import UIKit
 
 
-struct ErrorViewStyle {    
-    let borderWidth = 4.0
-    let borderColor = UIColor.appSoftPink.cgColor
-    let cornerRadius: CGFloat = 15
-    let backgroundColor: UIColor = UIColor.white
+enum ErrorViewStyle {
+    
+    case primary
+
+    public var borderWidth: CGFloat  {
+        return 4.0
+    }
+    
+    public var cornerRadius: CGFloat  {
+        return 15
+    }
+
+    public var borderColor : CGColor {
+        return UIColor.appSoftPink.cgColor
+    }
+    
+    public var backgroundColor : UIColor {
+        return UIColor.white
+    }
 }

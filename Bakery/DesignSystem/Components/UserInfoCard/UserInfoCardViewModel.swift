@@ -16,6 +16,6 @@ struct UserInfoCardModelViewModel: DSViewModel {
     var valueLabel: DSLabelViewModel?
     var headerStack: DSStackViewModel?
     
-    var style: UserInfoCardStyle = .init()
+    var style: UserInfoCardStyle = .primary
     var layout: DSLayout = .init()
 }

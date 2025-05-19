@@ -25,7 +25,6 @@ class UserAutentificationInteractor: UserAutentificationBusinessLogic {
     
     // MARK: Login
     func login(request: UserAutentification.Login.Request) async {
-        
         var result: UserAutentification.UserAutentificationRequestResult
         
         if request.form.phoneNumner.isEmpty {

@@ -12,6 +12,6 @@ struct DSContainerViewModel: DSViewModel {
     var layout: DSLayout = .init()
     var items: [DSViewModel] = []
     
-    var topView: Int = 0
-    var bottomView: Int =  0
+    var topView: Int = -1
+    var bottomView: Int =  -1
 }

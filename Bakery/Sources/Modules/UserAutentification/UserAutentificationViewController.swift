@@ -45,6 +45,7 @@ class UserAutentificationViewController: UIViewController {
         let view = UserAutentificationView(frame: UIScreen.main.bounds)
         self.view = view
     }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,6 +120,7 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
 
 extension UserAutentificationViewController : LoginButtonDelegate {
     func didTapLoginButton() {
+        print("did tap login")
         let info = customView?.getInfo()
         let number = info?.phoneTextField.text ?? ""
         Task {
