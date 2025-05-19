@@ -8,11 +8,17 @@ import UIKit
 class UserAutentificationBuilder: ModuleBuilder {
 
     var initialState: UserAutentification.ViewControllerState?
+    var router: TabBarRouterProtocol?
 
     func set(initialState: UserAutentification.ViewControllerState) -> UserAutentificationBuilder {
         self.initialState = initialState
         return self
-    } 
+    }
+    
+    func set(router : TabBarRouterProtocol) -> UserAutentificationBuilder {
+        self.router = router
+        return self
+    }
 
     func build() -> UIViewController {
         let presenter = UserAutentificationPresenter()
@@ -20,6 +26,10 @@ class UserAutentificationBuilder: ModuleBuilder {
         let controller = UserAutentificationViewController(interactor: interactor)
 
         presenter.viewController = controller
+        presenter.buttonDelegate = controller as? any LoginButtonDelegate
+        presenter.refreshActionsDelegate = controller as? any ErrorViewDelegate
+        presenter.validateDelegate = controller as? any UserAutentificationValidateDelegate
+        controller.router = router
         return controller
     }
 }

@@ -13,26 +13,22 @@ protocol MenuRouterAppearance: AnyObject {
     func applyRouterSettigs()
 }
 
-protocol MenuViewControllerDelegate: AnyObject {
-    func openItemDetails(_ itemId: UniqueIdentifier)
-}
-
 class MenuViewController: UIViewController {
     let interactor: MenuBusinessLogic
     var state: Menu.ViewControllerState
     weak var router: TabBarRouterProtocol?
     lazy var customView = self.view as? MenuView
     
-    var collectionDataSource: MenuCollectionDataSource = MenuCollectionDataSource()
-    var collectionHandler: MenuCollectionDelegate = MenuCollectionDelegate()
+    private var collectionManager : CollectionManagerProtocol
 
-    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading) {
+    init(interactor: MenuBusinessLogic, initialState: Menu.ViewControllerState = .loading, collectionManager: CollectionManagerProtocol = CollectionManager()) {
         self.interactor = interactor
         self.state = initialState
+        self.collectionManager = collectionManager
         
         super.init(nibName: nil, bundle: nil)
         
-        collectionHandler.delegate = self
+        self.collectionManager.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -41,9 +37,8 @@ class MenuViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = MenuView(frame: UIScreen.main.bounds, collectionDataSource: collectionDataSource, collectionDelegate: collectionHandler, refreshDelegate: self)
+        let view = MenuView(frame: UIScreen.main.bounds, refreshDelegate: self, refreshControlDelegate: self)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
 
     override func viewDidLoad() {
@@ -52,16 +47,11 @@ class MenuViewController: UIViewController {
         display(newState: state)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.bounds = view.safeAreaLayoutGuide.layoutFrame
-    }
-    
     // MARK: Do something
-    func fetchItems() {
+    func fetchItems() async {
             let request = Menu.ShowItems.Request()
-            interactor.fetchItems(request: request)
-        }
+            await interactor.fetchItems(request: request)
+    }
 }
 
 extension MenuViewController: MenuDisplayLogic {
@@ -74,17 +64,15 @@ extension MenuViewController: MenuDisplayLogic {
         switch state {
         case .loading:
             customView?.showLoading()
-            fetchItems()
+            Task{
+                await fetchItems()
+            }
         case let .error(message):
             customView?.showError(message: message)
         case let .result(items):
-            collectionHandler.representableViewModel = items
-            collectionDataSource.representableViewModel = items
-            customView?.updateTableViewData(delegate: collectionHandler, dataSource: collectionDataSource)
+            collectionManager.updateData(with: items)
         case .emptyResult:
-            collectionHandler.representableViewModel = []
-            collectionDataSource.representableViewModel = []
-            customView?.updateTableViewData(delegate: collectionHandler, dataSource: collectionDataSource)
+            collectionManager.updateData(with: [])
         }
     }
 }
@@ -97,19 +85,24 @@ extension MenuViewController : MenuRouterAppearance {
             title: tabBarSetting.tabBarTitle,
             image: tabBarSetting.image,
             selectedImage: tabBarSetting.selectedImage)
+        title = tabBarSetting.title
     }
     
     struct TabBarSetting {
         let tabBarTitle = String("меню")
         let image = UIImage(systemName: "birthday.cake")
         let selectedImage = UIImage(systemName: "birthday.cake.fill")
+        let title = "меню"
     }
     
 }
 
-
-extension MenuViewController: MenuViewControllerDelegate {
-    func openItemDetails(_ itemId: UniqueIdentifier) {
+extension MenuViewController: CollectionManagerDelegate {
+    func didUpdateData() {
+        customView?.updateTableViewData(delegate: collectionManager, dataSource: collectionManager)
+    }
+    
+    func openItemTapped(_ itemId: UniqueIdentifier) {
         router?.openViewController(toView: MyViewController.itemDetails(itemId: itemId))
     }
 }
@@ -117,6 +110,13 @@ extension MenuViewController: MenuViewControllerDelegate {
 
 extension MenuViewController: ErrorViewDelegate {
     func reloadButtonWasTapped() {
+        display(newState: .loading)
+    }
+}
+
+
+extension MenuViewController: RefreshControlDelegate {
+    func refreshData() {
         display(newState: .loading)
     }
 }

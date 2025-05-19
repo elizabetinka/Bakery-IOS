@@ -5,6 +5,56 @@
 
 enum UserAutentification {
     // MARK: Use cases
+    enum Init {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum Loading {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum Reload {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum ValidatePhoneNumber {
+        struct Request {
+            var form : UserAutentificationRequest
+        }
+
+        struct Response {
+            var result: UserAutentificationValidateResult
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
     
     enum Login {
         struct Request {
@@ -24,21 +74,23 @@ enum UserAutentification {
         let phoneNumner : String
     }
     
-    enum UserAutentificationError: Error {
-        case someError(message: String)
-    }
-    
     enum UserAutentificationRequestResult {
-        case failure(UserAutentificationError)
+        case failure(message: String)
         case success
         case notRegistred
+    }
+    
+    enum UserAutentificationValidateResult {
+        case failure(message: String)
+        case success
     }
     
     enum ViewControllerState {
-        case loading
+        case initial
+        case setup(model: UserAutentificationViewModel)
+        case configure(model: UserAutentificationViewModel)
         case success
         case notRegistred
-        case error(message: String)
     }
 
 }

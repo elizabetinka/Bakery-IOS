@@ -17,10 +17,10 @@ class UserSessionService: UserSessionServiceProtocol {
     static let shared = UserSessionService()
     private init() {}
     
-    var currentUserId : UniqueIdentifier? = 0;
+    var currentUserId : UniqueIdentifier? = nil;
     
     func getCurrentUserId() -> UniqueIdentifier? {
-        currentUserId
+       return currentUserId
     }
     
     func setCurrentUserId(id: UniqueIdentifier){

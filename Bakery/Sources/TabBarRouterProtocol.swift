@@ -17,6 +17,7 @@ enum MyViewController{
     case itemDetails(itemId: UniqueIdentifier)
 }
 
+@MainActor
 protocol TabBarRouterProtocol  : AnyObject {
     var tabBarController: UITabBarController { get }
     func start()
