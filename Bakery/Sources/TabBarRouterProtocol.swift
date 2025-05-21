@@ -15,11 +15,14 @@ enum MyViewController{
     case authentification
     case registration
     case itemDetails(itemId: UniqueIdentifier)
+    case universal(config: UniversalScreenConfig)
+    case someUniversalImplement
 }
 
 @MainActor
 protocol TabBarRouterProtocol  : AnyObject {
     var tabBarController: UITabBarController { get }
     func start()
+    func registerHandlers()
     func openViewController(toView : MyViewController)
 }

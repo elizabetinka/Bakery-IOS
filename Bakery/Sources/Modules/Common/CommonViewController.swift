@@ -170,6 +170,6 @@ extension CommonViewController : CardsDelegate {
     }
     
     func didTapActionCard() {
-        router?.openViewController(toView: MyViewController.menu)
+        router?.openViewController(toView: MyViewController.someUniversalImplement)
     }
 }

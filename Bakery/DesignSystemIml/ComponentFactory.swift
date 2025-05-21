@@ -115,4 +115,11 @@ struct ComponentFactory: BdUIMapper {
                 fatalError("Unsupported component type")
             }
     }
+    
+    static func makeView(from models: [DSViewModel]) -> DSView {
+        let containerLayout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin:.zero,bottomMargin: .zero, HMargin: .zero), padding: .init())
+        let vm = DSContainerViewModel(layout: containerLayout, items: models, topView: 0, bottomView: models.count-1)
+        return makeView(from: vm)
+    }
+        
 }
