@@ -116,9 +116,9 @@ struct ComponentFactory: BdUIMapper {
             }
     }
     
-    static func makeView(from models: [DSViewModel]) -> DSView {
+    static func makeView(from models: [DSViewModel], topConmponents: Int, bottomComponents: Int) -> DSView {
         let containerLayout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin:.zero,bottomMargin: .zero, HMargin: .zero), padding: .init())
-        let vm = DSContainerViewModel(layout: containerLayout, items: models, topView: 0, bottomView: models.count-1)
+        let vm = DSContainerViewModel(layout: containerLayout, items: models, topView: topConmponents, bottomView: bottomComponents)
         return makeView(from: vm)
     }
         

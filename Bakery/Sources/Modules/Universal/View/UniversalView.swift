@@ -26,7 +26,7 @@ class UniversalView: UIView, UniversalViewProtocol {
         viewModel = model
         
         backgroundColor = model.style.backgroundColor()
-        contentView = ComponentFactory.makeView(from: model.components)
+        contentView = ComponentFactory.makeView(from: model.components, topConmponents: model.topComponent, bottomComponents: model.bottomComponent)
         
         guard let contentView else { return }
         

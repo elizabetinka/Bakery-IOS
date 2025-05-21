@@ -46,6 +46,9 @@ class TabBarRouter: TabBarRouterProtocol {
         ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "some-screen"), handler: {
             self.openViewController(toView: .someUniversalImplement)
         })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "promocode-screen"), handler: {
+            self.openViewController(toView: .promocode)
+        })
         ActionHandler<UniqueIdentifier>.shared().registerHandler(for: HandlerModel(custom: "itemDetails"), handler: {id in
             self.openViewController(toView: .itemDetails(itemId: id))
         })
@@ -74,7 +77,9 @@ class TabBarRouter: TabBarRouterProtocol {
         case .someUniversalImplement:
             let config = UniversalScreenConfig(endpoint: "https://alfa-itmo.ru/server/v1/storage/", key: "some-screen")
             openUniversal(config: config)
-            
+        case .promocode:
+            let config = UniversalScreenConfig(endpoint: "https://alfa-itmo.ru/server/v1/storage/", key: "promocode-screen")
+            openUniversal(config: config)
         }
     }
     
@@ -135,6 +140,8 @@ class TabBarRouter: TabBarRouterProtocol {
     
     
     func openUniversal(config: UniversalScreenConfig){
+        closeAnimatedController()
+        print("open universal \(config.endpoint) \(config.key)")
         let uniController = UniversalBuilder().set(router: self).set(config: config).build()
         uniController.modalPresentationStyle = .overFullScreen
         uniController.modalTransitionStyle = .coverVertical

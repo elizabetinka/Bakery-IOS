@@ -16,6 +16,7 @@ enum MyViewController{
     case registration
     case itemDetails(itemId: UniqueIdentifier)
     case universal(config: UniversalScreenConfig)
+    case promocode
     case someUniversalImplement
 }
 

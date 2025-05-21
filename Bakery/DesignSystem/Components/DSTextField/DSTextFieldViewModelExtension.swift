@@ -15,13 +15,13 @@ extension DSTextFieldViewModel: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         identifier = try container.decode(String.self, forKey: .identifier)
-        text = try container.decode(String.self, forKey: .text)
-        placeholder = try container.decode(String.self, forKey: .placeholder)
+        text = try container.decodeIfPresent(String.self, forKey: .text)
+        placeholder = try container.decodeIfPresent(String.self, forKey: .placeholder) ?? ""
         style = try container.decode(DSTextFieldStyle.self, forKey: .style)
         size = try container.decode(DSTextFieldSize.self, forKey: .size)
         state = try container.decode(DSTextFieldState.self, forKey: .state)
         layout = try container.decode(DSLayout.self, forKey: .layout)
-        errorLabel = try container.decode(DSLabelViewModel.self, forKey: .errorLabel)
+        errorLabel = try container.decodeIfPresent(DSLabelViewModel.self, forKey: .errorLabel)
         
         if let action = try container.decodeIfPresent(HandlerModel.self, forKey: .action) {
             if let handler = ActionHandler<String>.shared().getHandler(action: action) {

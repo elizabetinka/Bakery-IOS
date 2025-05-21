@@ -17,7 +17,7 @@ protocol UniversalDisplayLogic: AnyObject {
     func displaySomething(viewModel: Universal.Cashe.ViewModel)
 }
 
-struct UniversalScreenConfig {
+struct UniversalScreenConfig:Decodable {
     let endpoint: String
     let key: String
 }

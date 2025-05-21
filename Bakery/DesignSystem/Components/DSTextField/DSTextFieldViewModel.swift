@@ -14,7 +14,7 @@ struct DSTextFieldViewModel: DSViewModel {
     var state: DSTextFieldState
     var size: DSTextFieldSize
     var onEditingChanged: ((String) -> Void)?
-    var errorLabel: DSLabelViewModel
+    var errorLabel: DSLabelViewModel?
     var layout: DSLayout
 
     public init(
@@ -24,7 +24,7 @@ struct DSTextFieldViewModel: DSViewModel {
         size: DSTextFieldSize = .medium,
         layout: DSLayout = .init(),
         onEditingChanged: ((String) -> Void)? = nil,
-        errorLabel: DSLabelViewModel
+        errorLabel: DSLabelViewModel? = nil
     ) {
         self.placeholder = placeholder
         self.style = style

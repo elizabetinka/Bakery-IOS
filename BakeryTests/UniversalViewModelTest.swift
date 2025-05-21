@@ -150,6 +150,25 @@ struct UniversalViewModelTest {
                             }
                         },
                         {
+                            "componentType": "text",
+                            "identifier": "id-field",
+                            "placeholder": "введите название продукта",
+                            "size": "medium",
+                            "state": "error",
+                            "style": "placeholder",
+                            "layout": {
+                                "margin": {
+                                    "width": "fill",
+                                    "topMargin": "l",
+                                    "HMargin": "m"
+                                },
+                                "padding": {
+                                    "hPadding": "m",
+                                    "vPadding": "s"
+                                }
+                            }
+                        },
+                        {
                             "componentType": "button",
                             "identifier": "refresh-button",
                             "title": "Обновить",
@@ -229,12 +248,14 @@ struct UniversalViewModelTest {
 
         #expect(viewModel.style == .primary, "style should be 'primary'")
 
-        #expect(viewModel.components.count==5, "Items count should be 3")
+        #expect(viewModel.components.count==6, "Items count should be 3")
         
-        #expect(viewModel.components[3].identifier == "my_activityIndicator", "First item identifier should be 'my_activityIndicator'")
-        #expect(viewModel.components[4].identifier == "my_spacer", "Four item identifier should be 'my_spacer'")
-        #expect(viewModel.components[1].identifier == "refresh-button", "Third item identifier should be 'refresh-button'")
-        #expect(viewModel.components[2].identifier == "route-button", "Third item identifier should be 'route-button'")
+        #expect(viewModel.components[1].identifier == "id-field", "First item identifier should be 'id-field'")
+        
+        #expect(viewModel.components[4].identifier == "my_activityIndicator", "First item identifier should be 'my_activityIndicator'")
+        #expect(viewModel.components[5].identifier == "my_spacer", "Four item identifier should be 'my_spacer'")
+        #expect(viewModel.components[2].identifier == "refresh-button", "Third item identifier should be 'refresh-button'")
+        #expect(viewModel.components[3].identifier == "route-button", "Third item identifier should be 'route-button'")
     }
 
 }

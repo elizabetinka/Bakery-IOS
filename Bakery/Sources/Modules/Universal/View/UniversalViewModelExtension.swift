@@ -7,17 +7,22 @@
 
 extension UniversalViewModel: Decodable {
     enum CodingKeys: String, CodingKey {
-        case components, style
+        case components, style, topComponent, bottomComponent
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let style = try container.decodeIfPresent(UniversalViewStyle.self, forKey: .style)
-        self.style = style ?? self.style
+        
+        let topComponent = try container.decodeIfPresent(Int.self, forKey: .topComponent)
+        
+        let bottomComponent = try container.decodeIfPresent(Int.self, forKey: .bottomComponent)
 
         let decodedItems = try container.decode([DSViewModelWrapper].self, forKey: .components)
-        components = decodedItems.map { $0.viewModel }
+        let components = decodedItems.map { $0.viewModel }
+        
+        self.init(components: components, style: style, topComponent: topComponent, bottomComponent: bottomComponent)
     }
 }
 

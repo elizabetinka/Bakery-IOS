@@ -74,13 +74,13 @@ class UserAutentificationPresenter: UserAutentificationPresentationLogic {
             case .success:
             vm.phoneTextField?.state = .default
             vm.loginButton?.state = .default
-            vm.phoneTextField?.errorLabel.state = .hidden
-            vm.phoneTextField?.errorLabel.text = ""
+            vm.phoneTextField?.errorLabel?.state = .hidden
+            vm.phoneTextField?.errorLabel?.text = ""
                 break
         case let .failure(error):
             vm.phoneTextField?.state = .error
-            vm.phoneTextField?.errorLabel.text = error
-            vm.phoneTextField?.errorLabel.state = .default
+            vm.phoneTextField?.errorLabel?.text = error
+            vm.phoneTextField?.errorLabel?.state = .default
             vm.loginButton?.state = .disabled
         }
         let viewModel = UserAutentification.ValidatePhoneNumber.ViewModel(state: .configure(model: vm))
