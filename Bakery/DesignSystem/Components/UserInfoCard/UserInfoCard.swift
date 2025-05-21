@@ -67,11 +67,11 @@ class UserInfoCard: UIView, DSView {
         valueLabel?.translatesAutoresizingMaskIntoConstraints = false
         
         if let headerLayout = viewModel.headerStack?.layout, let view = headerStack {
-            applyLayoutToView(layout: headerLayout.margin, view: view, topView: nil, botView: valueLabel, superview: self)
+            LayoutUtils.applyLayoutToView(layout: headerLayout.margin, view: view, topView: nil, botView: valueLabel, superview: self)
         }
         
         if let valueLayout = viewModel.valueLabel?.layout, let view = valueLabel {
-            applyLayoutToView(layout: valueLayout.margin, view: view, topView: headerStack, botView: nil, superview: self)
+            LayoutUtils.applyLayoutToView(layout: valueLayout.margin, view: view, topView: headerStack, botView: nil, superview: self)
         }
     }
 }

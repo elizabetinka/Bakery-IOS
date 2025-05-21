@@ -29,7 +29,6 @@ class CommonPresenter: CommonPresentationLogic {
             vm = getInitialViewModel()
         }
         var viewModel: Common.ShowUserInfo.ViewModel
-        vm!.card0.activityIndicator.state = .stopped
         switch response.result {
         case let .failure(error):
             setError(cardNumber: 0, error: error.localizedDescription)
@@ -47,7 +46,6 @@ class CommonPresenter: CommonPresentationLogic {
             vm = getInitialViewModel()
         }
         var viewModel: Common.ShowItem.ViewModel
-        vm!.card2.activityIndicator.state = .stopped
         switch response.result {
         case let .failure(error):
             setError(cardNumber: 1, error: error.localizedDescription)
@@ -63,7 +61,6 @@ class CommonPresenter: CommonPresentationLogic {
             vm = getInitialViewModel()
         }
         var viewModel: Common.ShowAction.ViewModel
-        vm!.card1.activityIndicator.state = .stopped
         switch response.result {
         case let .failure(error):
             setError(cardNumber: 2, error: error.localizedDescription)
@@ -78,7 +75,8 @@ class CommonPresenter: CommonPresentationLogic {
         if (vm == nil){
             vm = getInitialViewModel()
         }
-        vm!.card0.activityIndicator.state = .running
+
+        vm?.card0.content = createContenrView0(activityState: .running, title: "Fairy cakes", titleId: "Fairy cakes", text: "Вход/Регистрация", textId: "commonCardEnter")
         let viewModel = Common.LoadingUserInfo.ViewModel(state: .setup(model: vm!))
         viewController?.displaySomething(viewModel: viewModel)
     }
@@ -87,7 +85,8 @@ class CommonPresenter: CommonPresentationLogic {
         if (vm == nil){
             vm = getInitialViewModel()
         }
-        vm!.card2.activityIndicator.state = .running
+        vm?.card2.content = createContenrView1(activityState: .running)
+        
         let viewModel = Common.LoadingItem.ViewModel(state: .setup(model: vm!))
         viewController?.displaySomething(viewModel: viewModel)
     }
@@ -96,7 +95,8 @@ class CommonPresenter: CommonPresentationLogic {
         if (vm == nil){
             vm = getInitialViewModel()
         }
-        vm!.card1.activityIndicator.state = .running
+        vm?.card1.content = createContenrView1(activityState: .running)
+        
         let viewModel = Common.LoadingAction.ViewModel(state: .setup(model: vm!))
         viewController?.displaySomething(viewModel: viewModel)
     }
@@ -104,82 +104,146 @@ class CommonPresenter: CommonPresentationLogic {
     private func setError(cardNumber: Int, error: String){
         switch cardNumber {
         case 0:
-            vm?.card0.text?.text = error
+
+            vm?.card0.content = createContenrView0(activityState: .stopped, title: nil, titleId: nil, text: error, textId: "commonCardEnter")
         case 1:
-            vm?.card1.text?.text = error
+
+            vm?.card1.content = createContenrView1(activityState: .stopped, text: error, textId: "card1Description")
         default:
-            vm?.card2.text?.text = error
+
+            vm?.card2.content = createContenrView1(activityState: .stopped, text: error, textId: "card2Description")
         }
     }
     
     private func setNotAuth(){
-        vm?.card0.text?.text = "Вход/Регистрация"
-        vm?.card0.title?.text = "Fairy cakes"
+        vm?.card0.content = createContenrView0(activityState: .stopped, title: "Fairy cakes", titleId: "Fairy cakes", text: "Вход/Регистрация", textId: "commonCardEnter")
     }
     
     private func setUserInfo(user: UserModel){
-        vm?.card0.text?.text = "Привет, \(user.name)"
+        vm?.card0.content = createContenrView0(activityState: .stopped, title: "Fairy cakes", titleId: "Fairy cakes", text: "Привет, \(user.name)", textId: "commonCardEnter")
     }
     
     private func setItem(item:ItemModel){
         guard item.itemImage != nil else { return }
         vm?.card2.backroundImageView = item.itemImage!
-        vm?.card2.text = nil
+        vm?.card2.content = createContenrView1(activityState: .stopped, text: nil, textId: nil)
     }
     
     private func setAction(action:ActionModel){
         guard action.image != nil else { return }
         vm?.card1.backroundImageView = action.image!
-        vm?.card1.text = nil
+        vm?.card1.content = createContenrView1(activityState: .stopped, text: nil, textId: nil)
     }
     
     private func  getInitialViewModel() -> CommonViewModel {
-        let titleLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero), padding: .init())
-        let titleViewModel = DSLabelViewModel(identifier: "Fairy cakes", text: "Fairy cakes", style: .beautyful, state: .default, size: .l, layout: titleLayout)
-        
-        let valueLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
-        let valueViewModel = DSLabelViewModel(identifier: "commonCardEnter", text: "Вход/Регистрация", style: .beautyful, state: .default, size: .m, layout: valueLayout)
-        
-        let activityIndicatorLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: DSLayoutPadding())
-        
-        let activityIndicator = DSActivityIndicatorViewModel(state: .stopped, size: .large, style: .primary, layout: activityIndicatorLayout)
+
+        let cont0 = createContenrView0(activityState: .stopped, title: "Fairy cakes", titleId:"Fairy cakes" , text: "Вход/Регистрация", textId: "commonCardEnter")
         
         let card0Layout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .s, HMargin: .m))
         
-        var card0 = CommonCardViewModel(title: titleViewModel, text: valueViewModel, activityIndicator: activityIndicator, backroundImageView: UIImage.init(color: .appPink) ?? UIImage.init(), style: .text, layout: card0Layout)
+        var card0 = CommonCardViewModel( backroundImageView: UIImage.init(color: .appPink) ?? UIImage.init(), style: .text, layout: card0Layout, content: cont0)
         
         card0.onTap = cardsDelegate?.didTapUserCard
         
         
+        let cont1 = createContenrView1(activityState: .stopped, text: "Акции", textId: "card1Description")
+        
+        
         let promotionLayout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
         let promotionViewModel = DSLabelViewModel(identifier: "promotionLabel", text: "Акции и новости", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout)
-        
-        let valueLayout1 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: .init())
-        let valueViewModel1 = DSLabelViewModel(identifier: "card1Description", text: "Акции", style: .primary, state: .default, size: .s, layout: valueLayout1)
-        
+
         let card1Layout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .xs, HMargin: .m))
         
         let image1 = UIImage.init(color: .appSoftGray)!
-        var card1 = CommonCardViewModel(text: valueViewModel1, activityIndicator: activityIndicator, backroundImageView: image1, style: .image, size: .medium, layout: card1Layout)
+        var card1 = CommonCardViewModel(backroundImageView: image1, style: .image, size: .medium, layout: card1Layout, content: cont1)
         
         card1.onTap = cardsDelegate?.didTapActionCard
         
+        
+        let cont2 = createContenrView1(activityState: .stopped, text: "Меню", textId: "card2Description")
         
         let promotionLayout2 = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .l, HMargin: .m))
         let promotionViewModel2 = DSLabelViewModel(identifier: "promotionLabel2", text: "Посмотреть меню", style: .commonEnumeration, state: .default, size: .m, layout: promotionLayout2)
         
         
-        let valueLayout2 = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
-        let valueViewModel2 = DSLabelViewModel(identifier: "card2Description", text: "Меню", style: .primary, state: .default, size: .s, layout: valueLayout2)
-        
         let card2Layout = DSLayout(margin: DSLayoutMarging(width: .fill, topMargin: .xs, bottomMargin: .zero, HMargin: .m))
         
         let image2 = UIImage.init(color: .appSoftGray)!
-        var card2 = CommonCardViewModel(text: valueViewModel2, activityIndicator: activityIndicator, backroundImageView: image2, style: .image, size: .medium, layout: card2Layout)
+        var card2 = CommonCardViewModel(backroundImageView: image2, style: .image, size: .medium, layout: card2Layout, content: cont2)
         
         card2.onTap = cardsDelegate?.didTapItemCard
         
         return CommonViewModel(card0: card0, promotionViewModel: promotionViewModel, card1: card1, promotionViewModel2: promotionViewModel2, card2: card2)
+    }
+    
+    
+    private func createContenrView0(activityState: DSActivityIndicatorState, title: String? = nil,titleId: String? = nil, text: String? = nil,textId: String? = nil) -> DSContainerViewModel{
+        
+        
+        let activityIndicatorLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: DSLayoutPadding())
+        
+        let activityIndicator = DSActivityIndicatorViewModel(state: activityState, size: .large, style: .primary, layout: activityIndicatorLayout)
+        
+        let titleLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero), padding: .init())
+        let titleViewModel = (title == nil || titleId == nil) ? nil : DSLabelViewModel(identifier: titleId!, text: title!, style: .beautyful, state: .default, size: .l, layout: titleLayout)
+        
+        let valueLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, topMargin: .zero, bottomMargin: .zero), padding: .init())
+        let valueViewModel = (text == nil || textId == nil) ? nil : DSLabelViewModel(identifier: textId!, text: text!, style: .beautyful, state: .default, size: .m, layout: valueLayout)
+        
+        
+        var items: [any DSViewModel] = []
+        var bottomview = -1
+        var topView = -1
+        if let titleViewModel = titleViewModel {
+            items.append(titleViewModel)
+            if (titleViewModel.layout.margin.vAlign == .auto){
+                bottomview  += 1
+                topView = 0
+            }
+        }
+        if let valueViewModel = valueViewModel {
+            items.append(valueViewModel)
+            if (valueViewModel.layout.margin.vAlign == .auto){
+                bottomview  += 1
+                topView = 0
+            }
+        }
+        items.append(activityIndicator)
+        let contentLayot = DSLayout(margin: DSLayoutMarging(width:.fill, topMargin: .zero, bottomMargin: .zero, HMargin: .zero), padding: .init())
+        
+        let container = DSContainerViewModel(layout: contentLayot, items: items, topView: topView, bottomView: bottomview)
+        return container
+        
+    }
+    
+    
+    private func createContenrView1(activityState: DSActivityIndicatorState, text: String? = nil,textId: String? = nil) -> DSContainerViewModel{
+        
+        
+        let activityIndicatorLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center), padding: DSLayoutPadding())
+        
+        let activityIndicator = DSActivityIndicatorViewModel(state: activityState, size: .large, style: .primary, layout: activityIndicatorLayout)
+        
+        let valueLayout = DSLayout(margin: DSLayoutMarging(hAlign: .center, vAlign: .center,topMargin: .zero, bottomMargin: .zero), padding: .init())
+        let valueViewModel = (text == nil || textId == nil) ? nil : DSLabelViewModel(identifier: textId!, text: text!, style: .primary, state: .default, size: .s, layout: valueLayout)
+        
+        
+        var items: [any DSViewModel] = []
+        var bottomview = -1
+        var topView = -1
+        if let valueViewModel = valueViewModel {
+            items.append(valueViewModel)
+            if (valueViewModel.layout.margin.vAlign == .auto){
+                bottomview  += 1
+                topView = 0
+            }
+        }
+        items.append(activityIndicator)
+        let contentLayot = DSLayout(margin: DSLayoutMarging(width:.fill, topMargin: .zero, bottomMargin: .zero, HMargin: .zero), padding: .init())
+        
+        let container = DSContainerViewModel(layout: contentLayot, items: items, topView: topView, bottomView: bottomview)
+        return container
+        
     }
     
 }

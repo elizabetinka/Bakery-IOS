@@ -13,7 +13,7 @@ final class DSContainer : UIView, DSView {
     private var container = UIView()
     private var items: [DSView] = []
     
-    
+    // Я пыталась это пофиксить, но пока не понимаю, как например тут я могу заранее статично создать те вьюшки которые будут. А пересоздавать их при каждом вызове configure не хочется, так как например textField при пересоздании вообще странно себя ведет, ты ему букву - а он пересоздается и теряет курсор с клавиатурой
     public init(viewModel: DSContainerViewModel, frame: CGRect = .zero) {
         super.init(frame: frame)
         commonInit()
@@ -84,13 +84,13 @@ final class DSContainer : UIView, DSView {
     
             let layout = viewModel!.items[i].layout
             if i ==  viewModel?.topView {
-                applyLayoutToView(layout: layout.margin, view: item, topView: nil, botView: items[safe: i+1], superview: container)
+                LayoutUtils.applyLayoutToView(layout: layout.margin, view: item, topView: nil, botView: items[safe: i+1], superview: container)
             }
             else if i == viewModel?.bottomView {
-                applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: nil, superview: container)
+                LayoutUtils.applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: nil, superview: container)
             }
             else {
-                applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: items[safe: i+1], superview: container)
+                LayoutUtils.applyLayoutToView(layout: layout.margin, view: item, topView: items[safe: i-1], botView: items[safe: i+1], superview: container)
             }
         }
       

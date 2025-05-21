@@ -33,4 +33,10 @@ extension UIImage {
             self.draw(in: CGRect(origin: .zero, size: newSize))
             return UIGraphicsGetImageFromCurrentImageContext()
         }
+    
+    func toBase64() -> String? {
+            guard let imageData = self.pngData() else { return nil }
+            return imageData.base64EncodedString()
+    }
+    
 }

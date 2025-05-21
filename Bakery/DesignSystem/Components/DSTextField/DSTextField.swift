@@ -85,7 +85,7 @@ public final class DSTextField: UIView, DSView {
         textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -layout.hPadding).isActive = true
         
         
-        applyLayoutToView(layout: viewModel.errorLabel.layout.margin, view: errorLabel, topView: textField, botView: nil, superview: self)
+        LayoutUtils.applyLayoutToView(layout: viewModel.errorLabel.layout.margin, view: errorLabel, topView: textField, botView: nil, superview: self)
 
         errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -layout.vPadding).isActive = true
     }

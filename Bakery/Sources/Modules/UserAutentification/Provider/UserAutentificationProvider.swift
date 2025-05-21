@@ -43,6 +43,7 @@ struct UserAutentificationProvider: UserAutentificationProviderProtocol {
     func getUserByPhoneNumber(phoneNumber: String) async -> (UserModel?, UserAutentificationProviderError?) {
         
         if let user = dataStore.fetchUsers().first(where: { $0.phoneNumber == phoneNumber }){
+            sessionService.setCurrentUserId(id: user.uid)
             return (user, nil)
         }
         let (info, error) = await service.fetchUsers()

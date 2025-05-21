@@ -70,11 +70,11 @@ class ErrorView: UIView, DSView  {
     func makeConfiguredConstraints(viewModel: ErrorViewModel) {
 
         if let titleLayout = viewModel.title?.layout {
-            applyLayoutToView(layout: titleLayout.margin, view: title, topView: nil, botView: refreshButton, superview: self)
+            LayoutUtils.applyLayoutToView(layout: titleLayout.margin, view: title, topView: nil, botView: refreshButton, superview: self)
         }
         
         if let buttonLayout = viewModel.refreshButton?.layout {
-            applyLayoutToView(layout: buttonLayout.margin, view: refreshButton, topView: title, botView: nil, superview: self)
+            LayoutUtils.applyLayoutToView(layout: buttonLayout.margin, view: refreshButton, topView: title, botView: nil, superview: self)
         }
         
     }

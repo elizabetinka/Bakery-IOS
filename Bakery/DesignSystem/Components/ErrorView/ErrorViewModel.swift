@@ -13,6 +13,6 @@ struct ErrorViewModel: DSViewModel {
     var refreshButton: DSButtonViewModel?
     var state: ErrorViewState = .hidden
     
-    var style: ErrorViewStyle = .init()
+    var style: ErrorViewStyle = .primary
     var layout: DSLayout = .init()
 }

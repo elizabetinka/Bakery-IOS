@@ -27,9 +27,13 @@ final class CommonCard: UIView, DSView {
         layer.cornerRadius = vm.style.cornerRadius
         clipsToBounds = vm.style.clipsToBounds
         
-        let scale = vm.backroundImageView.size.width/(UIScreen.main.bounds.width)
+        if let background = vm.backroundImageView as? UIImage {
+            let scale = background.size.width/(UIScreen.main.bounds.width)
+            
+            iconImageView.image = background.scaled(by: scale)?.resizableImage(withCapInsets: .zero) ?? vm.backroundImageView
+        }
         
-        iconImageView.image = vm.backroundImageView.scaled(by: scale)?.resizableImage(withCapInsets: .zero) ?? vm.backroundImageView
+        
         
         iconImageView.contentMode = vm.style.contentMode()
 
@@ -68,7 +72,7 @@ final class CommonCard: UIView, DSView {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         contentView!.translatesAutoresizingMaskIntoConstraints = false
         
-        applyLayoutToView(layout: vm.content.layout.margin, view: contentView!, topView: nil, botView: nil, superview: self)
+        LayoutUtils.applyLayoutToView(layout: vm.content.layout.margin, view: contentView!, topView: nil, botView: nil, superview: self)
 
 
         NSLayoutConstraint.activate([
