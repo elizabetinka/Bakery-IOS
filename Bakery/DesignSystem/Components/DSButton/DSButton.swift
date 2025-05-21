@@ -66,7 +66,6 @@ final class DSButton : UIView, DSView {
     }
 
     @objc private func didTap() {
-        print("button \(viewModel?.title ?? "") tapped")
         guard viewModel?.state != .disabled else { return }
         viewModel?.onTap?()
     }
