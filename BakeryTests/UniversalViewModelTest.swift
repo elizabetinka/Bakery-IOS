@@ -257,5 +257,114 @@ struct UniversalViewModelTest {
         #expect(viewModel.components[2].identifier == "refresh-button", "Third item identifier should be 'refresh-button'")
         #expect(viewModel.components[3].identifier == "route-button", "Third item identifier should be 'route-button'")
     }
+    
+    
+    
+    @Test
+    func testPromoScreenJsonEncode() throws {
+        let transfer_image: UIImage = .logo
+        let data = transfer_image.toBase64() ?? ""
+        
+        let json = """
+        {
+                    "style": "primary",
+                    "topComponent": 0,
+                    "bottomComponent": 3,
+                    "components": [
+                        {
+                            "componentType": "image",
+                            "identifier": "logo",
+                            "size": "default",
+                            "imageBase64": "\(data)",
+                            "layout": {
+                                "margin": {
+                                    "hAlign": "center",
+                                    "topMargin": "l"
+                                }
+                            }
+                        },
+                        {
+                            "componentType": "label",
+                                "identifier": "title_label",
+                                "text": "Ваш промокод",
+                                "style": "primary",
+                                "size": "m",
+                                "state": "default",
+                                "layout": {
+                                    "margin": {
+                                        "width": "fill",
+                                        "topMargin": "xl",
+                                        "HMargin": "m"
+                                    }
+                                }
+                        },
+                        {
+                            "componentType": "label",
+                                "identifier": "value_label",
+                                "text": "9080",
+                                "style": "primary",
+                                "size": "l",
+                                "state": "default",
+                                "layout": {
+                                    "margin": {
+                                        "width": "fill",
+                                        "topMargin": "m",
+                                        "HMargin": "m"
+                                    }
+                                }
+                        },
+                        {
+                            "componentType": "button",
+                            "identifier": "route-button",
+                            "title": "Вернуться",
+                            "style": "primary",
+                            "size": "medium",
+                            "state": "default",
+                            "layout": {
+                                "margin": {
+                                    "hAlign": "center",
+                                    "topMargin": "m"
+                                },
+                                "padding": {
+                                    "hPadding": "m",
+                                    "vPadding": "xs"
+                                }
+                            },
+                            "action": {
+                                "type": "route",
+                                "target": "home"
+                            }
+                        },
+                        {
+                            "componentType": "activityIndicator",
+                            "identifier": "my_activityIndicator",
+                            "style": "primary",
+                            "size": "large",
+                            "state": "stopped",
+                            "layout": {
+                                "margin": {
+                                    "hAlign": "center",
+                                    "vAlign": "center"
+                                }
+                            }
+                        }
+                    ]
+        }
+        """.data(using: .utf8)!
+        
+        let decoder = JSONDecoder()
+        let viewModel = try decoder.decode(UniversalViewModel.self, from: json)
+        
+
+        #expect(viewModel.style == .primary, "style should be 'primary'")
+
+        #expect(viewModel.components.count==5, "Items count should be 5")
+        
+        #expect(viewModel.components[0].identifier == "logo", "First item identifier should be 'id-field'")
+        #expect(viewModel.components[1].identifier == "title_label", "First item identifier should be 'title_label'")
+        #expect(viewModel.components[4].identifier == "my_activityIndicator", "First item identifier should be 'my_activityIndicator'")
+        #expect(viewModel.components[2].identifier == "value_label", "Third item identifier should be 'value_label'")
+        #expect(viewModel.components[3].identifier == "route-button", "Third item identifier should be 'route-button'")
+    }
 
 }
