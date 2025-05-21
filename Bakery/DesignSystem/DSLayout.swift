@@ -8,11 +8,11 @@
 import CoreFoundation
 
 struct DSLayoutMarging {
-    var width: DSWidth
-    var height: DSHeight
+    var width: DSWidth = .auto
+    var height: DSHeight = .auto
     
-    var hAlign: DSAlign
-    var vAlign: DSAlign
+    var hAlign: DSAlign = .auto
+    var vAlign: DSAlign = .auto
     
     var topMargin: CGFloat? = nil
     var bottomMargin: CGFloat? = nil
@@ -49,8 +49,8 @@ struct DSLayoutMarging {
 }
 
 struct DSLayoutPadding {
-    var vPadding: CGFloat
-    var hPadding: CGFloat
+    var vPadding: CGFloat = .zero
+    var hPadding: CGFloat = .zero
     
     init(VPadding: VSpacing = .zero, HPadding: HSpacing = .zero) {
         self.vPadding = VPadding.rawValue
@@ -61,8 +61,8 @@ struct DSLayoutPadding {
 
 struct DSLayout {
     
-    var margin: DSLayoutMarging
-    var padding: DSLayoutPadding
+    var margin: DSLayoutMarging = .init()
+    var padding: DSLayoutPadding = .init()
     
     init(margin: DSLayoutMarging = .init(), padding: DSLayoutPadding = .init()) {
         self.margin = margin

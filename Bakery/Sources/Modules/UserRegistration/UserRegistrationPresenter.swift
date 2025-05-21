@@ -75,13 +75,13 @@ class UserRegistrationPresenter: UserRegistrationPresentationLogic {
             case .success:
             vm.phoneTextField?.state = .default
             vm.button?.state = .default
-            vm.phoneTextField?.errorLabel.state = .hidden
-            vm.phoneTextField?.errorLabel.text = ""
+            vm.phoneTextField?.errorLabel?.state = .hidden
+            vm.phoneTextField?.errorLabel?.text = ""
                 break
         case let .failure(error):
             vm.phoneTextField?.state = .error
-            vm.phoneTextField?.errorLabel.text = error
-            vm.phoneTextField?.errorLabel.state = .default
+            vm.phoneTextField?.errorLabel?.text = error
+            vm.phoneTextField?.errorLabel?.state = .default
             vm.button?.state = .disabled
         }
         
@@ -95,13 +95,13 @@ class UserRegistrationPresenter: UserRegistrationPresentationLogic {
              case .success:
              vm.nameTextField?.state = .default
              vm.button?.state = .default
-             vm.nameTextField?.errorLabel.state = .hidden
-             vm.nameTextField?.errorLabel.text = ""
+             vm.nameTextField?.errorLabel?.state = .hidden
+             vm.nameTextField?.errorLabel?.text = ""
                  break
          case let .failure(error):
              vm.nameTextField?.state = .error
-             vm.nameTextField?.errorLabel.text = error
-             vm.nameTextField?.errorLabel.state = .default
+             vm.nameTextField?.errorLabel?.text = error
+             vm.nameTextField?.errorLabel?.state = .default
              vm.button?.state = .disabled
          }
         

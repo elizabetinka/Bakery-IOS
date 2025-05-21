@@ -107,22 +107,22 @@ struct DSTextFieldTest {
         
         
         
-        #expect(viewModel.errorLabel.text == "Привет!!!!", "Title should be 'Привет!!!!'")
-        #expect(viewModel.errorLabel.style == .beautyful, "Style should be 'beautyful'")
-        #expect(viewModel.errorLabel.size == .l, "Size should be 'l'")
-        #expect(viewModel.errorLabel.state == .hidden, "State should be 'hidden'")
+        #expect(viewModel.errorLabel?.text == "Привет!!!!", "Title should be 'Привет!!!!'")
+        #expect(viewModel.errorLabel?.style == .beautyful, "Style should be 'beautyful'")
+        #expect(viewModel.errorLabel?.size == .l, "Size should be 'l'")
+        #expect(viewModel.errorLabel?.state == .hidden, "State should be 'hidden'")
         
-        #expect(viewModel.errorLabel.layout.margin.width == .auto, "Margin width should be 'auto'")
-        #expect(viewModel.errorLabel.layout.margin.height == .fixed(50), "Margin height should be 'fixed(50)'")
-        #expect(viewModel.errorLabel.layout.margin.hAlign == .auto, "Margin hAlign should be 'auto'")
-        #expect(viewModel.errorLabel.layout.margin.vAlign == .center, "Margin vAlign should be 'center'")
-        #expect(viewModel.errorLabel.layout.margin.topMargin == .zero, "Margin topMargin should be 'zero'")
-        #expect(viewModel.errorLabel.layout.margin.bottomMargin == VSpacing.xs.rawValue, "Margin bottomMargin should be 'xs'")
-        #expect(viewModel.errorLabel.layout.margin.leftMargin == HSpacing.m.rawValue, "Margin leftMargin should be 'm'")
-        #expect(viewModel.errorLabel.layout.margin.rightMargin == HSpacing.l.rawValue, "Margin rightMargin should be 'l'")
+        #expect(viewModel.errorLabel?.layout.margin.width == .auto, "Margin width should be 'auto'")
+        #expect(viewModel.errorLabel?.layout.margin.height == .fixed(50), "Margin height should be 'fixed(50)'")
+        #expect(viewModel.errorLabel?.layout.margin.hAlign == .auto, "Margin hAlign should be 'auto'")
+        #expect(viewModel.errorLabel?.layout.margin.vAlign == .center, "Margin vAlign should be 'center'")
+        #expect(viewModel.errorLabel?.layout.margin.topMargin == .zero, "Margin topMargin should be 'zero'")
+        #expect(viewModel.errorLabel?.layout.margin.bottomMargin == VSpacing.xs.rawValue, "Margin bottomMargin should be 'xs'")
+        #expect(viewModel.errorLabel?.layout.margin.leftMargin == HSpacing.m.rawValue, "Margin leftMargin should be 'm'")
+        #expect(viewModel.errorLabel?.layout.margin.rightMargin == HSpacing.l.rawValue, "Margin rightMargin should be 'l'")
         
-        #expect(viewModel.errorLabel.layout.padding.hPadding == HSpacing.m.rawValue, "Padding hPadding should be 'm'")
-        #expect(viewModel.errorLabel.layout.padding.vPadding == VSpacing.s.rawValue, "Padding vPadding should be 's'")
+        #expect(viewModel.errorLabel?.layout.padding.hPadding == HSpacing.m.rawValue, "Padding hPadding should be 'm'")
+        #expect(viewModel.errorLabel?.layout.padding.vPadding == VSpacing.s.rawValue, "Padding vPadding should be 's'")
     }
 
 }

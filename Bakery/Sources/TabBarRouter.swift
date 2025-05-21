@@ -27,6 +27,36 @@ extension TabBarRouter {
 @MainActor
 class TabBarRouter: TabBarRouterProtocol {
     
+    func registerHandlers(){
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "home"), handler: {
+            self.openViewController(toView: .home)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "user"), handler: {
+            self.openViewController(toView: .user)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "menu"), handler: {
+            self.openViewController(toView: .menu)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "authentification"), handler: {
+            self.openViewController(toView: .authentification)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "registration"), handler: {
+            self.openViewController(toView: .registration)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "some-screen"), handler: {
+            self.openViewController(toView: .someUniversalImplement)
+        })
+        ActionHandler<Void>.shared().registerHandler(for: HandlerModel(route: "promocode-screen"), handler: {
+            self.openViewController(toView: .promocode)
+        })
+        ActionHandler<UniqueIdentifier>.shared().registerHandler(for: HandlerModel(custom: "itemDetails"), handler: {id in
+            self.openViewController(toView: .itemDetails(itemId: id))
+        })
+        ActionHandler<UniversalScreenConfig>.shared().registerHandler(for: HandlerModel(custom: "universal"), handler: {config in
+            self.openViewController(toView: .universal(config: config))
+        })
+    }
+    
     func openViewController(toView: MyViewController) {
         print("openViewController \(toView)")
         switch toView {
@@ -42,15 +72,24 @@ class TabBarRouter: TabBarRouterProtocol {
             openRegistration()
         case let .itemDetails(itemId):
             openItemDetails(itemId: itemId)
+        case let .universal(config):
+            openUniversal(config: config)
+        case .someUniversalImplement:
+            let config = UniversalScreenConfig(endpoint: "https://alfa-itmo.ru/server/v1/storage/", key: "some-screen")
+            openUniversal(config: config)
+        case .promocode:
+            let config = UniversalScreenConfig(endpoint: "https://alfa-itmo.ru/server/v1/storage/", key: "promocode-screen")
+            openUniversal(config: config)
         }
-        
     }
     
     
     let tabBarController: UITabBarController
+    var currentAnimatedController: UIViewController?
 
     init() {
         self.tabBarController = UITabBarController()
+        registerHandlers()
     }
     
     func start() {
@@ -95,7 +134,28 @@ class TabBarRouter: TabBarRouterProtocol {
         guard let controllers = tabBarController.viewControllers, index < controllers.count else {
             return
         }
+        closeAnimatedController()
         tabBarController.selectedIndex = index
+    }
+    
+    
+    func openUniversal(config: UniversalScreenConfig){
+        closeAnimatedController()
+        print("open universal \(config.endpoint) \(config.key)")
+        let uniController = UniversalBuilder().set(router: self).set(config: config).build()
+        uniController.modalPresentationStyle = .overFullScreen
+        uniController.modalTransitionStyle = .coverVertical
+
+        if let sheet = uniController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        
+        uniController.modalPresentationStyle = .pageSheet
+        
+        currentAnimatedController = uniController
+        
+        tabBarController.present(uniController, animated: true, completion: nil)
     }
         
         func openAutentification(){
@@ -139,6 +199,10 @@ class TabBarRouter: TabBarRouterProtocol {
         if let curViewController = tabBarController.viewControllers?[tabBarController.selectedIndex] {
             curViewController.present(detailsVC, animated: true)
         }
+    }
+    
+    private func closeAnimatedController(){
+        currentAnimatedController?.dismiss(animated: true, completion: nil)
     }
 
 }

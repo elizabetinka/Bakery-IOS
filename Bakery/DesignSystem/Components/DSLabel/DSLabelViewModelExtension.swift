@@ -14,7 +14,7 @@ extension DSLabelViewModel: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         identifier = try container.decode(String.self, forKey: .identifier)
-        text = try container.decode(String.self, forKey: .text)
+        text = try container.decodeIfPresent(String.self, forKey: .text) ?? ""
         style = try container.decode(DSLabelStyle.self, forKey: .style)
         size = try container.decode(DSLabelSize.self, forKey: .size)
         state = try container.decode(DSLabelState.self, forKey: .state)

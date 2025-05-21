@@ -154,13 +154,11 @@ extension DSLayoutMarging: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        // Обязательные параметры
-        let width = try container.decode(DSWidth.self, forKey: .width)
-        let height = try container.decode(DSHeight.self, forKey: .height)
-        let hAlign = try container.decode(DSAlign.self, forKey: .hAlign)
-        let vAlign = try container.decode(DSAlign.self, forKey: .vAlign)
+        let width = try container.decodeIfPresent(DSWidth.self, forKey: .width)
+        let height = try container.decodeIfPresent(DSHeight.self, forKey: .height)
+        let hAlign = try container.decodeIfPresent(DSAlign.self, forKey: .hAlign)
+        let vAlign = try container.decodeIfPresent(DSAlign.self, forKey: .vAlign)
         
-        // Обработка отступов
         var topMargin: VSpacing?
         var bottomMargin: VSpacing?
         var HMargin: HSpacing?
@@ -174,16 +172,25 @@ extension DSLayoutMarging: Decodable {
         rightMargin = try container.decodeIfPresent(HSpacing.self, forKey: .rightMargin)
         
         self.init(
-            width: width,
-            height: height,
-            hAlign: hAlign,
-            vAlign: vAlign,
             topMargin: topMargin,
             bottomMargin: bottomMargin,
             HMargin: HMargin,
             leftMargin: leftMargin,
             rightMargin: rightMargin
         )
+        
+        if let width = width{
+            self.width = width
+        }
+        if let height = height{
+            self.height = height
+        }
+        if let hAlign = hAlign{
+            self.hAlign = hAlign
+        }
+        if let vAlign = vAlign{
+            self.vAlign = vAlign
+        }
     }
 }
 
