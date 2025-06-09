@@ -7,21 +7,27 @@ import UIKit
 
 class CommonBuilder: ModuleBuilder {
 
-    var userInitialState: Common.ShowUserInfo.ViewControllerState?
-    var itemInitialState: Common.ShowItem.ViewControllerState?
+    var state: Common.ViewControllerState?
+    var router: TabBarRouterProtocol?
 
-    func set(userInitialState: Common.ShowUserInfo.ViewControllerState, itemInitialState: Common.ShowItem.ViewControllerState) -> CommonBuilder {
-        self.itemInitialState = itemInitialState
-        self.userInitialState = userInitialState
+    func set(itemInitialState: Common.ViewControllerState) -> CommonBuilder {
+        self.state = itemInitialState
         return self
-    } 
+    }
+    
+    func set(router : TabBarRouterProtocol) -> CommonBuilder {
+        self.router = router
+        return self
+    }
 
-    func build() -> UIViewController {
+    @MainActor func build() -> UIViewController {
         let presenter = CommonPresenter()
         let interactor = CommonInteractor(presenter: presenter)
         let controller = CommonViewController(interactor: interactor)
 
         presenter.viewController = controller
+        presenter.cardsDelegate = controller
+        controller.router = router
         return controller
     }
 }

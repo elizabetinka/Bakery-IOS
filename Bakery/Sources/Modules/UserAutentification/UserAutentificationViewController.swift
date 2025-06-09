@@ -6,11 +6,19 @@
 import UIKit
 
 protocol LoginButtonDelegate: AnyObject {
-    func didTapLoginButton(number: String)
+    func didTapLoginButton()
+}
+
+protocol UserAutentificationValidateDelegate: AnyObject {
+    func validatePhoneNumber(number: String)
 }
 
 protocol UserAutentificationDisplayLogic: AnyObject {
     func displaySomething(viewModel: UserAutentification.Login.ViewModel)
+    func displaySomething(viewModel: UserAutentification.Init.ViewModel)
+    func displaySomething(viewModel: UserAutentification.ValidatePhoneNumber.ViewModel)
+    func displaySomething(viewModel: UserAutentification.Loading.ViewModel)
+    func displaySomething(viewModel: UserAutentification.Reload.ViewModel)
 }
 
 class UserAutentificationViewController: UIViewController {
@@ -18,12 +26,13 @@ class UserAutentificationViewController: UIViewController {
     var state: UserAutentification.ViewControllerState
     weak var router: TabBarRouterProtocol?
     
-    lazy var customView = self.view as? UserAutentificationView
+    lazy var customView = self.view as? UserAutentificationViewProtocol
     
 
-    init(interactor: UserAutentificationBusinessLogic, initialState: UserAutentification.ViewControllerState = .loading) {
+    init(interactor: UserAutentificationBusinessLogic, initialState: UserAutentification.ViewControllerState = .initial) {
         self.interactor = interactor
         self.state = initialState
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -33,10 +42,10 @@ class UserAutentificationViewController: UIViewController {
 
     // MARK: View lifecycle
     override func loadView() {
-        let view = UserAutentificationView(frame: UIScreen.main.bounds,delegate: self)
+        let view = UserAutentificationView(frame: UIScreen.main.bounds)
         self.view = view
-        // make additional setup of view or save references to subviews
     }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,9 +54,26 @@ class UserAutentificationViewController: UIViewController {
     }
 
     // MARK: Do something
-    func login(number : String) {
+    func login(number : String) async {
+        loadingRequest()
         let request = UserAutentification.Login.Request(form: UserAutentification.UserAutentificationRequest(phoneNumner: number))
-        interactor.login(request: request)
+        await interactor.login(request: request)
+    }
+    
+    func initRequest(){
+        interactor.initRequest(request: UserAutentification.Init.Request())
+    }
+    
+    func loadingRequest(){
+        interactor.loadingRequest(request: UserAutentification.Loading.Request())
+    }
+    
+    func reloadRequest(){
+        interactor.reloadRequest(request: UserAutentification.Reload.Request())
+    }
+    
+    func validateRequest(number : String){
+        interactor.validatePhoneNumber(request: UserAutentification.ValidatePhoneNumber.Request(form: UserAutentification.UserAutentificationRequest(phoneNumner: number)))
     }
 }
 
@@ -55,30 +81,62 @@ extension UserAutentificationViewController: UserAutentificationDisplayLogic {
     func displaySomething(viewModel: UserAutentification.Login.ViewModel) {
         display(newState: viewModel.state)
     }
-
+    func displaySomething(viewModel: UserAutentification.Init.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserAutentification.ValidatePhoneNumber.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserAutentification.Loading.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    func displaySomething(viewModel: UserAutentification.Reload.ViewModel) {
+        display(newState: viewModel.state)
+    }
+    
     func display(newState: UserAutentification.ViewControllerState) {
         state = newState
         switch state {
-        case .loading:
-            print("loading...")
-            customView?.showLoading()
-        case let .error(message):
-            print("error \(message)")
-            customView?.showError(message: message)
+        case .initial:
+            print("ayth state init")
+            initRequest()
+        case let .setup(model):
+            print("ayth state setup")
+            customView?.setup(with: model)
+        case let .configure(model):
+            print("ayth state configure")
+            customView?.configure(with: model)
         case .success:
-            dismiss(animated: true, completion: nil)
+            print("ayth state success")
+            self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.user)
         case .notRegistred:
-            dismiss(animated: true, completion: nil)
+            print("ayth state not registred")
+            self.dismiss(animated: true, completion: nil)
             router?.openViewController(toView: MyViewController.registration)
         }
     }
 }
 
-
 extension UserAutentificationViewController : LoginButtonDelegate {
-    func didTapLoginButton(number : String) {
-        login(number: number)
-        //dismiss(animated: true, completion: nil)
+    func didTapLoginButton() {
+        print("did tap login")
+        let info = customView?.getInfo()
+        let number = info?.phoneTextField.text ?? ""
+        Task {
+            await login(number: number)
+        }
+    }
+}
+
+extension UserAutentificationViewController: ErrorViewDelegate {
+    func reloadButtonWasTapped() {
+        reloadRequest()
+    }
+}
+
+extension  UserAutentificationViewController: UserAutentificationValidateDelegate {
+    func validatePhoneNumber(number: String) {
+        validateRequest(number: number)
     }
 }

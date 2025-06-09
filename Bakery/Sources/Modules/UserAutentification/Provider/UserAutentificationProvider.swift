@@ -2,14 +2,29 @@
 //  Created by Елизавета Кравченкова on 10/04/2025.
 //
 
+import Foundation
+
 protocol UserAutentificationProviderProtocol {
-    func getUserByPhoneNumber(phoneNumber: String, completion: @escaping (UserModel?, UserAutentificationProviderError?) -> Void)
+    func getUserByPhoneNumber(phoneNumber: String) async -> (UserModel?, UserAutentificationProviderError?)
 }
 
 enum UserAutentificationProviderError: Error {
     case getUserFailed(underlyingError: Error)
     case notRegistred
     case unknown
+}
+
+extension UserAutentificationProviderError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case let .getUserFailed(underlyingError):
+            return NSLocalizedString(underlyingError.localizedDescription, comment: "")
+        case .notRegistred:
+            return NSLocalizedString("Такого пользователя нет", comment: "")
+        case .unknown:
+            return NSLocalizedString("Неизвестная ошибка", comment: "")
+        }
+    }
 }
 
 /// Отвечает за получение данных модуля User
@@ -25,30 +40,29 @@ struct UserAutentificationProvider: UserAutentificationProviderProtocol {
         self.sessionService = sessionService
     }
     
-    func getUserByPhoneNumber(phoneNumber: String, completion: @escaping (UserModel?, UserAutentificationProviderError?) -> Void) {
+    func getUserByPhoneNumber(phoneNumber: String) async -> (UserModel?, UserAutentificationProviderError?) {
         
-        if let user = dataStore.fetchUsers().first(where: { $0.phoneNumner == phoneNumber }){
-            completion(user, nil)
+        if let user = dataStore.fetchUsers().first(where: { $0.phoneNumber == phoneNumber }){
+            sessionService.setCurrentUserId(id: user.uid)
+            return (user, nil)
         }
-        service.fetchUsers { (info, error) in
-            if let error = error {
-                completion(nil, .getUserFailed(underlyingError: error))
-            } else if let models = info {
-                if let user = models.first(where: { $0.phoneNumner == phoneNumber }){
-                    self.dataStore.addUser(user)
-                    sessionService.setCurrentUserId(id: user.uid)
-                    completion(user, nil)
-                }
-                else{
-                    self.dataStore.saveUsers(models)
-                    completion(nil, .notRegistred)
-                }
+        let (info, error) = await service.fetchUsers()
+        
+        if let error = error {
+            return (nil, .getUserFailed(underlyingError: error))
+        } else if let models = info {
+            if let user = models.first(where: { $0.phoneNumber == phoneNumber }){
+                self.dataStore.addUser(user)
+                sessionService.setCurrentUserId(id: user.uid)
+                return (user, nil)
             }
             else{
-                completion(nil, .unknown)
+                self.dataStore.saveUsers(models)
+                return (nil, .notRegistred)
             }
         }
-        
-        
+        else{
+            return (nil, .unknown)
+        }
     }
 }

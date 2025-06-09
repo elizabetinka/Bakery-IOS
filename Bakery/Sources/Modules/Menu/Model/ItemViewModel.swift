@@ -4,13 +4,11 @@
 
 import UIKit
 
-/// Модель данных, описывающая ...
-struct ItemViewModel: UniqueIdentifiable {
-    // Example
+struct ItemViewModel: UniqueIdentifiable, ViewModelProtocol {
     let uid: UniqueIdentifier
     let name: String
     let cost: Int
-    let itemImage: UIImage
+    let itemImage: UIImage?
 }
 
 extension ItemViewModel: Equatable {

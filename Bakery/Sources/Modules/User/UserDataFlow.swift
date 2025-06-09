@@ -4,6 +4,43 @@
 //
 
 enum User {
+    
+    enum Init {
+        struct Request {
+        }
+
+        struct Response {
+            var result: UserRequestResult
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum Loading {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
+    
+    enum Reload {
+        struct Request {
+        }
+
+        struct Response {
+        }
+
+        struct ViewModel {
+            var state: ViewControllerState
+        }
+    }
     // MARK: Use cases
     enum ShowUserInfo {
         struct Request {
@@ -25,10 +62,10 @@ enum User {
     }
 
     enum ViewControllerState {
-        case loading
-        case result(UserInfoViewModel)
+        case initial
+        case setup(model: UserViewModel)
+        case configure(model: UserViewModel)
         case notAuthorized
-        case error(message: String)
     }
 
     enum UserError: Error {
