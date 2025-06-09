@@ -65,8 +65,9 @@ public final class DSTextField: UIView, DSView {
         if case .hidden = viewModel.state {
             textField.isHidden = true
         }
-        
-        errorLabel.configure(with: viewModel.errorLabel)
+        if let errorModel = viewModel.errorLabel {
+            errorLabel.configure(with: errorModel)
+        }
         
         makeConfiguredConstraints(viewModel: viewModel)
     }
@@ -84,10 +85,11 @@ public final class DSTextField: UIView, DSView {
         textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: layout.hPadding).isActive = true
         textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -layout.hPadding).isActive = true
         
-        
-        LayoutUtils.applyLayoutToView(layout: viewModel.errorLabel.layout.margin, view: errorLabel, topView: textField, botView: nil, superview: self)
-
-        errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -layout.vPadding).isActive = true
+        if let errorModel = viewModel.errorLabel {
+            LayoutUtils.applyLayoutToView(layout: errorModel.layout.margin, view: errorLabel, topView: textField, botView: nil, superview: self)
+            
+            errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -layout.vPadding).isActive = true
+        }
     }
     
     func getInfo() -> DSTextFieldInfo {
